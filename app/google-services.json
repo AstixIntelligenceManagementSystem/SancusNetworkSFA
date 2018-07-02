@@ -1,31 +1,27 @@
 {
   "project_info": {
-    "project_number": "883448859120",
-    "firebase_url": "https://rsplsfa.firebaseio.com",
-    "project_id": "rsplsfa",
-    "storage_bucket": "rsplsfa.appspot.com"
+    "project_number": "450331011268",
+    "firebase_url": "https://sancusnetworksfa.firebaseio.com",
+    "project_id": "sancusnetworksfa",
+    "storage_bucket": "sancusnetworksfa.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:883448859120:android:ee155e21cf2a7ddd",
+        "mobilesdk_app_id": "1:450331011268:android:d5b3381bb0d50267",
         "android_client_info": {
           "package_name": "project.astix.com.sancusnetworksfa"
         }
       },
       "oauth_client": [
         {
-          "client_id": "883448859120-2mu9e02es3el6mlo3a1u48biglt9gbcg.apps.googleusercontent.com",
-          "client_type": 3
-        },
-        {
-          "client_id": "883448859120-2mu9e02es3el6mlo3a1u48biglt9gbcg.apps.googleusercontent.com",
+          "client_id": "450331011268-643ueh6rmhp1uebf4rufomgbvqub787q.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyD_7mSWEnwiSt6XYEj9vykq5RXDWJnWGOA"
+          "current_key": "AIzaSyBGSJLvtwcnw6riw36O8tZ8d6d4m0Gz1Gs"
         }
       ],
       "services": {
