@@ -1,27 +1,5 @@
 package project.astix.com.sancusnetworksfa;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.text.DateFormat;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Locale;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.StringTokenizer;
-import java.util.UUID;
-import java.util.regex.Pattern;
-
 import android.annotation.SuppressLint;
 import android.app.ActionBar.LayoutParams;
 import android.app.AlertDialog;
@@ -75,7 +53,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import com.astix.Common.CommonInfo;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -90,15 +67,39 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Locale;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.StringTokenizer;
+import java.util.UUID;
+import java.util.regex.Pattern;
+
 public class OrderReview extends BaseActivity implements OnItemSelectedListener, OnClickListener, OnFocusChangeListener, LocationListener,GoogleApiClient.ConnectionCallbacks,
 GoogleApiClient.OnConnectionFailedListener{
 
-	TextView txt_Lststock;
-	String lastStockDate="";
+	String VisitDate="";
+	HashMap<String, String> hmapProductIdLastOrder=new HashMap<String, String>();
+	public static boolean isSubmitClicked;
 	Double outstandingvalue=0.0;
 	LinkedHashMap<String, String> hmapSchmDscrptnAndBenfit;
 	LinkedHashMap<String,ArrayList<String>> hmapProductMinMax;
-
+	TextView txt_Lststock;
+	String lastStockDate="";
 	//nitika
 	CustomKeyboard mCustomKeyboardNum,mCustomKeyboardNumWithoutDecimal;
 
@@ -204,8 +205,9 @@ GoogleApiClient.OnConnectionFailedListener{
 		public TextView tvNoOfCouponValue;
 		
 		public TextView txttvCouponAmountValue;
-		public TextView tvAmtPrvsOutstandingVAL,tvTtlAmtOutstandingVAL;
-	public String lastKnownLocLatitude="";
+	public TextView tvAmtPrvsOutstandingVAL,tvTtlAmtOutstandingVAL;
+		
+		public String lastKnownLocLatitude="";
 		public String lastKnownLocLongitude="";
 		public String accuracy="0";
 		public String locationProvider="Default";
@@ -349,7 +351,7 @@ GoogleApiClient.OnConnectionFailedListener{
 	HashMap<String, String> hmapPrdctFreeQtyFinal=new HashMap<String, String>();
 	HashMap<String, String> hmapProductDiscountPercentageGiveFinal=new HashMap<String, String>();
 	HashMap<String, String> hmapProductVolumePerFinal=new HashMap<String, String>();
-
+		   
 		   //hmapProductDiscountPercentageGive= key =ProductID         value=DiscountPercentageGivenOnProduct
 		   HashMap<String, String> hmapProductDiscountPercentageGive=new HashMap<String, String>();
 		   
@@ -457,13 +459,163 @@ GoogleApiClient.OnConnectionFailedListener{
 			        // Showing Alert Message
 			        alertDialog.show();
 			 }
+
+
+			 public void submitWithoutAlert()
+			 {
+				 butClickForGPS=3;
+				 dbengine.open();
+				 if ((dbengine.PrevLocChk(storeID.trim())) )
+				 {
+					 dbengine.close();
+					 try
+					 {
+						 FullSyncDataNow task = new FullSyncDataNow(OrderReview.this);
+						 task.execute();
+					 }
+					 catch (Exception e) {
+						 // TODO Autouuid-generated catch block
+						 e.printStackTrace();
+
+					 }
+				 }
+				 else
+				 {
+
+
+
+					 appLocationService=new AppLocationService();
+
+
+					 pDialog2STANDBY=ProgressDialog.show(OrderReview.this,getText(R.string.genTermPleaseWaitNew) ,getText(R.string.genTermRetrivingLocation), true);
+					 pDialog2STANDBY.setIndeterminate(true);
+
+					 pDialog2STANDBY.setCancelable(false);
+					 pDialog2STANDBY.show();
+
+					 if(isGooglePlayServicesAvailable()) {
+						 createLocationRequest();
+
+						 mGoogleApiClient = new GoogleApiClient.Builder(OrderReview.this)
+								 .addApi(LocationServices.API)
+								 .addConnectionCallbacks(OrderReview.this)
+								 .addOnConnectionFailedListener(OrderReview.this)
+								 .build();
+						 mGoogleApiClient.connect();
+					 }
+
+					 startService(new Intent(OrderReview.this, AppLocationService.class));
+					 Location nwLocation=appLocationService.getLocation(locationManager,LocationManager.GPS_PROVIDER,location);
+					 Location gpsLocation=appLocationService.getLocation(locationManager,LocationManager.NETWORK_PROVIDER,location);
+					 countDownTimer2 = new CoundownClass2(startTime, interval);
+					 countDownTimer2.start();
+
+
+
+
+				 }
+
+			 }
+
+			 public void submitFunctionalityAfterMerchandisingInstruction()
+			 {
+				 isSubmitClicked=false;
+				 submitWithoutAlert();
+				/* AlertDialog.Builder alertDialogSubmitConfirm = new AlertDialog.Builder(OrderReview.this);
+				 alertDialogSubmitConfirm.setTitle(getText(R.string.genTermNoDataConnection));
+				 alertDialogSubmitConfirm.setMessage(getText(R.string.submitConfirmAlert));
+				 alertDialogSubmitConfirm.setCancelable(false);
+
+				 alertDialogSubmitConfirm.setNeutralButton(OrderReview.this.getResources().getString(R.string.AlertDialogYesButton), new DialogInterface.OnClickListener() {
+					 public void onClick(DialogInterface dialog, int which)
+					 {
+						 butClickForGPS=3;
+						 dbengine.open();
+						 if ((dbengine.PrevLocChk(storeID.trim())) )
+						 {
+							 dbengine.close();
+							 try
+							 {
+								 FullSyncDataNow task = new FullSyncDataNow(OrderReview.this);
+								 task.execute();
+							 }
+							 catch (Exception e) {
+								 // TODO Autouuid-generated catch block
+								 e.printStackTrace();
+
+							 }
+						 }
+						 else
+						 {
+
+
+
+							 appLocationService=new AppLocationService();
+
+
+							 pDialog2STANDBY=ProgressDialog.show(OrderReview.this,getText(R.string.genTermPleaseWaitNew) ,getText(R.string.genTermRetrivingLocation), true);
+							 pDialog2STANDBY.setIndeterminate(true);
+
+							 pDialog2STANDBY.setCancelable(false);
+							 pDialog2STANDBY.show();
+
+							 if(isGooglePlayServicesAvailable()) {
+								 createLocationRequest();
+
+								 mGoogleApiClient = new GoogleApiClient.Builder(OrderReview.this)
+										 .addApi(LocationServices.API)
+										 .addConnectionCallbacks(OrderReview.this)
+										 .addOnConnectionFailedListener(OrderReview.this)
+										 .build();
+								 mGoogleApiClient.connect();
+							 }
+
+							 startService(new Intent(OrderReview.this, AppLocationService.class));
+							 Location nwLocation=appLocationService.getLocation(locationManager,LocationManager.GPS_PROVIDER,location);
+							 Location gpsLocation=appLocationService.getLocation(locationManager,LocationManager.NETWORK_PROVIDER,location);
+							 countDownTimer2 = new CoundownClass2(startTime, interval);
+							 countDownTimer2.start();
+
+
+
+
+						 }
+
+
+
+					 }
+				 });
+
+				 alertDialogSubmitConfirm.setNegativeButton(OrderReview.this.getResources().getString(R.string.AlertDialogNoButton), new DialogInterface.OnClickListener() {
+
+					 @Override
+					 public void onClick(DialogInterface dialog, int which) {
+						 // TODO Auto-generated method stub
+						 dialog.dismiss();
+					 }
+				 });
+
+				 alertDialogSubmitConfirm.setIcon(R.drawable.info_ico);
+
+				 AlertDialog alert = alertDialogSubmitConfirm.create();
+
+				 alert.show();*/
+			 }
+
 		 @Override
 			protected void onResume() 
 			{
 				// TODO Auto-generated method stub
 				super.onResume();
-				
-				
+
+				if(isSubmitClicked)
+				{
+					submitFunctionalityAfterMerchandisingInstruction();
+				}
+				else
+				{
+
+				}
 				
 				
 				
@@ -668,7 +820,9 @@ GoogleApiClient.OnConnectionFailedListener{
 			  // LocalBroadcastManager.getInstance(ProductList.this).unregisterReceiver(mLocationReceiver);
 			   
 			  }
+		
 
+		 
 		 public void CustomAlertBoxForSchemeDetails()
 		 {
 			 
@@ -813,9 +967,8 @@ GoogleApiClient.OnConnectionFailedListener{
 	      
 			
 		 }
-
-		 public void loadPurchaseProductDefault()
-		{
+public void loadPurchaseProductDefault()
+{		   
 	      
 	      
 	      
@@ -936,7 +1089,6 @@ GoogleApiClient.OnConnectionFailedListener{
 			
 			
 			final Button btn_AmountCollect=(Button) findViewById(R.id.btn_collectAmount);
-
 			if(flgOrderType==0){
 				btn_AmountCollect.setVisibility(View.GONE);
 			}
@@ -945,7 +1097,7 @@ GoogleApiClient.OnConnectionFailedListener{
 			}
 
 			btn_AmountCollect.setOnClickListener(new OnClickListener() {
-				
+
 				@Override
 				public void onClick(View v) {
 					if(ed_LastEditextFocusd!=null)
@@ -1041,7 +1193,7 @@ GoogleApiClient.OnConnectionFailedListener{
 			
 			final Button btn_OrderPayment=(Button) findViewById(R.id.btn_OrderPayment);
 			btn_OrderPayment.setOnClickListener(new OnClickListener() {
-				
+
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
@@ -1229,7 +1381,7 @@ GoogleApiClient.OnConnectionFailedListener{
 						
 						String fileName=imei+"_"+storeID;
 						
-						File file = new File("/sdcard/"+CommonInfo.TextFileFolder+"/"+fileName);
+						File file = new File("/sdcard/"+ CommonInfo.TextFileFolder+"/"+fileName);
 						
 						if (!file.exists()) 
 						{
@@ -1244,7 +1396,7 @@ GoogleApiClient.OnConnectionFailedListener{
 							}
 						}
 						
-						CommonInfo.fileContent=CommonInfo.fileContent+"     "+imei+"_"+storeID+"_"+"Cancel Button Click on Product List"+StartClickTimeFinal;
+						CommonInfo.fileContent= CommonInfo.fileContent+"     "+imei+"_"+storeID+"_"+"Cancel Button Click on Product List"+StartClickTimeFinal;
 						
 						
 						FileWriter fw;
@@ -1310,9 +1462,17 @@ GoogleApiClient.OnConnectionFailedListener{
 			    		dbengine.updateStoreQuoteSubmitFlgInStoreMstr(storeID.trim(),0);
 			    		
 			    		
-			        	Intent storeSaveIntent = new Intent(OrderReview.this, LauncherActivity.class);
+			        	/*Intent storeSaveIntent = new Intent(OrderReview.this, AllButtonActivity.class);
 			     		startActivity(storeSaveIntent);
-			     		finish();
+			     		finish();*/
+						String routeID=dbengine.GetActiveRouteIDSunil();
+						Intent ide = new Intent(OrderReview.this, StoreSelection.class);
+						ide.putExtra("userDate", date);
+						ide.putExtra("pickerDate", pickerDate);
+						ide.putExtra("imei", imei);
+						ide.putExtra("rID", routeID);
+						startActivity(ide);
+						finish();
 			        }
 			       
 			     });
@@ -2013,6 +2173,8 @@ GoogleApiClient.OnConnectionFailedListener{
 			
 			  
 		}
+		
+		
 
 	private boolean isGooglePlayServicesAvailable() {
 	    int status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
@@ -2032,7 +2194,8 @@ GoogleApiClient.OnConnectionFailedListener{
 	}
 
 		private void getDataFromIntent() {
-
+			  
+			  
 			  Intent passedvals = getIntent();
 
 			  storeID = passedvals.getStringExtra("storeID");
@@ -2046,6 +2209,7 @@ GoogleApiClient.OnConnectionFailedListener{
 				{
 					startTime = 10000;
 				}
+
 			  dbengine.open();
 				 StoreCurrentStoreType=Integer.parseInt(dbengine.fnGetStoreTypeOnStoreIdBasis(storeID));
 					dbengine.close();
@@ -2063,6 +2227,7 @@ GoogleApiClient.OnConnectionFailedListener{
 			hmapSchemeIDandDescr=dbengine.fnSchemeIDandDescr();
 			lastStockDate=dbengine.fnGetLastStockDate(storeID);
 			hmapProductIdLastStock=dbengine.fnGetLastStockByDMS_Or_SFA(storeID);
+			hmapProductIdLastOrder=dbengine.fnGetLastOrderByDMS_Or_SFA(storeID);
 			HashMap<String, String>  hmapTempProd=dbengine.FetchLODqty(storeID);
 			if(arrLstHmapPrdct.size()>0)
 			{
@@ -3064,9 +3229,18 @@ GoogleApiClient.OnConnectionFailedListener{
 		{
 			et_LstStock.setText("");
 		}
+		final EditText et_LstOrder=(EditText) viewProduct.findViewById(R.id.et_LstOrder);
+		if(hmapProductIdLastOrder.containsKey(productIdDynamic))
+		{
+			et_LstOrder.setText(""+hmapProductIdLastOrder.get(productIdDynamic));
+		}
+		else
+		{
+			et_LstOrder.setText("");
+		}
 		et_Stock.setTag("etStock"+"_"+productIdDynamic);
-		et_Stock.setEnabled(true);
-	/*	if(flgOrderType==1)
+		et_Stock.setEnabled(false);
+		if(flgOrderType==1)
 		{
 			et_Stock.setBackgroundResource(R.drawable.edit_text_diable_bg_transprent);
 			if(hmapFetchPDASavedData!=null && hmapFetchPDASavedData.containsKey(productIdDynamic))
@@ -3086,8 +3260,10 @@ GoogleApiClient.OnConnectionFailedListener{
 		}
 		else
 		{
-			et_Stock.setEnabled(true);
-		}*/
+			et_Stock.setTextColor(getResources().getColor(R.color.black));
+			//setTextColor(getResources().getColor(R.color.black));
+			et_Stock.setEnabled(false);    // its making false,stock alrady taken in store check
+		}
 		et_Stock.setOnFocusChangeListener(this);
 
 
@@ -4661,7 +4837,6 @@ GoogleApiClient.OnConnectionFailedListener{
 
 						}
 
-
 						if(!TextUtils.isEmpty(ed_LastEditextFocusd.getText().toString()))
 						{
 							if(hmapProductMinMax!=null && hmapProductMinMax.containsKey(ProductIdOnClickedEdit))
@@ -4964,273 +5139,331 @@ GoogleApiClient.OnConnectionFailedListener{
 
 	}
 
-	public void fnCheckNewSchemeIDsAppliedAfterValueChange(String SchIdsCompleteListOnProductID,String ProductIdOnClicked) {
-		arredtboc_OderQuantityFinalSchemesToApply = new ArrayList<String>();
+	public void fnCheckNewSchemeIDsAppliedAfterValueChange(String SchIdsCompleteListOnProductID,String ProductIdOnClicked)
+	{
+		arredtboc_OderQuantityFinalSchemesToApply=new ArrayList<String>();
 		//Example :-1075_1_0_1!1026$1^1|1^23^1^10^0@1025$1^1|1^22^1^20^0@1022$1^1|1^19^5^5^0@1020$1^1|1^17^3^4^0@1019$1^1|1^16^1^12^0@1018$1^1|1^15^1^10^0@1017$1^1|1^14^1^12^0
-		String valForVolumetQTYToMultiply = "0";
-		productFullFilledSlabGlobal = new ArrayList<String>();
-		if (SchIdsCompleteListOnProductID != null)
+		String valForVolumetQTYToMultiply="0";
+		productFullFilledSlabGlobal=new ArrayList<String>();
+		if(SchIdsCompleteListOnProductID!=null)
 		{
-			String[] arrSchIdsListOnProductID = SchIdsCompleteListOnProductID.split("#");
-		for (int pSchIdsAppliCount = 0; pSchIdsAppliCount < arrSchIdsListOnProductID.length; pSchIdsAppliCount++) {
-			//35_1_0_2 where 35=shcemId, 1= SchAppRule, 2= schemeTypeId
-			String schOverviewDetails = arrSchIdsListOnProductID[pSchIdsAppliCount].split("!")[0];   //Example :-1075_1_0_1
-			String schOverviewOtherDetails = arrSchIdsListOnProductID[pSchIdsAppliCount].split("!")[1]; //Example :-1026$1^1|1^23^1^10^0@1025$1^1|1^22^1^20^0@1022$1^1|1^19^5^5^0@1020$1^1|1^17^3^4^0@1019$1^1|1^16^1^12^0@1018$1^1|1^15^1^10^0@1017$1^1|1^14^1^12^0
-			int schId = Integer.parseInt(schOverviewDetails.split("_")[0]);                           //Example :-1075
-			int schAppRule = Integer.parseInt(schOverviewDetails.split("_")[1]);                                                                                        //Example :-1
-			int schApplicationId = Integer.parseInt(schOverviewDetails.split("_")[2]);                                                              //Example :-0
-			int SchTypeId = Integer.parseInt(schOverviewDetails.split("_")[3]);                                                                                           //Example :-1 // 1=Check Combined Skus, 2=Bundle,3=Simple with Check on Individual SKU
-			String[] arrschSlbIDsOnSchIdBasis = schOverviewOtherDetails.split("@");   //Split for multiple slabs Example :-1026$1^1|1^23^1^10^0, 1025$1^1|1^22^1^20^0
-			boolean bucketCndtnSchemeFullFill = false;
-			int exitWhenSlabToExit = 0;
+			String[] arrSchIdsListOnProductID=SchIdsCompleteListOnProductID.split("#");
+			for(int pSchIdsAppliCount=0;pSchIdsAppliCount<arrSchIdsListOnProductID.length;pSchIdsAppliCount++)
+			{
+				//35_1_0_2 where 35=shcemId, 1= SchAppRule, 2= schemeTypeId
+				String schOverviewDetails=arrSchIdsListOnProductID[pSchIdsAppliCount].split("!")[0];   //Example :-1075_1_0_1
+				String schOverviewOtherDetails=arrSchIdsListOnProductID[pSchIdsAppliCount].split("!")[1]; //Example :-1026$1^1|1^23^1^10^0@1025$1^1|1^22^1^20^0@1022$1^1|1^19^5^5^0@1020$1^1|1^17^3^4^0@1019$1^1|1^16^1^12^0@1018$1^1|1^15^1^10^0@1017$1^1|1^14^1^12^0
+				int schId=Integer.parseInt(schOverviewDetails.split("_")[0]);                           //Example :-1075
+				int schAppRule=Integer.parseInt(schOverviewDetails.split("_")[1]);                                                                                        //Example :-1
+				int schApplicationId=Integer.parseInt(schOverviewDetails.split("_")[2]);                                                              //Example :-0
+				int SchTypeId=Integer.parseInt(schOverviewDetails.split("_")[3]);                                                                                           //Example :-1 // 1=Check Combined Skus, 2=Bundle,3=Simple with Check on Individual SKU
+				String[] arrschSlbIDsOnSchIdBasis=schOverviewOtherDetails.split("@");   //Split for multiple slabs Example :-1026$1^1|1^23^1^10^0, 1025$1^1|1^22^1^20^0
+				boolean bucketCndtnSchemeFullFill=false;
+				int exitWhenSlabToExit=0;
 
-			if (hmapSchemeIdStoreID.containsKey("" + schId)) {
-				boolean bucketCndtnFullFillisReally = false;
-				for (int pSchSlbCount = 0; pSchSlbCount < arrschSlbIDsOnSchIdBasis.length; pSchSlbCount++) {
-					//Exmaple Slab:- 1026$1^1|1^23^1^10^0
-					int schSlabId = Integer.parseInt((arrschSlbIDsOnSchIdBasis[pSchSlbCount]).split(Pattern.quote("$"))[0]); //Exmaple Slab ID:- 1026
-					String schSlabOtherDetails = arrschSlbIDsOnSchIdBasis[pSchSlbCount].split(Pattern.quote("$"))[1]; //Exmaple Slab OtherDetails:- 1^1|1^23^1^10^0
-					String[] arrSchSlabBuckWiseDetails = schSlabOtherDetails.split(Pattern.quote("~")); //Example Split For Multiple Buckets (OR Condition)
-					for (int pSchSlbBuckCnt = 0; pSchSlbBuckCnt < arrSchSlabBuckWiseDetails.length; pSchSlbBuckCnt++) {
-						String schSlbBuckDetails = arrSchSlabBuckWiseDetails[pSchSlbBuckCnt].split(Pattern.quote("|"))[0]; // Eaxmple:-1^1
-						String schSlbBuckOtherDetails = arrSchSlabBuckWiseDetails[pSchSlbBuckCnt].split(Pattern.quote("|"))[1];  // Eaxmple:-1^23^1^10^0
-						int schSlbBuckId = Integer.parseInt(schSlbBuckDetails.split(Pattern.quote("^"))[0]);  //Exmaple Slab Bucket ID:- 1
-						int schSlbBuckCnt = Integer.parseInt(schSlbBuckDetails.split(Pattern.quote("^"))[1]);            //Example Number of Buckets under this Slab, Count:-1
+				if(hmapSchemeIdStoreID.containsKey(""+schId))
+				{
+					boolean bucketCndtnFullFillisReally=false;
+					for(int pSchSlbCount=0;pSchSlbCount<arrschSlbIDsOnSchIdBasis.length;pSchSlbCount++)
+					{
+						//Exmaple Slab:- 1026$1^1|1^23^1^10^0
+						int schSlabId=Integer.parseInt((arrschSlbIDsOnSchIdBasis[pSchSlbCount]).split(Pattern.quote("$"))[0]); //Exmaple Slab ID:- 1026
+						String schSlabOtherDetails=arrschSlbIDsOnSchIdBasis[pSchSlbCount].split(Pattern.quote("$"))[1]; //Exmaple Slab OtherDetails:- 1^1|1^23^1^10^0
+						String[] arrSchSlabBuckWiseDetails=schSlabOtherDetails.split(Pattern.quote("~")); //Example Split For Multiple Buckets (OR Condition)
+						for(int pSchSlbBuckCnt=0;pSchSlbBuckCnt<arrSchSlabBuckWiseDetails.length;pSchSlbBuckCnt++)
+						{
+							String schSlbBuckDetails=arrSchSlabBuckWiseDetails[pSchSlbBuckCnt].split(Pattern.quote("|"))[0]; // Eaxmple:-1^1
+							String schSlbBuckOtherDetails=arrSchSlabBuckWiseDetails[pSchSlbBuckCnt].split(Pattern.quote("|"))[1];  // Eaxmple:-1^23^1^10^0
+							int schSlbBuckId=Integer.parseInt(schSlbBuckDetails.split(Pattern.quote("^"))[0]);  //Exmaple Slab Bucket ID:- 1
+							int schSlbBuckCnt=Integer.parseInt(schSlbBuckDetails.split(Pattern.quote("^"))[1]);            //Example Number of Buckets under this Slab, Count:-1
 
-						String[] arrSubBucketDetails = schSlbBuckOtherDetails.split(Pattern.quote("*"));  //Example Split For Multiple Sub Buckets(AND Condition)
-						String[] arrMaintainDetailsOfBucketConditionsAgainstBuckId = new String[schSlbBuckCnt];  //Example Length of Buckes in Slab and which condition is true in case of OR
-						// variables for calculating total sub bucket
-						ArrayList<String> productFullFilledSlab = new ArrayList<String>();
-						ArrayList<String> schSlabRowIdFullFilledSlab = new ArrayList<String>();
-						ArrayList<String> productFullFilledSlabForInvoice = new ArrayList<String>();
-						int totalProductQnty = 0;
-						double totalProductVol = 0.0;
+							String[] arrSubBucketDetails=schSlbBuckOtherDetails.split(Pattern.quote("*"));  //Example Split For Multiple Sub Buckets(AND Condition)
+							String[] arrMaintainDetailsOfBucketConditionsAgainstBuckId=new String[schSlbBuckCnt];  //Example Length of Buckes in Slab and which condition is true in case of OR
+							// variables for calculating total sub bucket
+							ArrayList<String> productFullFilledSlab=new ArrayList<String>();
+							ArrayList<String> schSlabRowIdFullFilledSlab=new ArrayList<String>();
+							ArrayList<String> productFullFilledSlabForInvoice=new ArrayList<String>();
+							int totalProductQnty=0;
+							double totalProductVol=0.0;
 
-						double totalProductVal = 0.0;
-						int totalProductLine = 0;
-						double totalInvoice = 0.0;
+							double totalProductVal=0.0;
+							int totalProductLine=0;
+							double totalInvoice=0.0;
 
-						//product invoice
-						for (Entry<String, String> entryProduct : hmapPrdctOdrQty.entrySet()) {
-							if (hmapPrdctOdrQty.containsKey(entryProduct.getKey())) {
-								if (Integer.parseInt(hmapPrdctOdrQty.get(entryProduct.getKey())) > (0)) {
-									int curntProdQty = Integer.parseInt(entryProduct.getValue());
-									String curntProdVolumeRate = hmapPrdctVolRatTax.get(entryProduct.getKey());
-									Double curntProdRate = Double.parseDouble(curntProdVolumeRate.split(Pattern.quote("^"))[1]);
+							//product invoice
+							for(Entry<String, String> entryProduct:hmapPrdctOdrQty.entrySet())
+							{
+								if(hmapPrdctOdrQty.containsKey(entryProduct.getKey()))
+								{
+									if(Integer.parseInt(hmapPrdctOdrQty.get(entryProduct.getKey()))>(0))
+									{
+										int curntProdQty = Integer.parseInt(entryProduct.getValue()) ;
+										String curntProdVolumeRate = hmapPrdctVolRatTax.get(entryProduct.getKey());
+										Double curntProdRate=Double.parseDouble(curntProdVolumeRate.split(Pattern.quote("^"))[1]);
 
-									Double currentProductOverAllPriceQtywise = curntProdRate * curntProdQty;
-									totalInvoice = totalInvoice + currentProductOverAllPriceQtywise;
-									productFullFilledSlabForInvoice.add(entryProduct.getKey());
-								}
-							}
-
-						}
-						// end product invoice
-						//sub bucket starts here
-						LinkedHashMap<String, String> hmapSubBucketDetailsData = new LinkedHashMap<String, String>();
-						LinkedHashMap<String, String> hmapSubBucketTotalQntty = new LinkedHashMap<String, String>();
-						LinkedHashMap<String, String> hmapSubBucketTotalValue = new LinkedHashMap<String, String>();
-						LinkedHashMap<String, String> hmapSubBucketTotalVolume = new LinkedHashMap<String, String>();
-
-						for (int cntSubBucket = 0; cntSubBucket < arrSubBucketDetails.length; cntSubBucket++) {
-							// Eaxmple:-1^23^1^10^0
-							int schSlbSubBuckID = Integer.parseInt(arrSubBucketDetails[cntSubBucket].split(Pattern.quote("^"))[0]); //Slab Sub BucketID Eaxmple:-1  subBucketId
-							int schSlbSubRowID = Integer.parseInt(arrSubBucketDetails[cntSubBucket].split(Pattern.quote("^"))[1]);  //Slab Sub Bucket RowID Eaxmple:-23  rowid
-							int schSlabSubBucketType = Integer.parseInt(arrSubBucketDetails[cntSubBucket].split(Pattern.quote("^"))[2]);  ///Slab Sub Bucket Type Eaxmple:-1
-
-							Double schSlabSubBucketValue = Double.parseDouble(arrSubBucketDetails[cntSubBucket].split(Pattern.quote("^"))[3]);  ///Slab Sub Bucket Value Eaxmple:-10
-							int schSubBucketValType = Integer.parseInt(arrSubBucketDetails[cntSubBucket].split(Pattern.quote("^"))[4]); ///Slab Sub Bucket Value Type Eaxmple:-0
-
-
-							int totalOderQtyProductsAgainstRowId = 0;
-							Double totalVolProductsAgainstRowId = 0.0;
-							Double totalValProductsAgainstRowId = 0.0;
-
-
-							//String[] productFullFilledSlab=new String[arrProductIDMappedInSchSlbSubBukRowId.length];
-							int positionOfProductHavingQntty = 0;
-							ArrayList<String> arrProductIDMappedInSchSlbSubBukRowId = new ArrayList<String>();
-
-							//IF SchTypeID==1 OR SchTypeID==2 OR SchTypeID==3  Code Starts Here To Check the Products
-
-							if (SchTypeId == 1 || SchTypeId == 2) {
-								arrProductIDMappedInSchSlbSubBukRowId = dbengine.fectProductIDMappedInSchSlbSubBukRowIdTemp(schSlbSubRowID);
-							}
-							if (SchTypeId == 3) {
-								arrProductIDMappedInSchSlbSubBukRowId.add(ProductIdOnClicked);
-							}
-
-							//IF SchTypeID==1 OR SchTypeID==2 OR SchTypeID==3  Code Ends Here To Check the Products
-							//SlabSubBucketValType
-							//I           =Invoice Value                  Order Value After Tax
-							//G         =Gross Value                     Order Value Before Tax
-							//N         =Net Value                                         Order Value After Tax
-
-
-							if (arrProductIDMappedInSchSlbSubBukRowId.size() > 0) {
-
-
-								for (String productMappedWithScheme : arrProductIDMappedInSchSlbSubBukRowId) {
-									schSlabRowIdFullFilledSlab.add(productMappedWithScheme + "^" + schSlbSubRowID);
-									productFullFilledSlab.add(productMappedWithScheme + "^" + schId);// productLine
-
-									String hmapSubBucketDetailsData_Value = schId + "^" + schSlabId + "^" + schSlbBuckId + "^" + schSlabSubBucketValue + "^" + schSubBucketValType + "^" + schSlabSubBucketType + "^" + ProductIdOnClicked + "^" + valForVolumetQTYToMultiply + "^" + schSlbSubRowID + "^" + SchTypeId;
-									hmapSubBucketDetailsData.put(productMappedWithScheme + "^" + schSlbSubRowID, hmapSubBucketDetailsData_Value);
-									if (hmapPrdctOdrQty.containsKey(productMappedWithScheme)) {
-										if (Integer.parseInt(hmapPrdctOdrQty.get(productMappedWithScheme)) > (0)) {
-											//1. Product Quantity
-
-
-											int oderQtyOnProd = Integer.parseInt(hmapPrdctOdrQty.get(productMappedWithScheme));
-
-											totalProductQnty = totalProductQnty + oderQtyOnProd;
-											totalOderQtyProductsAgainstRowId = totalOderQtyProductsAgainstRowId + oderQtyOnProd;
-
-											hmapSubBucketTotalQntty.put("" + schSlbSubRowID, "" + totalOderQtyProductsAgainstRowId);
-											// product volume
-											Double prodVolume = Double.parseDouble(hmapPrdctVolRatTax.get(productMappedWithScheme).split(Pattern.quote("^"))[0]);
-											Double oderVolumeOfCurrentMapedProduct = prodVolume * oderQtyOnProd;
-											totalProductVol = totalProductVol + oderVolumeOfCurrentMapedProduct;
-											totalVolProductsAgainstRowId = totalVolProductsAgainstRowId + oderVolumeOfCurrentMapedProduct;
-
-											hmapSubBucketTotalVolume.put("" + schSlbSubRowID, "" + totalVolProductsAgainstRowId);
-											//product value
-
-											Double prodRate = Double.parseDouble(hmapPrdctVolRatTax.get(productMappedWithScheme).split(Pattern.quote("^"))[1]);
-											Double oderRateOfCurrentMapedProduct = prodRate * oderQtyOnProd;
-											//oderRateOnProduct=oderRateOnProduct + oderRateOfCurrentMapedProduct;
-											totalProductVal = totalProductVal + oderRateOfCurrentMapedProduct;
-											totalValProductsAgainstRowId = totalValProductsAgainstRowId + oderRateOfCurrentMapedProduct;
-											hmapSubBucketTotalValue.put("" + schSlbSubRowID, "" + totalValProductsAgainstRowId);
-
-
-										}
-
-
-									}
-
-
-								}// for loops ends here productMappedWithScheme:arrProductIDMappedInSchSlbSubBukRowId
-
-
-							}// ends if(arrProductIDMappedInSchSlbSubBukRowId.size()>0)
-
-
-						} //sub bucket ends here
-
-						//schSlabSubBucketType
-						//1. Product Quantity
-						//5. Product Volume
-						//2. Invoice Value
-						//3. Product Lines
-						//4. Product Value
-						boolean bucketCndtnFullFill = true;
-						String stringValHmap = "";
-						String stringValHmapInvoice = "";
-						ArrayList<String> listStrValHmapForSchm2 = new ArrayList<String>();
-						if (productFullFilledSlabForInvoice != null && productFullFilledSlabForInvoice.size() > 0) {
-							for (String productIdFullFilledSlabInvoiceWithQty : productFullFilledSlabForInvoice) {
-								if (hmapSubBucketDetailsData.containsKey(productIdFullFilledSlabInvoiceWithQty)) {
-									stringValHmapInvoice = hmapSubBucketDetailsData.get(productIdFullFilledSlabInvoiceWithQty);
-									String schSlabSubBucketType = stringValHmapInvoice.split(Pattern.quote("^"))[5];
-									Double schSlabSubBucketVal = Double.valueOf(stringValHmapInvoice.split(Pattern.quote("^"))[3]);
-									if (schSlabSubBucketType.equals("2")) {
-										if (totalInvoice >= schSlabSubBucketVal) {
-											dbengine.insertProductMappedWithSchemApplied(storeID, productIdFullFilledSlabInvoiceWithQty, "" + schSlabId, "" + schId, strGlobalOrderID);
-											break;
-										} else {
-											dbengine.deleteAlertValueSlab(storeID, "" + schSlabId, strGlobalOrderID);
-											bucketCndtnFullFill = false;
-											stringValHmapInvoice = "";
-											break;
-										}
-
-									} else {
-										stringValHmapInvoice = "";
+										Double currentProductOverAllPriceQtywise=curntProdRate * curntProdQty;
+										totalInvoice=totalInvoice+currentProductOverAllPriceQtywise;
+										productFullFilledSlabForInvoice.add(entryProduct.getKey());
 									}
 								}
 
 							}
-						}
-						if (schSlabRowIdFullFilledSlab != null && schSlabRowIdFullFilledSlab.size() > 0) {
-							for (String productIdRowIDFullFilledSlabWithQty : schSlabRowIdFullFilledSlab) {
-								String productIdFullFilledSlabWithQty = productIdRowIDFullFilledSlabWithQty.split(Pattern.quote("^"))[0];
-								String RowIDFullFilledSlabWithQty = productIdRowIDFullFilledSlabWithQty.split(Pattern.quote("^"))[1];
-								stringValHmap = hmapSubBucketDetailsData.get(productIdRowIDFullFilledSlabWithQty);
-								String schSlabSubBucketType = stringValHmap.split(Pattern.quote("^"))[5];
-								Double schSlabSubBucketVal = Double.valueOf(stringValHmap.split(Pattern.quote("^"))[3]);
-								if (SchTypeId == 1 || SchTypeId == 3) {
+							// end product invoice
+							//sub bucket starts here
+							LinkedHashMap<String, String> hmapSubBucketDetailsData=new LinkedHashMap<String, String>();
+							LinkedHashMap<String, String> hmapSubBucketTotalQntty=new LinkedHashMap<String, String>();
+							LinkedHashMap<String, String> hmapSubBucketTotalValue=new LinkedHashMap<String, String>();
+							LinkedHashMap<String, String> hmapSubBucketTotalVolume=new LinkedHashMap<String, String>();
+
+							for(int cntSubBucket=0;cntSubBucket<arrSubBucketDetails.length;cntSubBucket++)
+							{
+								// Eaxmple:-1^23^1^10^0
+								int schSlbSubBuckID=Integer.parseInt(arrSubBucketDetails[cntSubBucket].split(Pattern.quote("^"))[0]); //Slab Sub BucketID Eaxmple:-1  subBucketId
+								int schSlbSubRowID=Integer.parseInt(arrSubBucketDetails[cntSubBucket].split(Pattern.quote("^"))[1]);  //Slab Sub Bucket RowID Eaxmple:-23  rowid
+								int schSlabSubBucketType=Integer.parseInt(arrSubBucketDetails[cntSubBucket].split(Pattern.quote("^"))[2]);  ///Slab Sub Bucket Type Eaxmple:-1
+
+								Double schSlabSubBucketValue=Double.parseDouble(arrSubBucketDetails[cntSubBucket].split(Pattern.quote("^"))[3]);  ///Slab Sub Bucket Value Eaxmple:-10
+								int schSubBucketValType=Integer.parseInt(arrSubBucketDetails[cntSubBucket].split(Pattern.quote("^"))[4]); ///Slab Sub Bucket Value Type Eaxmple:-0
 
 
-									if (schSlabSubBucketType.equals("1")) {
-										if (totalProductQnty >= schSlabSubBucketVal) {
-											dbengine.insertProductMappedWithSchemApplied(storeID, productIdFullFilledSlabWithQty, "" + schSlabId, "" + schId, strGlobalOrderID);
+								int totalOderQtyProductsAgainstRowId=0;
+								Double totalVolProductsAgainstRowId=0.0;
+								Double totalValProductsAgainstRowId=0.0;
 
-										} else {
 
-											dbengine.deleteAlertValueSlab(storeID, "" + schSlabId, strGlobalOrderID);
-											bucketCndtnFullFill = false;
-											stringValHmap = "";
-											break;
-										}
 
-									}
-									//Product Line
-									if (schSlabSubBucketType.equals("3")) {
-										if (productFullFilledSlab.size() >= schSlabSubBucketVal) {
-											dbengine.insertProductMappedWithSchemApplied(storeID, productIdFullFilledSlabWithQty, "" + schSlabId, "" + schId, strGlobalOrderID);
-										} else {
-											dbengine.deleteAlertValueSlab(storeID, "" + schSlabId, strGlobalOrderID);
-											bucketCndtnFullFill = false;
-											stringValHmap = "";
-											break;
-										}
-									}
-									//product Value
-									if (schSlabSubBucketType.equals("4")) {
-										if (totalProductVal >= schSlabSubBucketVal) {
-											dbengine.insertProductMappedWithSchemApplied(storeID, productIdFullFilledSlabWithQty, "" + schSlabId, "" + schId, strGlobalOrderID);
-										} else {
-											dbengine.deleteAlertValueSlab(storeID, "" + schSlabId, strGlobalOrderID);
-											bucketCndtnFullFill = false;
-											stringValHmap = "";
-											break;
-										}
 
-									}
-									//product volume
-									if (schSlabSubBucketType.equals("5")) {
-										if (totalProductVol >= (schSlabSubBucketVal * 1000)) {
-											dbengine.insertProductMappedWithSchemApplied(storeID, productIdFullFilledSlabWithQty, "" + schSlabId, "" + schId, strGlobalOrderID);
-										} else {
-											dbengine.deleteAlertValueSlab(storeID, "" + schSlabId, strGlobalOrderID);
-											bucketCndtnFullFill = false;
-											stringValHmap = "";
-											break;
-										}
-									}
 
-								} else // scheme typeid=2
+
+								//String[] productFullFilledSlab=new String[arrProductIDMappedInSchSlbSubBukRowId.length];
+								int positionOfProductHavingQntty=0;
+								ArrayList<String> arrProductIDMappedInSchSlbSubBukRowId=new ArrayList<String>();
+
+								//IF SchTypeID==1 OR SchTypeID==2 OR SchTypeID==3  Code Starts Here To Check the Products
+
+								if(SchTypeId==1 || SchTypeId==2)
+								{
+									arrProductIDMappedInSchSlbSubBukRowId=dbengine.fectProductIDMappedInSchSlbSubBukRowIdTemp(schSlbSubRowID);
+								}
+								if(SchTypeId==3)
+								{
+									arrProductIDMappedInSchSlbSubBukRowId.add(ProductIdOnClicked);
+								}
+
+								//IF SchTypeID==1 OR SchTypeID==2 OR SchTypeID==3  Code Ends Here To Check the Products
+								//SlabSubBucketValType
+								//I           =Invoice Value                  Order Value After Tax
+								//G         =Gross Value                     Order Value Before Tax
+								//N         =Net Value                                         Order Value After Tax
+
+
+								if(arrProductIDMappedInSchSlbSubBukRowId.size()>0)
 								{
 
-									if (schSlabSubBucketType.equals("1")) {
-										if (hmapSubBucketTotalQntty.containsKey(RowIDFullFilledSlabWithQty)) {
-											int quantity = Integer.parseInt(hmapSubBucketTotalQntty.get(RowIDFullFilledSlabWithQty));
-											if (quantity >= schSlabSubBucketVal) {
-												dbengine.insertProductMappedWithSchemApplied(storeID, productIdFullFilledSlabWithQty, "" + schSlabId, "" + schId, strGlobalOrderID);
-												listStrValHmapForSchm2.add(stringValHmap);
-											} else {
-												dbengine.deleteAlertValueSlab(storeID, "" + schSlabId, strGlobalOrderID);
-												bucketCndtnFullFill = false;
+
+									for(String productMappedWithScheme:arrProductIDMappedInSchSlbSubBukRowId)
+									{
+										schSlabRowIdFullFilledSlab.add(productMappedWithScheme+"^"+schSlbSubRowID);
+										productFullFilledSlab.add(productMappedWithScheme+"^"+schId);// productLine
+
+										String hmapSubBucketDetailsData_Value=	schId+"^"+schSlabId+"^"+schSlbBuckId+"^"+schSlabSubBucketValue+"^"+schSubBucketValType+"^"+schSlabSubBucketType+"^"+ProductIdOnClicked +"^"+valForVolumetQTYToMultiply+"^"+schSlbSubRowID+"^"+SchTypeId;
+										hmapSubBucketDetailsData.put(productMappedWithScheme+"^"+schSlbSubRowID,hmapSubBucketDetailsData_Value );
+										if(hmapPrdctOdrQty.containsKey(productMappedWithScheme))
+										{
+											if(Integer.parseInt(hmapPrdctOdrQty.get(productMappedWithScheme))>(0))
+											{
+												//1. Product Quantity
+
+
+												int oderQtyOnProd=Integer.parseInt(hmapPrdctOdrQty.get(productMappedWithScheme));
+
+												totalProductQnty=totalProductQnty+oderQtyOnProd;
+												totalOderQtyProductsAgainstRowId=totalOderQtyProductsAgainstRowId+oderQtyOnProd;
+
+												hmapSubBucketTotalQntty.put(""+schSlbSubRowID,""+totalOderQtyProductsAgainstRowId);
+												// product volume
+												Double prodVolume= Double.parseDouble(hmapPrdctVolRatTax.get(productMappedWithScheme).split(Pattern.quote("^"))[0]);
+												Double oderVolumeOfCurrentMapedProduct=prodVolume * oderQtyOnProd;
+												totalProductVol=totalProductVol + oderVolumeOfCurrentMapedProduct;
+												totalVolProductsAgainstRowId=totalVolProductsAgainstRowId+oderVolumeOfCurrentMapedProduct;
+
+												hmapSubBucketTotalVolume.put(""+schSlbSubRowID,""+totalVolProductsAgainstRowId);
+												//product value
+
+												Double prodRate= Double.parseDouble(hmapPrdctVolRatTax.get(productMappedWithScheme).split(Pattern.quote("^"))[1]);
+												Double oderRateOfCurrentMapedProduct=prodRate * oderQtyOnProd;
+												//oderRateOnProduct=oderRateOnProduct + oderRateOfCurrentMapedProduct;
+												totalProductVal=totalProductVal+oderRateOfCurrentMapedProduct;
+												totalValProductsAgainstRowId=totalValProductsAgainstRowId+oderRateOfCurrentMapedProduct;
+												hmapSubBucketTotalValue.put(""+schSlbSubRowID,""+totalValProductsAgainstRowId);
+
+
+											}
+
+
+
+										}
+
+
+									}// for loops ends here productMappedWithScheme:arrProductIDMappedInSchSlbSubBukRowId
+
+
+								}// ends if(arrProductIDMappedInSchSlbSubBukRowId.size()>0)
+
+
+
+							} //sub bucket ends here
+
+							//schSlabSubBucketType
+							//1. Product Quantity
+							//5. Product Volume
+							//2. Invoice Value
+							//3. Product Lines
+							//4. Product Value
+							boolean bucketCndtnFullFill=true;
+							String stringValHmap="";
+							String stringValHmapInvoice="";
+							ArrayList<String> listStrValHmapForSchm2=new ArrayList<String>();
+							if(productFullFilledSlabForInvoice!=null && productFullFilledSlabForInvoice.size()>0)
+							{
+								for(String productIdFullFilledSlabInvoiceWithQty:productFullFilledSlabForInvoice)
+								{
+									if(hmapSubBucketDetailsData.containsKey(productIdFullFilledSlabInvoiceWithQty))
+									{
+										stringValHmapInvoice=hmapSubBucketDetailsData.get(productIdFullFilledSlabInvoiceWithQty);
+										String schSlabSubBucketType=stringValHmapInvoice.split(Pattern.quote("^"))[5];
+										Double schSlabSubBucketVal=Double.valueOf(stringValHmapInvoice.split(Pattern.quote("^"))[3]);
+										if(schSlabSubBucketType.equals("2"))
+										{
+											if(totalInvoice>=schSlabSubBucketVal)
+											{
+												dbengine.insertProductMappedWithSchemApplied(storeID, productIdFullFilledSlabInvoiceWithQty,""+schSlabId,""+schId,strGlobalOrderID);
+												break;
+											}
+											else
+											{
+												dbengine.deleteAlertValueSlab(storeID,""+schSlabId,strGlobalOrderID);
+												bucketCndtnFullFill=false;
+												stringValHmapInvoice="";
+												break;
+											}
+
+										}
+										else
+										{
+											stringValHmapInvoice="";
+										}
+									}
+
+								}
+							}
+							if(schSlabRowIdFullFilledSlab!=null && schSlabRowIdFullFilledSlab.size()>0)
+							{
+								for(String productIdRowIDFullFilledSlabWithQty:schSlabRowIdFullFilledSlab)
+								{
+									String productIdFullFilledSlabWithQty=productIdRowIDFullFilledSlabWithQty.split(Pattern.quote("^"))[0];
+									String RowIDFullFilledSlabWithQty=productIdRowIDFullFilledSlabWithQty.split(Pattern.quote("^"))[1];
+									stringValHmap=hmapSubBucketDetailsData.get(productIdRowIDFullFilledSlabWithQty);
+									String schSlabSubBucketType=stringValHmap.split(Pattern.quote("^"))[5];
+									Double schSlabSubBucketVal=Double.valueOf(stringValHmap.split(Pattern.quote("^"))[3]);
+									if(SchTypeId==1 || SchTypeId==3 )
+									{
+
+
+										if(schSlabSubBucketType.equals("1"))
+										{
+											if(totalProductQnty>=schSlabSubBucketVal)
+											{
+												dbengine.insertProductMappedWithSchemApplied(storeID, productIdFullFilledSlabWithQty,""+schSlabId,""+schId,strGlobalOrderID);
+
+											}
+											else
+											{
+
+												dbengine.deleteAlertValueSlab(storeID,""+schSlabId,strGlobalOrderID);
+												bucketCndtnFullFill=false;
+												stringValHmap="";
+												break;
+											}
+
+										}
+										//Product Line
+										if(schSlabSubBucketType.equals("3"))
+										{
+											if(productFullFilledSlab.size()>=schSlabSubBucketVal)
+											{
+												dbengine.insertProductMappedWithSchemApplied(storeID, productIdFullFilledSlabWithQty,""+schSlabId,""+schId,strGlobalOrderID);
+											}
+											else
+											{
+												dbengine.deleteAlertValueSlab(storeID,""+schSlabId,strGlobalOrderID);
+												bucketCndtnFullFill=false;
+												stringValHmap="";
+												break;
+											}
+										}
+										//product Value
+										if(schSlabSubBucketType.equals("4"))
+										{
+											if(totalProductVal>=schSlabSubBucketVal)
+											{
+												dbengine.insertProductMappedWithSchemApplied(storeID, productIdFullFilledSlabWithQty,""+schSlabId,""+schId,strGlobalOrderID);
+											}
+											else
+											{
+												dbengine.deleteAlertValueSlab(storeID,""+schSlabId,strGlobalOrderID);
+												bucketCndtnFullFill=false;
+												stringValHmap="";
+												break;
+											}
+
+										}
+										//product volume
+										if(schSlabSubBucketType.equals("5"))
+										{
+											if(totalProductVol>=(schSlabSubBucketVal*1000))
+											{
+												dbengine.insertProductMappedWithSchemApplied(storeID, productIdFullFilledSlabWithQty,""+schSlabId,""+schId,strGlobalOrderID);
+											}
+											else
+											{
+												dbengine.deleteAlertValueSlab(storeID,""+schSlabId,strGlobalOrderID);
+												bucketCndtnFullFill=false;
+												stringValHmap="";
+												break;
+											}
+										}
+
+									}
+									else // scheme typeid=2
+									{
+
+										if(schSlabSubBucketType.equals("1"))
+										{
+											if(hmapSubBucketTotalQntty.containsKey(RowIDFullFilledSlabWithQty))
+											{
+												int quantity=Integer.parseInt(hmapSubBucketTotalQntty.get(RowIDFullFilledSlabWithQty));
+												if(quantity>=schSlabSubBucketVal)
+												{
+													dbengine.insertProductMappedWithSchemApplied(storeID, productIdFullFilledSlabWithQty,""+schSlabId,""+schId,strGlobalOrderID);
+													listStrValHmapForSchm2.add(stringValHmap);
+												}
+												else
+												{
+													dbengine.deleteAlertValueSlab(storeID,""+schSlabId,strGlobalOrderID);
+													bucketCndtnFullFill=false;
+													listStrValHmapForSchm2.clear();
+													break;
+												}
+											}
+
+											else
+											{
+												dbengine.deleteAlertValueSlab(storeID,""+schSlabId,strGlobalOrderID);
+												bucketCndtnFullFill=false;
 												listStrValHmapForSchm2.clear();
 												break;
 											}
-										} else {
-											dbengine.deleteAlertValueSlab(storeID, "" + schSlabId, strGlobalOrderID);
-											bucketCndtnFullFill = false;
-											listStrValHmapForSchm2.clear();
-											break;
-										}
 										/*if(hmapPrdctOdrQty.containsKey(productIdFullFilledSlabWithQty))
 										{
 											if(Integer.parseInt(hmapPrdctOdrQty.get(productIdFullFilledSlabWithQty))>=schSlabSubBucketVal)
@@ -5256,75 +5489,94 @@ GoogleApiClient.OnConnectionFailedListener{
 											break;
 										}
 */
-									}
-
-									if (schSlabSubBucketType.equals("3")) {
-
-										if (productFullFilledSlab.size() >= schSlabSubBucketVal) {
-											listStrValHmapForSchm2.add(stringValHmap);
-											dbengine.insertProductMappedWithSchemApplied(storeID, productIdFullFilledSlabWithQty, "" + schSlabId, "" + schId, strGlobalOrderID);
-										} else {
-											dbengine.deleteAlertValueSlab(storeID, "" + schSlabId, strGlobalOrderID);
-											bucketCndtnFullFill = false;
-											listStrValHmapForSchm2.clear();
-											break;
 										}
-									}
-									if (schSlabSubBucketType.equals("4")) {
-										Double singleProdRate = Double.parseDouble(hmapPrdctVolRatTax.get(productIdFullFilledSlabWithQty).split(Pattern.quote("^"))[1]);
-										Double singlePrdctOderRate = singleProdRate * Integer.parseInt(hmapPrdctOdrQty.get(productIdFullFilledSlabWithQty));
-										if (hmapSubBucketTotalValue.containsKey(RowIDFullFilledSlabWithQty)) {
-											Double prdctVal = Double.parseDouble(hmapSubBucketTotalValue.get(RowIDFullFilledSlabWithQty));
-											if (prdctVal >= schSlabSubBucketVal) {
+
+										if(schSlabSubBucketType.equals("3"))
+										{
+
+											if(productFullFilledSlab.size()>=schSlabSubBucketVal)
+											{
 												listStrValHmapForSchm2.add(stringValHmap);
-												dbengine.insertProductMappedWithSchemApplied(storeID, productIdFullFilledSlabWithQty, "" + schSlabId, "" + schId, strGlobalOrderID);
+												dbengine.insertProductMappedWithSchemApplied(storeID, productIdFullFilledSlabWithQty,""+schSlabId,""+schId,strGlobalOrderID);
 											}
+											else
+											{
+												dbengine.deleteAlertValueSlab(storeID,""+schSlabId,strGlobalOrderID);
+												bucketCndtnFullFill=false;
+												listStrValHmapForSchm2.clear();
+												break;
+											}
+										}
+										if(schSlabSubBucketType.equals("4"))
+										{
+											Double singleProdRate= Double.parseDouble(hmapPrdctVolRatTax.get(productIdFullFilledSlabWithQty).split(Pattern.quote("^"))[1]);
+											Double singlePrdctOderRate=singleProdRate * Integer.parseInt(hmapPrdctOdrQty.get(productIdFullFilledSlabWithQty));
+											if(hmapSubBucketTotalValue.containsKey(RowIDFullFilledSlabWithQty))
+											{
+												Double prdctVal=Double.parseDouble(hmapSubBucketTotalValue.get(RowIDFullFilledSlabWithQty));
+												if(prdctVal>=schSlabSubBucketVal)
+												{
+													listStrValHmapForSchm2.add(stringValHmap);
+													dbengine.insertProductMappedWithSchemApplied(storeID, productIdFullFilledSlabWithQty,""+schSlabId,""+schId,strGlobalOrderID);
+												}
 										/*if(singlePrdctOderRate>=schSlabSubBucketVal)
 										{
 											listStrValHmapForSchm2.add(stringValHmap);
 											dbengine.insertProductMappedWithSchemApplied(storeID, productIdFullFilledSlabWithQty,""+schSlabId,""+schId,strGlobalOrderID);
 										}*/
-											else {
-												dbengine.deleteAlertValueSlab(storeID, "" + schSlabId, strGlobalOrderID);
-												bucketCndtnFullFill = false;
+												else
+												{
+													dbengine.deleteAlertValueSlab(storeID,""+schSlabId,strGlobalOrderID);
+													bucketCndtnFullFill=false;
+													listStrValHmapForSchm2.clear();
+													break;
+												}
+											}
+											else
+											{
+												dbengine.deleteAlertValueSlab(storeID,""+schSlabId,strGlobalOrderID);
+												bucketCndtnFullFill=false;
 												listStrValHmapForSchm2.clear();
 												break;
 											}
-										} else {
-											dbengine.deleteAlertValueSlab(storeID, "" + schSlabId, strGlobalOrderID);
-											bucketCndtnFullFill = false;
-											listStrValHmapForSchm2.clear();
-											break;
+
+
 										}
-
-
-									}
-									if (schSlabSubBucketType.equals("5")) {
-										Double singleProdVol = Double.parseDouble(hmapPrdctVolRatTax.get(productIdFullFilledSlabWithQty).split(Pattern.quote("^"))[0]);
-										Double singlePrdctOderVol = singleProdVol * Integer.parseInt(hmapPrdctOdrQty.get(productIdFullFilledSlabWithQty));
-										if (hmapSubBucketTotalVolume.containsKey(RowIDFullFilledSlabWithQty)) {
-											Double prdctVol = Double.parseDouble(hmapSubBucketTotalVolume.get(RowIDFullFilledSlabWithQty));
-											if (prdctVol >= (schSlabSubBucketVal * 1000)) {
-												dbengine.insertProductMappedWithSchemApplied(storeID, productIdFullFilledSlabWithQty, "" + schSlabId, "" + schId, strGlobalOrderID);
-												listStrValHmapForSchm2.add(stringValHmap);
-											}
+										if(schSlabSubBucketType.equals("5"))
+										{
+											Double singleProdVol= Double.parseDouble(hmapPrdctVolRatTax.get(productIdFullFilledSlabWithQty).split(Pattern.quote("^"))[0]);
+											Double singlePrdctOderVol=singleProdVol * Integer.parseInt(hmapPrdctOdrQty.get(productIdFullFilledSlabWithQty));
+											if(hmapSubBucketTotalVolume.containsKey(RowIDFullFilledSlabWithQty))
+											{
+												Double prdctVol=Double.parseDouble(hmapSubBucketTotalVolume.get(RowIDFullFilledSlabWithQty));
+												if(prdctVol>=(schSlabSubBucketVal*1000))
+												{
+													dbengine.insertProductMappedWithSchemApplied(storeID, productIdFullFilledSlabWithQty,""+schSlabId,""+schId,strGlobalOrderID);
+													listStrValHmapForSchm2.add(stringValHmap);
+												}
 										/*if(singlePrdctOderVol>=schSlabSubBucketVal)
 										{
 											listStrValHmapForSchm2.add(stringValHmap);
 											dbengine.insertProductMappedWithSchemApplied(storeID, productIdFullFilledSlabWithQty,""+schSlabId,""+schId,strGlobalOrderID);
 										}*/
-											else {
-												dbengine.deleteAlertValueSlab(storeID, "" + schSlabId, strGlobalOrderID);
-												bucketCndtnFullFill = false;
+												else
+												{
+													dbengine.deleteAlertValueSlab(storeID,""+schSlabId,strGlobalOrderID);
+													bucketCndtnFullFill=false;
+													listStrValHmapForSchm2.clear();
+													break;
+												}
+											}
+											else
+											{
+												dbengine.deleteAlertValueSlab(storeID,""+schSlabId,strGlobalOrderID);
+												bucketCndtnFullFill=false;
 												listStrValHmapForSchm2.clear();
 												break;
 											}
-										} else {
-											dbengine.deleteAlertValueSlab(storeID, "" + schSlabId, strGlobalOrderID);
-											bucketCndtnFullFill = false;
-											listStrValHmapForSchm2.clear();
-											break;
+
 										}
+
 
 									}
 
@@ -5333,9 +5585,6 @@ GoogleApiClient.OnConnectionFailedListener{
 
 
 							}
-
-
-						}
 					/*if(productFullFilledSlab!=null && productFullFilledSlab.size()>0)
 					{
 						for(String productIdFullFilledSlabWithQty:productFullFilledSlab)
@@ -5515,49 +5764,63 @@ GoogleApiClient.OnConnectionFailedListener{
 					}*///	if(productFullFilledSlab!=null && productFullFilledSlab.size()>0) ends here
 
 
-						if (bucketCndtnFullFill) {
-							bucketCndtnFullFillisReally = true;
-							if (SchTypeId == 1 || SchTypeId == 3) {
-								if (!TextUtils.isEmpty(stringValHmap.trim())) {
-									for (String allproductFullFilledSlab : productFullFilledSlab) {
-										productFullFilledSlabGlobal.add(allproductFullFilledSlab);
+							if(bucketCndtnFullFill)
+							{
+								bucketCndtnFullFillisReally=true;
+								if(SchTypeId==1 || SchTypeId==3)
+								{
+									if(!TextUtils.isEmpty(stringValHmap.trim()))
+									{
+										for(String allproductFullFilledSlab:productFullFilledSlab)
+										{
+											productFullFilledSlabGlobal.add(allproductFullFilledSlab);
+										}
+
+
+										arredtboc_OderQuantityFinalSchemesToApply.add(stringValHmap+"^"+totalProductQnty+"^"+totalInvoice+"^"+totalProductLine+"^"+totalProductVal+"^"+totalProductVol+"^0");
 									}
-
-
-									arredtboc_OderQuantityFinalSchemesToApply.add(stringValHmap + "^" + totalProductQnty + "^" + totalInvoice + "^" + totalProductLine + "^" + totalProductVal + "^" + totalProductVol + "^0");
-								} else if (!TextUtils.isEmpty(stringValHmapInvoice.trim())) {
-									arredtboc_OderQuantityFinalSchemesToApply.add(stringValHmapInvoice + "^" + totalProductQnty + "^" + totalInvoice + "^" + totalProductLine + "^" + totalProductVal + "^" + totalProductVol + "^0");
-								}
-							} else {
-								if (listStrValHmapForSchm2 != null && listStrValHmapForSchm2.size() > 0) {
-									for (String allproductFullFilledSlab : productFullFilledSlab) {
-										productFullFilledSlabGlobal.add(allproductFullFilledSlab);
-									}
-
-									for (String strVal : listStrValHmapForSchm2) {
-
-										arredtboc_OderQuantityFinalSchemesToApply.add(strVal + "^" + totalProductQnty + "^" + totalInvoice + "^" + totalProductLine + "^" + totalProductVal + "^" + totalProductVol + "^0");
+									else if(!TextUtils.isEmpty(stringValHmapInvoice.trim()))
+									{
+										arredtboc_OderQuantityFinalSchemesToApply.add(stringValHmapInvoice+"^"+totalProductQnty+"^"+totalInvoice+"^"+totalProductLine+"^"+totalProductVal+"^"+totalProductVol+"^0");
 									}
 								}
-								if (!TextUtils.isEmpty(stringValHmapInvoice.trim())) {
-									arredtboc_OderQuantityFinalSchemesToApply.add(stringValHmapInvoice + "^" + totalProductQnty + "^" + totalInvoice + "^" + totalProductLine + "^" + totalProductVal + "^" + totalProductVol + "^0");
-								}
+								else
+								{
+									if(listStrValHmapForSchm2!=null && listStrValHmapForSchm2.size()>0)
+									{
+										for(String allproductFullFilledSlab:productFullFilledSlab)
+										{
+											productFullFilledSlabGlobal.add(allproductFullFilledSlab);
+										}
 
-							}
+										for(String strVal:listStrValHmapForSchm2)
+										{
+
+											arredtboc_OderQuantityFinalSchemesToApply.add(strVal+"^"+totalProductQnty+"^"+totalInvoice+"^"+totalProductLine+"^"+totalProductVal+"^"+totalProductVol+"^0");
+										}
+									}
+									if(!TextUtils.isEmpty(stringValHmapInvoice.trim()))
+									{
+										arredtboc_OderQuantityFinalSchemesToApply.add(stringValHmapInvoice+"^"+totalProductQnty+"^"+totalInvoice+"^"+totalProductLine+"^"+totalProductVal+"^"+totalProductVol+"^0");
+									}
+
+								}
+								break;
+							}//if(bucketCndtnFullFill) ends here
+
+						}// bucket ends here
+
+						if(bucketCndtnFullFillisReally)
+						{
+							bucketCndtnSchemeFullFill=true;
 							break;
-						}//if(bucketCndtnFullFill) ends here
-
-					}// bucket ends here
-
-					if (bucketCndtnFullFillisReally) {
-						bucketCndtnSchemeFullFill = true;
-						break;
+						}
 					}
 				}
-			}
 
+			}
 		}
-	}
+
 		if(hmapProductAddOnSchemesList!=null && hmapProductAddOnSchemesList.containsKey(ProductIdOnClicked))
 		{
 			fnCheckExtraSchemeAfterValueChange(hmapProductAddOnSchemesList.get(ProductIdOnClicked),ProductIdOnClicked);
@@ -7013,9 +7276,9 @@ GoogleApiClient.OnConnectionFailedListener{
 	 
 
 	  String ProductIdOnClickedControl=v.getTag().toString().split(Pattern.quote("_"))[1];
-	  if(hmapProductRelatedSchemesList.size()>0 || hmapProductAddOnSchemesList.size()>0)
+		if(hmapProductRelatedSchemesList.size()>0 || hmapProductAddOnSchemesList.size()>0)
 	  {
-	if(hmapProductRelatedSchemesList.containsKey(ProductIdOnClickedControl) || hmapProductAddOnSchemesList.containsKey(ProductIdOnClickedControl))
+	   if(hmapProductRelatedSchemesList.containsKey(ProductIdOnClickedControl) || hmapProductAddOnSchemesList.containsKey(ProductIdOnClickedControl))
 	   {
 		   
 		   fnUpdateSchemeNameOnScehmeControl(ProductIdOnClickedControl);
@@ -7420,7 +7683,7 @@ GoogleApiClient.OnConnectionFailedListener{
 		tvAmtPrvsOutstandingVAL=(TextView)row123.findViewById(R.id.tvAmtPrvsOutstandingVAL);
 
 		tvAmtPrvsOutstandingVAL.setText(""+outstandingvalue);
-				tvTtlAmtOutstandingVAL=(TextView)row123.findViewById(R.id.tvTtlAmtOutstandingVAL);
+		tvTtlAmtOutstandingVAL=(TextView)row123.findViewById(R.id.tvTtlAmtOutstandingVAL);
 		 ll_scheme_detail.addView(row123);
 		 orderBookingTotalCalc();
 		
@@ -8293,7 +8556,6 @@ GoogleApiClient.OnConnectionFailedListener{
 
 	}
 
-
 	public void fnDeletePreviousEntriesSchemeIDsAppliedOverProductAfterValueChange(String CompleteSchemeIdListOnProductID,String ProductIdOnClicked)
 	{
 
@@ -8833,10 +9095,13 @@ GoogleApiClient.OnConnectionFailedListener{
 
 	 if(valBtnClickedFrom==3)//Clicked By Btn Submitt
 	 {
-	     //Send Data for Sync
-		
-		 // Changes By Sunil 
-		   AlertDialog.Builder alertDialogSubmitConfirm = new AlertDialog.Builder(OrderReview.this);
+
+		 Intent in=new Intent(OrderReview.this,MerchandisingInstruction.class);
+		 in.putExtra("storeID", storeID);
+		 in.putExtra("OrderPDAID", strGlobalOrderID);
+		 startActivity(in);
+		 //submitFunctionalityAfterMerchandisingInstruction();
+		 /*  AlertDialog.Builder alertDialogSubmitConfirm = new AlertDialog.Builder(OrderReview.this);
 			alertDialogSubmitConfirm.setTitle(getText(R.string.genTermNoDataConnection));
 			alertDialogSubmitConfirm.setMessage(getText(R.string.submitConfirmAlert));
 			alertDialogSubmitConfirm.setCancelable(false);
@@ -8857,59 +9122,17 @@ GoogleApiClient.OnConnectionFailedListener{
 									catch (Exception e) {
 										// TODO Autouuid-generated catch block
 										e.printStackTrace();
-										//System.out.println("onGetStoresForDayCLICK: Exec(). EX: "+e);
+
 									}
 								}
 							 else
 							 {
-								/* dbengine.close();
 
-									// TODO Auto-generated method stub
-									boolean isGPSok = false;
-									isGPSok = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-									
-									 if(!isGPSok)
-							          {
-										showSettingsAlert();
-										isGPSok = false;
-										 return;
-									  }
-
-
-									
-							       isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-							       isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-								   location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-									
-								   pm = (PowerManager) getSystemService(POWER_SERVICE);
-								   wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK
-							                | PowerManager.ACQUIRE_CAUSES_WAKEUP
-							                | PowerManager.ON_AFTER_RELEASE, "INFO");
-							        wl.acquire();
-							        
-							       pDialog2STANDBY=ProgressDialog.show(ProductList.this,getText(R.string.genTermPleaseWaitNew) ,getText(R.string.genTermRetrivingLocation), true);
-								   pDialog2STANDBY.setIndeterminate(true);
-									
-									pDialog2STANDBY.setCancelable(false);
-									pDialog2STANDBY.show();
-									
-									checkSTANDBYAysncTask chkSTANDBY = new checkSTANDBYAysncTask(
-											new standBYtask().execute()); // Thread keeping 1 minute time
-															// watch
-									
-									(new Thread(chkSTANDBY)).start();*/
-							      
 									
 								
 								 appLocationService=new AppLocationService();
 								 
-								/* pm = (PowerManager) getSystemService(POWER_SERVICE);
-								 *//*  wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK
-							                | PowerManager.ACQUIRE_CAUSES_WAKEUP
-							                | PowerManager.ON_AFTER_RELEASE, "INFO");
-							        wl.acquire();*/
-							       
-							        
+
 							        pDialog2STANDBY=ProgressDialog.show(OrderReview.this,getText(R.string.genTermPleaseWaitNew) ,getText(R.string.genTermRetrivingLocation), true);
 									   pDialog2STANDBY.setIndeterminate(true);
 										
@@ -8926,7 +9149,7 @@ GoogleApiClient.OnConnectionFailedListener{
 								     .build();
 									 mGoogleApiClient.connect();
 							      }
-								//startService(new Intent(DynamicActivity.this, AppLocationService.class));
+
 								startService(new Intent(OrderReview.this, AppLocationService.class));
 								Location nwLocation=appLocationService.getLocation(locationManager,LocationManager.GPS_PROVIDER,location);
 								Location gpsLocation=appLocationService.getLocation(locationManager,LocationManager.NETWORK_PROVIDER,location);
@@ -8938,28 +9161,7 @@ GoogleApiClient.OnConnectionFailedListener{
 								 
 							 }
 							
-							// storeSubmit.setEnabled(false);
-							//storeSave4Later.setEnabled(false);
-							//storeSaveContinue4Later.setEnabled(false);
-							/* int Outstat=3;
-							TransactionTableDataDeleteAndSaving(Outstat);
-							InvoiceTableDataDeleteAndSaving(Outstat);
-						 
-						    long  syncTIMESTAMP = System.currentTimeMillis();
-							Date dateobj = new Date(syncTIMESTAMP);
-							SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-							String StampEndsTime = df.format(dateobj);
-							
-							
-							dbengine.open();
-							dbengine.UpdateStoreEndVisit(storeID, StampEndsTime);
-							dbengine.UpdateStoreProductAppliedSchemesBenifitsRecords(storeID.trim(),"3");
-							
-							dbengine.UpdateStoreFlag(storeID.trim(), 3);
-							//dbengine.deleteStoreRecordFromtblStoreSchemeFreeProQtyOtherDetailsOnceSubmitted(fStoreID);
-							dbengine.close();*/
-							
-							//new FullSyncDataNow().execute();
+
 							
 						}
 					});
@@ -8977,7 +9179,7 @@ GoogleApiClient.OnConnectionFailedListener{
 			
 			AlertDialog alert = alertDialogSubmitConfirm.create();
 			
-			alert.show();
+			alert.show();*/
 			
 
 		    
@@ -9048,9 +9250,18 @@ GoogleApiClient.OnConnectionFailedListener{
 					dbengine.close();
 				}
 			}
-		    Intent storeSaveIntent = new Intent(OrderReview.this, LauncherActivity.class);
+		   /* Intent storeSaveIntent = new Intent(OrderReview.this, AllButtonActivity.class);
 			startActivity(storeSaveIntent);
-			finish();
+			finish();*/
+
+		 String routeID=dbengine.GetActiveRouteIDSunil();
+		 Intent ide = new Intent(OrderReview.this, StoreSelection.class);
+		 ide.putExtra("userDate", date);
+		 ide.putExtra("pickerDate", pickerDate);
+		 ide.putExtra("imei", imei);
+		 ide.putExtra("rID", routeID);
+		 startActivity(ide);
+		 finish();
 		 
 	 }
 	 
@@ -9480,6 +9691,8 @@ GoogleApiClient.OnConnectionFailedListener{
 				dbengine.UpdateStoreReturnphotoFlag(storeID.trim(), 5);
 				dbengine.UpdateNewAddedStorephotoFlag(storeID.trim(), 5);
 				dbengine.UpdateStoreClosephotoWithOutFlag(storeID.trim(), 5);
+				dbengine.UpdatetblMerchandisingInstructionDetails(storeID.trim(), 5);
+
 
 				dbengine.close();
 				if(dbengine.checkCountIntblStoreSalesOrderPaymentDetails(storeID,strGlobalOrderID)==0)
@@ -9652,6 +9865,7 @@ GoogleApiClient.OnConnectionFailedListener{
 					int WhatFinallyApplied=1;
 
 
+
 					if(benSubBucketType==1 || benSubBucketType==5)//Free Different Product  / Free Same Product
 					{
 
@@ -9743,6 +9957,7 @@ GoogleApiClient.OnConnectionFailedListener{
 							}
 						}
 					}
+
 
 					//BenSubBucketType
 					//1. Free Other Product
@@ -9870,6 +10085,7 @@ GoogleApiClient.OnConnectionFailedListener{
 		  @Override
 		  protected Void doInBackground(Void... params)
 		  {
+			  VisitDate = dbengine.fnGetVisitDateFromtblForPDAGetLastVisitDate(storeID);
 		   hmapProductRelatedSchemesList=dbengine.fnProductRelatedSchemesList();
 			  hmapProductAddOnSchemesList=dbengine.fnProductADDOnScheme();
 		   CheckIfStoreExistInStoreProdcutPurchaseDetails=dbengine.fnCheckIfStoreExistInStoreProdcutPurchaseDetails(storeID);
@@ -9887,12 +10103,19 @@ GoogleApiClient.OnConnectionFailedListener{
 		   getProductData();
 		   
 		   getSchemeSlabDetails();
-			 /* dbengine.open();
+			  dbengine.open();
 			  hmapFetchPDASavedData=dbengine.fetchActualVisitData(storeID);
-			  dbengine.close();*/
+			  dbengine.close();
+			  if(hmapFetchPDASavedData!=null && hmapFetchPDASavedData.size()>0)
+			  {
+				  if(flgOrderType==1)
+				  {
+					  hmapProductIdStock.putAll(hmapFetchPDASavedData);
+				  }
+			  }
 			  hmapProductMinMax=dbengine.getProductMinMax();
 			  hmapSchmDscrptnAndBenfit=dbengine.getSchmDscrptnAndBenfit();
-			   outstandingvalue=dbengine.fnGetStoretblLastOutstanding(storeID);
+			  outstandingvalue=dbengine.fnGetStoretblLastOutstanding(storeID);
 		   hmapMinDlvrQty=dbengine.getMinDlvryQntty(storeID);
 		   hmapMinDlvrQtyQPBT=dbengine.getMinDlvryQnttyQPBT(storeID);
 		   hmapMinDlvrQtyQPTaxAmount=dbengine.getMinDlvryQnttyQPTaxAmount(storeID);
@@ -9903,7 +10126,15 @@ GoogleApiClient.OnConnectionFailedListener{
 		   return null;
 		  }
 		   @Override
-		         protected void onPostExecute(Void args) {/*
+		         protected void onPostExecute(Void args) {
+
+
+			   if(!VisitDate.equals(""))
+			   {
+				   TextView lastvisittextwithDate=(TextView)findViewById(R.id.lastvisittextwithDate);
+				   lastvisittextwithDate.setText("Last Visit"+"("+VisitDate+")");
+			   }
+		   	/*
 		   
 		     ArrayAdapter adapterCategory=new ArrayAdapter(OrderReview.this, android.R.layout.simple_spinner_item,categoryNames);
 		      adapterCategory.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -10114,8 +10345,7 @@ GoogleApiClient.OnConnectionFailedListener{
 	           }
 			   long syncTIMESTAMP = System.currentTimeMillis();
 				Date dateobj = new Date(syncTIMESTAMP);
-				SimpleDateFormat df = new SimpleDateFormat(
-						"dd-MMM-yyyy HH:mm:ss",Locale.ENGLISH);
+				SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss",Locale.ENGLISH);
 				String startTS = df.format(dateobj);
 				dbengine.open();
 				dbengine.UpdateStoreEndVisit(storeID,startTS);
@@ -10131,7 +10361,7 @@ GoogleApiClient.OnConnectionFailedListener{
 		           fireBackDetPg.putExtra("pickerDate", pickerDate);
 		           fireBackDetPg.putExtra("OrderPDAID", strGlobalOrderID);
 		           fireBackDetPg.putExtra("flgPageToRedirect", "2");
-		           fireBackDetPg.putExtra("flgOrderType", flgOrderType);
+				 fireBackDetPg.putExtra("flgOrderType", flgOrderType);
 		          // fireBackDetPg.putExtra("rID", routeID);
 		         
 		           startActivity(fireBackDetPg);
@@ -10153,7 +10383,7 @@ GoogleApiClient.OnConnectionFailedListener{
 			    startActivity(fireBackDetPg);
 			    finish();
 		     }
-		     else if(isReturnClkd==5)
+			 else if(isReturnClkd==5)
 			 {
 				 Intent AmtCollectIntent = new Intent(OrderReview.this, CollectionActivityNew.class);
 				 AmtCollectIntent.putExtra("storeID", storeID);
@@ -10179,7 +10409,6 @@ GoogleApiClient.OnConnectionFailedListener{
 				 startActivity(AmtCollectIntent);
 				 finish();
 			 }
-		  
 		   }
 
 		
@@ -11031,135 +11260,136 @@ GoogleApiClient.OnConnectionFailedListener{
 		 		
 		 		return builder;
 
-		 	}    
-		 
+		 	}
 
-	     public Double getAccAsignValue(int schSlabSubBucketType,int chkflgProDataCalculation,double BenSubBucketValue,double schSlabSubBucketValue,int totalProductQty,int totalProductLine,double totalProductValue,double totalProductVol,double totalInvoice,double per,String productIdForFree,boolean isLastPrdct)
-	     {
-	    	 Double accAsignVal=0.0;
-	    	//1. Product Quantity
-				//5. Product Volume
-				//2. Invoice Value
-				//3. Product Lines
-				//4. Product Value
-	    	 
-	    	 //Product Quantity
-				if(schSlabSubBucketType==1)
-				{
-					if(chkflgProDataCalculation==1)
-					{
-						
-						if(isLastPrdct)
-						{
-							accAsignVal=BenSubBucketValue*(totalProductQty/schSlabSubBucketValue);
-							accAsignVal=  Double.valueOf(Math.abs(accAsignVal.intValue())) ;
-						}
-						//accAsignVal=Double.valueOf(Double.valueOf(hmapPrdctOdrQty.get(productIdForFree))*accAsignVal/totalProductQty);
-						
-					}
-					else
-					{
-						if(isLastPrdct)
-						{
-							accAsignVal=BenSubBucketValue;
-						}
-						
-					}
-					
-				}
-				//Invoice Value
-				else if(schSlabSubBucketType==2)
-				{
 
-					if(chkflgProDataCalculation==1)
-					{
-						accAsignVal=BenSubBucketValue*(totalInvoice/schSlabSubBucketValue);
-						
-					}
-					else
-					{
-						if(isLastPrdct)
-						{
-							accAsignVal=BenSubBucketValue;
-						}
-					}
-				}
-				//Product Lines
-				else if(schSlabSubBucketType==3)
-				{
-					if(chkflgProDataCalculation==1)
-					{
-						accAsignVal=BenSubBucketValue*(totalProductLine/schSlabSubBucketValue);
-						accAsignVal=Double.valueOf(Double.valueOf(productFullFilledSlabGlobal.size())*accAsignVal/totalProductLine);
-					}
-					else
-					{
-						if(isLastPrdct)
-						{
-							accAsignVal=BenSubBucketValue;
-						}
-					}
-				}
-				 //Product Value
-				else if(schSlabSubBucketType==4)
-				{
-					if(chkflgProDataCalculation==1)
-					{
-						accAsignVal=BenSubBucketValue*(totalProductValue/schSlabSubBucketValue);
-					
-						//product value
-						
-						Double prodRate= Double.parseDouble(hmapPrdctVolRatTax.get(productIdForFree).split(Pattern.quote("^"))[1]);
-						Double oderRateOfCurrentMapedProduct=prodRate *Double.valueOf(hmapPrdctOdrQty.get(productIdForFree)) ;
-						//oderRateOnProduct=oderRateOnProduct + oderRateOfCurrentMapedProduct;
-						double singleProductVal=oderRateOfCurrentMapedProduct;
-						
-						if(per>0.0)
-						{
-							singleProductVal=singleProductVal/per;
-						}
-						accAsignVal=Double.valueOf(Double.valueOf(singleProductVal)*(accAsignVal/totalProductValue));
-						
-						
-					}
-					else
-					{
+	public Double getAccAsignValue(int schSlabSubBucketType,int chkflgProDataCalculation,double BenSubBucketValue,double schSlabSubBucketValue,int totalProductQty,int totalProductLine,double totalProductValue,double totalProductVol,double totalInvoice,double per,String productIdForFree,boolean isLastPrdct)
+	{
+		Double accAsignVal=0.0;
+		//1. Product Quantity
+		//5. Product Volume
+		//2. Invoice Value
+		//3. Product Lines
+		//4. Product Value
 
-						if(isLastPrdct)
-						{
-							accAsignVal=BenSubBucketValue;
-						}
-					}
-					
-				}
-				// Product Volume
-				else if(schSlabSubBucketType==5)
+		//Product Quantity
+		if(schSlabSubBucketType==1)
+		{
+			if(chkflgProDataCalculation==1)
+			{
+
+				if(isLastPrdct)
 				{
-					if(chkflgProDataCalculation==1)
-					{
-						
-						accAsignVal=BenSubBucketValue*(totalProductVol/(schSlabSubBucketValue*1000));
-						// product volume
-						Double prodVolume= Double.parseDouble(hmapPrdctVolRatTax.get(productIdForFree).split(Pattern.quote("^"))[0]);
-						Double oderVolumeOfCurrentMapedProduct=prodVolume * Double.valueOf(hmapPrdctOdrQty.get(productIdForFree)) ;
-						Double singleProductVol=oderVolumeOfCurrentMapedProduct;
-						if(per>0.0)
-						{
-							singleProductVol=singleProductVol/per;
-						}
-						accAsignVal=Double.valueOf(Double.valueOf(singleProductVol)*accAsignVal/totalProductVol);
-						
-					}
-					else
-					{
-						if(isLastPrdct)
-						{
-							accAsignVal=BenSubBucketValue;
-						}
-					}
+					accAsignVal=BenSubBucketValue*(totalProductQty/schSlabSubBucketValue);
+					accAsignVal=  Double.valueOf(Math.abs(accAsignVal.intValue())) ;
 				}
-				 return accAsignVal;
-	     }
+				//accAsignVal=Double.valueOf(Double.valueOf(hmapPrdctOdrQty.get(productIdForFree))*accAsignVal/totalProductQty);
+
+			}
+			else
+			{
+				if(isLastPrdct)
+				{
+					accAsignVal=BenSubBucketValue;
+				}
+
+			}
+
+		}
+		//Invoice Value
+		else if(schSlabSubBucketType==2)
+		{
+
+			if(chkflgProDataCalculation==1)
+			{
+				accAsignVal=BenSubBucketValue*(totalInvoice/schSlabSubBucketValue);
+
+			}
+			else
+			{
+				if(isLastPrdct)
+				{
+					accAsignVal=BenSubBucketValue;
+				}
+
+			}
+		}
+		//Product Lines
+		else if(schSlabSubBucketType==3)
+		{
+			if(chkflgProDataCalculation==1)
+			{
+				accAsignVal=BenSubBucketValue*(totalProductLine/schSlabSubBucketValue);
+				accAsignVal=Double.valueOf(Double.valueOf(productFullFilledSlabGlobal.size())*accAsignVal/totalProductLine);
+			}
+			else
+			{
+				if(isLastPrdct)
+				{
+					accAsignVal=BenSubBucketValue;
+				}
+			}
+		}
+		//Product Value
+		else if(schSlabSubBucketType==4)
+		{
+			if(chkflgProDataCalculation==1)
+			{
+				accAsignVal=BenSubBucketValue*(totalProductValue/schSlabSubBucketValue);
+
+				//product value
+
+				Double prodRate= Double.parseDouble(hmapPrdctVolRatTax.get(productIdForFree).split(Pattern.quote("^"))[1]);
+				Double oderRateOfCurrentMapedProduct=prodRate *Double.valueOf(hmapPrdctOdrQty.get(productIdForFree)) ;
+				//oderRateOnProduct=oderRateOnProduct + oderRateOfCurrentMapedProduct;
+				double singleProductVal=oderRateOfCurrentMapedProduct;
+
+				if(per>0.0)
+				{
+					singleProductVal=singleProductVal/per;
+				}
+				accAsignVal=Double.valueOf(Double.valueOf(singleProductVal)*(accAsignVal/totalProductValue));
+
+
+			}
+			else
+			{
+
+				if(isLastPrdct)
+				{
+					accAsignVal=BenSubBucketValue;
+				}
+			}
+
+		}
+		// Product Volume
+		else if(schSlabSubBucketType==5)
+		{
+			if(chkflgProDataCalculation==1)
+			{
+
+				accAsignVal=BenSubBucketValue*(totalProductVol/(schSlabSubBucketValue*1000));
+				// product volume
+				Double prodVolume= Double.parseDouble(hmapPrdctVolRatTax.get(productIdForFree).split(Pattern.quote("^"))[0]);
+				Double oderVolumeOfCurrentMapedProduct=prodVolume * Double.valueOf(hmapPrdctOdrQty.get(productIdForFree)) ;
+				Double singleProductVol=oderVolumeOfCurrentMapedProduct;
+				if(per>0.0)
+				{
+					singleProductVol=singleProductVol/per;
+				}
+				accAsignVal=Double.valueOf(Double.valueOf(singleProductVol)*accAsignVal/totalProductVol);
+
+			}
+			else
+			{
+				if(isLastPrdct)
+				{
+					accAsignVal=BenSubBucketValue;
+				}
+			}
+		}
+		return accAsignVal;
+	}
 	public boolean checkLastFinalLoctionIsRepeated(String currentLat,String currentLong,String currentAccuracy){
 		boolean repeatedLoction=false;
 
@@ -11176,7 +11406,7 @@ GoogleApiClient.OnConnectionFailedListener{
 			}
 			String txtFileNamenew="FinalGPSLastLocation.txt";
 			File file = new File(jsonTxtFolder,txtFileNamenew);
-			String fpath = Environment.getExternalStorageDirectory()+"/"+CommonInfo.FinalLatLngJsonFile+"/"+txtFileNamenew;
+			String fpath = Environment.getExternalStorageDirectory()+"/"+ CommonInfo.FinalLatLngJsonFile+"/"+txtFileNamenew;
 
 			// If file does not exists, then create it
 			if (file.exists()) {
@@ -11256,7 +11486,7 @@ GoogleApiClient.OnConnectionFailedListener{
 			}
 			String txtFileNamenew="FinalGPSLastLocation.txt";
 			File file = new File(jsonTxtFolder,txtFileNamenew);
-			String fpath = Environment.getExternalStorageDirectory()+"/"+CommonInfo.FinalLatLngJsonFile+"/"+txtFileNamenew;
+			String fpath = Environment.getExternalStorageDirectory()+"/"+ CommonInfo.FinalLatLngJsonFile+"/"+txtFileNamenew;
 
 
 			// If file does not exists, then create it
@@ -11321,7 +11551,7 @@ GoogleApiClient.OnConnectionFailedListener{
 			}
 			String txtFileNamenew="GPSLastLocation.txt";
 			File file = new File(jsonTxtFolder,txtFileNamenew);
-			String fpath = Environment.getExternalStorageDirectory()+"/"+CommonInfo.AppLatLngJsonFile+"/"+txtFileNamenew;
+			String fpath = Environment.getExternalStorageDirectory()+"/"+ CommonInfo.AppLatLngJsonFile+"/"+txtFileNamenew;
 
 
 			// If file does not exists, then create it
@@ -11656,7 +11886,7 @@ GoogleApiClient.OnConnectionFailedListener{
 			String fileName=imei+"_"+storeID;
 
 			//StringBuffer content=new StringBuffer(imei+"_"+storeID+"_"+"Save Button Click on Product List"+StartClickTimeFinal);
-			File file = new File("/sdcard/"+CommonInfo.TextFileFolder+"/"+fileName);
+			File file = new File("/sdcard/"+ CommonInfo.TextFileFolder+"/"+fileName);
 
 			if (!file.exists())
 			{
@@ -11672,7 +11902,7 @@ GoogleApiClient.OnConnectionFailedListener{
 			}
 
 
-			CommonInfo.fileContent=CommonInfo.fileContent+"     "+imei+"_"+storeID+"_"+"Save Button Click on Product List"+StartClickTimeFinal;
+			CommonInfo.fileContent= CommonInfo.fileContent+"     "+imei+"_"+storeID+"_"+"Save Button Click on Product List"+StartClickTimeFinal;
 
 
 			FileWriter fw;
@@ -11733,7 +11963,7 @@ GoogleApiClient.OnConnectionFailedListener{
 			String fileName=imei+"_"+storeID;
 
 			//StringBuffer content=new StringBuffer(imei+"_"+storeID+"_"+"SaveExit Button Click on Product List"+StartClickTimeFinal);
-			File file = new File("/sdcard/"+CommonInfo.TextFileFolder+"/"+fileName);
+			File file = new File("/sdcard/"+ CommonInfo.TextFileFolder+"/"+fileName);
 
 			if (!file.exists())
 			{
@@ -11749,7 +11979,7 @@ GoogleApiClient.OnConnectionFailedListener{
 			}
 
 
-			CommonInfo.fileContent=CommonInfo.fileContent+"     "+imei+"_"+storeID+"_"+"SaveExit Button Click on Product List"+StartClickTimeFinal;
+			CommonInfo.fileContent= CommonInfo.fileContent+"     "+imei+"_"+storeID+"_"+"SaveExit Button Click on Product List"+StartClickTimeFinal;
 
 
 			FileWriter fw;
@@ -11917,7 +12147,7 @@ GoogleApiClient.OnConnectionFailedListener{
 
 			//StringBuffer content=new StringBuffer(imei+"_"+storeID+"_"+"Submit Button Click on Product List"+StartClickTimeFinal);
 			//File file = new File("/sdcard/MeijiIndirectTextFile/"+fileName);
-			File file = new File("/sdcard/"+CommonInfo.TextFileFolder+"/"+fileName);
+			File file = new File("/sdcard/"+ CommonInfo.TextFileFolder+"/"+fileName);
 
 			if (!file.exists())
 			{
@@ -11933,7 +12163,7 @@ GoogleApiClient.OnConnectionFailedListener{
 			}
 
 
-			CommonInfo.fileContent=CommonInfo.fileContent+"     "+imei+"_"+storeID+"_"+"Submit Button Click on Product List"+StartClickTimeFinal;
+			CommonInfo.fileContent= CommonInfo.fileContent+"     "+imei+"_"+storeID+"_"+"Submit Button Click on Product List"+StartClickTimeFinal;
 
 
 			FileWriter fw;
@@ -12107,7 +12337,11 @@ GoogleApiClient.OnConnectionFailedListener{
 			if(!alertOpens)
 			{
 				progressTitle=OrderReview.this.getResources().getString(R.string.WhileWeSave);
+
 				new SaveData().execute("1~2");
+
+
+
 			}
 		}
 		else if(btnClkd==5)// Collection Amount

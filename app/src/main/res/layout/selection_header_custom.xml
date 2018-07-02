@@ -14,7 +14,7 @@
             android:id="@+id/mainImg"
             android:layout_width="match_parent"
             android:layout_height="180dp"
-            android:background="@drawable/banner_rspl"
+            android:background="@drawable/banner"
             android:layout_below="@+id/bardd"
             />
     <Button

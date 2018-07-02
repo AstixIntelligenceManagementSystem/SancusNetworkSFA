@@ -9,8 +9,8 @@
   <!-- <string name="app_name">SANCUS NETWORK SFA Training</string>-->
 
 
-
-
+    <string name="comments">Comments</string>
+    <string name="StockUnit">Unit</string>
     <string name="DSR_Profile">DSR Profile</string>
     <string name="selectAtleastOneOption">Please Select atleast one option to proceed.</string>
     <string name="selectAtleastOneOptionwithedittext">Please Specify the reason first to proceed.</string>

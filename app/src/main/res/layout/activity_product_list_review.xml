@@ -149,7 +149,41 @@
             android:gravity="center"
             android:textSize="10sp"
             android:textStyle="bold"
-            android:textColor="#201359"/>
+            android:textColor="#201359"
+            android:visibility="gone"/>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.5"
+            android:weightSum="2"
+            android:orientation="vertical"
+            android:background="@drawable/custom_border_product_page">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Last Visit"
+                android:textColor="#201359"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:id="@+id/lastvisittextwithDate"
+                />
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="Stk      O.Qty"
+                android:gravity="left"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:textColor="#201359"
+                android:layout_marginLeft="10dp"/>
+
+        </LinearLayout>
         <TextView
             android:id="@+id/txt_Lststock"
             android:layout_width="0dp"
@@ -159,7 +193,8 @@
             android:gravity="center"
             android:textSize="10sp"
             android:textStyle="bold"
-            android:textColor="#201359"/>
+            android:textColor="#201359"
+            android:visibility="gone"/>
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -178,7 +213,40 @@
             android:gravity="center"
             android:textSize="10sp"
             android:textStyle="bold"
-            android:textColor="#201359"/>
+            android:textColor="#201359"
+            android:visibility="gone"/>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:weightSum="2"
+            android:orientation="vertical"
+            android:layout_marginLeft="2dp"
+            android:background="@drawable/custom_border_product_page">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Today Visit"
+                android:textColor="#201359"
+                android:textSize="10sp"
+                android:layout_marginRight="20dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="Stk            O.Qty"
+                android:gravity="left"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:layout_marginLeft="10dp"
+                android:textColor="#201359"/>
+        </LinearLayout>
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -469,7 +537,7 @@
         android:textColor="#ffffff"
         android:text="@string/CollectAmount"
         android:textSize="14sp"
-        android:visibility="visible"
+        android:visibility="gone"
         android:background="@drawable/custom_button"/>
 <LinearLayout 
     android:id="@+id/ll_buttons"
@@ -542,10 +610,11 @@
         android:paddingBottom="5dp"
          android:gravity="center"
         android:textColor="#ffffff"
-        android:text="@string/Submit"
+        android:text="@string/txtNext"
         android:textSize="14sp"
         android:background="@drawable/custom_button"/>
 </LinearLayout>
+
     <android.inputmethodservice.KeyboardView
         android:id="@+id/keyboardview"
         android:layout_width="fill_parent"

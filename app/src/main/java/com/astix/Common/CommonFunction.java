@@ -12,10 +12,13 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.OutputStream;
 
-public class CommonFunction {
+/**
+ * Created by sunil.kumar on 8/16/2017.
+ */
 
-    public Bitmap normalizeImageForUri(Context context, Uri uri)
-    {
+public class CommonFunction
+{
+    public static Bitmap normalizeImageForUri(Context context, Uri uri) {
         Bitmap rotatedBitmap = null;
 
         try {
@@ -25,8 +28,7 @@ public class CommonFunction {
             int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
             Bitmap bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), uri);
             rotatedBitmap = rotateBitmap(bitmap, orientation);
-            if (!bitmap.equals(rotatedBitmap))
-            {
+            if (!bitmap.equals(rotatedBitmap)) {
                 saveBitmapToFile(context, rotatedBitmap, uri);
             }
         } catch (IOException e) {
@@ -35,7 +37,7 @@ public class CommonFunction {
         return rotatedBitmap;
     }
 
-    private  Bitmap rotateBitmap(Bitmap bitmap, int orientation) {
+    private static Bitmap rotateBitmap(Bitmap bitmap, int orientation) {
         Matrix matrix = new Matrix();
         switch (orientation) {
             case ExifInterface.ORIENTATION_NORMAL:
@@ -78,7 +80,7 @@ public class CommonFunction {
         }
     }
 
-    private  void saveBitmapToFile(Context context, Bitmap croppedImage, Uri saveUri) {
+    private static void saveBitmapToFile(Context context, Bitmap croppedImage, Uri saveUri) {
         if (saveUri != null) {
             OutputStream outputStream = null;
             try {
@@ -95,7 +97,7 @@ public class CommonFunction {
         }
     }
 
-    private  void closeSilently(@Nullable Closeable c) {
+    private static void closeSilently(@Nullable Closeable c) {
         if (c == null) {
             return;
         }
@@ -105,4 +107,5 @@ public class CommonFunction {
             // Do nothing
         }
     }
+
 }

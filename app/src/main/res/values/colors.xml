@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorPrimary">#1B5E20</color>
+    <color name="colorPrimaryDark">#1B5E20</color>
     <color name="colorAccent">#FF4081</color>
 
 
@@ -14,9 +14,9 @@
 
 
     <color name="my_color">#fff</color>
-    <color name="primaryColorDark">#0738a9</color>
-    <color name="primaryDarkColor">#0a4dca</color>
-    <color name="storelisttopcolor">#143660</color>
+    <color name="primaryColorDark">#1B5E20</color>
+    <color name="primaryDarkColor">#1B5E20</color>
+    <color name="storelisttopcolor">#1B5E20</color>
     <color name="radiocolor">#1e45d2</color>
     <color name="blue">#0000ff</color>
 

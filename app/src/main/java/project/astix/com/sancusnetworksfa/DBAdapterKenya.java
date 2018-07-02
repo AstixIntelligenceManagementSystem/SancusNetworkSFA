@@ -39,6 +39,10 @@ public class DBAdapterKenya
 	private static final String TAG = "DBAdapterKenya";
 	private boolean isDBOpenflag = false;
 
+    private static final String TABLE_tblMerchandisingInstructionDetails_Define = "tblMerchandisingInstructionDetails";
+    private static final String TABLE_tblMerchandisingInstructionDetails_Defintion = "create table tblMerchandisingInstructionDetails(StoreID text null,OrderPDAID text null,PhotoName text null,InstructionText text null,ClickedDateTime text null,Sstat integer null);";
+
+
     private static final String TABLE_tblAllServicesCalledSuccessfull = "tblAllServicesCalledSuccessfull";
     private static final String DATABASE_CREATE_tblAllServicesCalledSuccessfull = "create table tblAllServicesCalledSuccessfull(flgAllServicesCalledOrNot int null);";
 
@@ -911,7 +915,7 @@ private static final String DATABASE_TABLE_MAIN101 = "tblFirstOrderDetailsOnLast
 			
 			try
 			{
-
+                db.execSQL(TABLE_tblMerchandisingInstructionDetails_Defintion);
                 db.execSQL(DATABASE_CREATE_tblAllServicesCalledSuccessfull);
                 db.execSQL(DATABASE_CREATE_TABLE_tblAttandanceDetails);
                 db.execSQL(DATABASE_CREATE_TABLE_tblLastOutstanding);
@@ -1162,6 +1166,7 @@ private static final String DATABASE_TABLE_MAIN101 = "tblFirstOrderDetailsOnLast
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 			try
 			{
+                db.execSQL("DROP TABLE IF EXISTS tblMerchandisingInstructionDetails");
                 db.execSQL("DROP TABLE IF EXISTS tblAllServicesCalledSuccessfull");
                 db.execSQL("DROP TABLE IF EXISTS tblAttandanceDetails");
                 db.execSQL("DROP TABLE IF EXISTS tblLastOutstanding");
@@ -5980,7 +5985,7 @@ open();
 
         }
 
-
+        db.execSQL("Delete FROM tblMerchandisingInstructionDetails");
         db.execSQL("Delete FROM tblAllServicesCalledSuccessfull");
         db.execSQL("Delete FROM tblLastOutstanding");
 
@@ -13830,8 +13835,9 @@ close();
 			 {
 				 int affected4 = db.update("tblsameLocationForStoreRestartDone", values,"CrntStoreID=?", new String[] { sID });
 			 }
+             int affected411 = db.update("tblMerchandisingInstructionDetails", values,"StoreID=?", new String[] { sID });
 
-			 int affected3 = db.update("tblLatLongDetails", values,"StoreID=?", new String[] { sID });
+             int affected3 = db.update("tblLatLongDetails", values,"StoreID=?", new String[] { sID });
 			 int affected41 = db.update("tableImage", values,"StoreID=?", new String[] { sID });
 
 
@@ -27411,7 +27417,8 @@ public  LinkedHashMap<String,String> fngetAllOptionForQuestionID(int QuestID)
 	{
 		Cursor cursor2=null;
 		try {
-			cursor2 = db.rawQuery("SELECT *  FROM tblDistributorListMaster", null);
+			//cursor2 = db.rawQuery("SELECT *  FROM tblDistributorListMaster", null);
+            cursor2 = db.rawQuery("SELECT DBRNodeID,DistributorNodeType,Distributor FROM tblDistribtorMstr", null);
 			String strStoreTypeNamesDetais[] =null;// new String[cursor2.getCount()];
 			if(cursor2.getCount()>0)
 			{
@@ -30784,7 +30791,17 @@ if(cursor.getCount()>0)
             Log.e(TAG, ex.toString());
         }
     }
-
+    public void UpdatetblMerchandisingInstructionDetails(String sID, int flag2set)
+    {
+        try
+        {
+            db.execSQL("UPDATE tblMerchandisingInstructionDetails SET Sstat=5 where Sstat="+ 3);
+        }
+        catch (Exception ex)
+        {
+            Log.e(TAG, ex.toString());
+        }
+    }
     public void UpdateStoreClosephotoWithOutFlag(String sID, int flag2set)
     {
         try
@@ -31220,7 +31237,33 @@ if(cursor.getCount()>0)
         }
     }
 
+    public HashMap<String,String> fnGetLastOrderByDMS_Or_SFA(String ssStoreID)
+    {
+        HashMap<String, String> hmapProductIdLastStock= new HashMap<>();
+        open();
+        Cursor cursor = db.rawQuery("SELECT ProductID,Order123 FROM tblForPDAGetLastVisitDetails where StoreID= '" + ssStoreID + "'", null);
+        try
+        {
+            if(cursor.getCount()>0)
+            {
+                if (cursor.moveToFirst()) {
 
+                    for (int i = 0; i < cursor.getCount(); i++) {
+
+                        hmapProductIdLastStock.put((String) cursor.getString(0),(String) cursor.getString(1));
+                        cursor.moveToNext();
+                    }
+                }
+            }
+            return hmapProductIdLastStock;
+        } finally {
+            if(cursor!=null) {
+                cursor.close();
+            }
+            close();
+        }
+
+    }
 
     public HashMap<String,String> fnGetLastStockByDMS_Or_SFA(String ssStoreID)
     {
@@ -32045,6 +32088,215 @@ open();
         finally {
             close();
         }
+    }
+
+    public LinkedHashMap<String,String>   fetchProductListLastvisitAndOrderBasis(String StoreID){
+//tblActualVisitStock (ProductID text null,Stock text null);";
+        LinkedHashMap<String,String> hmapData=new LinkedHashMap<>();
+        Cursor cursor=null;
+        open();
+        try {
+            cursor = db.rawQuery("SELECT  Distinct tblProductListLastVisitStockOrOrderMstr.PrdID,tblProductList.ProductShortName from tblProductListLastVisitStockOrOrderMstr inner join tblProductList on tblProductListLastVisitStockOrOrderMstr.PrdID=tblProductList.ProductID   where tblProductListLastVisitStockOrOrderMstr.StoreID='"+StoreID+"'", null);
+            if(cursor.getCount()>0)
+            {
+                if (cursor.moveToFirst()) {
+
+                    for (int i = 0; i <= (cursor.getCount() - 1); i++)
+                    {
+
+                        hmapData.put(cursor.getString(0),cursor.getString(1));
+                        cursor.moveToNext();
+                    }
+                }
+            }
+        }
+        catch (Exception e){
+            System.out.println(e);
+        }finally {
+            if(cursor !=null){
+                cursor.close();
+            }
+
+            close();
+            return hmapData;
+        }
+    }
+
+    public LinkedHashMap<String,String> fetchProductAndDisplayUnitDataForActualVisit(){
+//"create table tblProductList(CategoryID text  null,ProductID text  null, ProductShortName text  null,
+// DisplayUnit text null, CalculateKilo real  null,ProductMRP real null, ProductRLP real null, ProductTaxAmount real null,
+// KGLiter string null,RetMarginPer real null,VatTax real null,
+// StandardRate real null,StandardRateBeforeTax real null,StandardTax real null,CatOrdr int null,PrdOrdr int null,
+// StoreCatNodeId int null,SearchField text null,ManufacturerID int null);";
+        LinkedHashMap<String,String> hmapData=new LinkedHashMap<>();
+        Cursor cursor=null;
+
+        try {
+            cursor = db.rawQuery("SELECT ProductID,DisplayUnit from tblProductList", null);
+            if(cursor.getCount()>0)
+            {
+                if (cursor.moveToFirst()) {
+
+                    for (int i = 0; i <= (cursor.getCount() - 1); i++)
+                    {
+
+                        hmapData.put(cursor.getString(0),cursor.getString(1));
+                        cursor.moveToNext();
+                    }
+                }
+            }
+        } finally {
+            if(cursor !=null)
+                cursor.close();
+            return hmapData;
+        }
+    }
+    public String fnGetVisitDateFromtblForPDAGetLastVisitDate(String StoreID)
+    {
+
+        open();
+        Cursor cursorE2 = db.rawQuery("SELECT VisitDate FROM tblForPDAGetLastVisitDate WHERE StoreID ='"
+                + StoreID + "'", null);
+        String VisitDate = "";
+
+        try {
+
+            if (cursorE2.moveToFirst()) {
+
+                for (int i = 0; i <= (cursorE2.getCount() - 1); i++)
+                {
+                    VisitDate = (String) cursorE2.getString(0);
+
+                    cursorE2.moveToNext();
+                }
+            }
+            return VisitDate;
+        } finally
+        {
+            cursorE2.close();
+            close();
+        }
+
+    }
+
+    public void Delete_tblMerchandisingInstructionDetails(String StoreID,String OrderPDAID)
+    {
+        open();
+        db.execSQL("DELETE FROM tblMerchandisingInstructionDetails where StoreID='"+StoreID+"' and OrderPDAID='"+OrderPDAID+"' ");
+        close();
+    }
+    public void insertImageFinalSubmit(String StoreID,String OrderPDAID,String imageName,String clkdDateTime,String InstructionText,int sStat)
+    {
+        open();
+        ContentValues values=new ContentValues();
+        values.put("StoreID",StoreID);
+        values.put("OrderPDAID",OrderPDAID);
+        values.put("PhotoName",imageName);
+        values.put("InstructionText",InstructionText);
+        values.put("ClickedDateTime",clkdDateTime);
+        values.put("Sstat",sStat);
+        db.insert(TABLE_tblMerchandisingInstructionDetails_Define,null,values);
+        close();
+    }
+
+    public String[] getAllStoreIDIntblMerchandisingInstructionDetails()
+    {
+
+        int SnamecolumnIndex1 = 0;
+
+
+        Cursor cursor = db.rawQuery("SELECT DISTINCT(StoreID) FROM tblMerchandisingInstructionDetails where Sstat=5", null);
+        //Cursor cursor = db.rawQuery("SELECT StoreID FROM tblStoreMaterialPhotoDetail", null);
+        try
+        {
+            String StoreName[] = new String[cursor.getCount()];
+
+            if (cursor.moveToFirst())
+            {
+                for (int i = 0; i <= (cursor.getCount() - 1); i++)
+                {
+                    StoreName[i] = (String) cursor.getString(SnamecolumnIndex1);
+                    cursor.moveToNext();
+                }
+            }
+
+            return StoreName;
+        }
+        finally
+        {
+            cursor.close();
+        }
+
+    }
+    public int getExistingPicNosIntblMerchandisingInstructionDetails(String StoreID) {
+
+        int ScodecolumnIndex = 0;
+
+        Cursor cursor = db.rawQuery("SELECT Count(StoreID) FROM tblMerchandisingInstructionDetails where StoreID='" + StoreID + "'", null);
+        try {
+            int strProdStockQty = 0;
+            if (cursor.moveToFirst()) {
+
+                for (int i = 0; i <= (cursor.getCount() - 1); i++) {
+                    if (!cursor.isNull(ScodecolumnIndex)) {
+                        strProdStockQty = Integer.parseInt(cursor.getString(ScodecolumnIndex));
+                        cursor.moveToNext();
+                    }
+
+                }
+            }
+            return strProdStockQty;
+        } finally {
+            cursor.close();
+        }
+    }
+    public String[] getImgsPathIntblMerchandisingInstructionDetails(String StoreID)
+    {
+
+        int SnamecolumnIndex1 = 0;
+
+        Cursor cursor = db.rawQuery("SELECT PhotoName FROM tblMerchandisingInstructionDetails WHERE StoreID ='"+ StoreID + "'", null);
+        try {
+
+            String StoreName[] = new String[cursor.getCount()];
+
+            if (cursor.moveToFirst()) {
+
+                for (int i = 0; i <= (cursor.getCount() - 1); i++) {
+
+                    StoreName[i] = (String) cursor.getString(SnamecolumnIndex1);
+
+                    cursor.moveToNext();
+                }
+            }
+            return StoreName;
+        } finally {
+            cursor.close();
+        }
+
+    }
+
+    public void updateImageRecordsSyncdfortblMerchandisingInstructionDetails(String PhotoName)
+    {
+
+        try
+        {
+            open();
+            final ContentValues values = new ContentValues();
+            values.put("Sstat", 4);
+
+            int affected3 = db.update("tblMerchandisingInstructionDetails", values, "PhotoName=?",new String[] { PhotoName });
+        }
+        catch (Exception ex)
+        {
+            Log.e(TAG, ex.toString());
+        }
+        finally
+        {
+            close();
+        }
+
+
     }
 }
 

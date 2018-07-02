@@ -1,11 +1,12 @@
 <resources>
 
+    <string name="StockUnit">Unit</string>
     <string name="app_name">RSPL SFA</string>
     <!-- <string name="app_name">RSPL SFA Stagging</string>-->
     <!--<string name="app_name">RSPL SFA Test</string>-->
     <!-- <string name="app_name">RSPL SFA Dev</string>-->
     <!--<string name="app_name">RSPL SFA Test Release</string>-->
-
+    <string name="comments">टिप्पणियाँ</string>
     <string name="Coverage_Area">कवरेज क्षेत्र</string>
     <string name="Contact_No">संपर्क नंबर</string>
     <string name="DOB">जन्म तिथि</string>

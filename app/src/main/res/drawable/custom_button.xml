@@ -18,9 +18,9 @@
                 android:radius="1dp" />
             <padding
                 android:left="10dp"
-                android:top="2dp"
+                android:top="8dp"
                 android:right="10dp"
-                android:bottom="2dp" />
+                android:bottom="8dp" />
 
         </shape>
     </item>
@@ -38,17 +38,17 @@
                 android:radius="1dp" />
             <padding
                 android:left="10dp"
-                android:top="2dp"
+                android:top="10dp"
                 android:right="10dp"
-                android:bottom="2dp" />
+                android:bottom="10dp" />
         </shape>
     </item>
 
     <item>
         <shape>
             <gradient
-                android:endColor="#015db4"
-                android:startColor="#015db4"
+                android:endColor="#00C853"
+                android:startColor="#00C853"
                 android:angle="270" />
             <corners android:radius="5dp"/>
             <stroke
@@ -56,9 +56,9 @@
                 android:color="#015db4"/>
             <padding
                 android:left="6dp"
-                android:top="2dp"
+                android:top="6dp"
                 android:right="6dp"
-                android:bottom="2dp" />
+                android:bottom="6dp" />
         </shape>
     </item>
 </selector>
