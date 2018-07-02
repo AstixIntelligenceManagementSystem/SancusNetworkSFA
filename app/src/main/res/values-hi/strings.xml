@@ -18,8 +18,6 @@
     <string name="not_working">काम नहीं कर रहे हो</string>
     <string name="selectDistributorProceeds">कृपया आगे जाने के लिये वितरक चुनें</string>
 
-    <string name="select_attendance_scope">उपस्थिति रिपोर्ट देखें</string>
-    <string name="select_attendance_report">डीएसआर उपस्थिति रिपोर्ट</string>
     <!--Day Start message start-->
     <string name="DayStartButtonText">दिन शुरू</string>
     <string name="ExitButtonText">बाहर जाएं</string>
@@ -55,14 +53,11 @@
     <string name="genTermLoadData">डेटा लोड हो रहा है...</string>
     <!--Splash screen ends here-->
 
-    <string name="OrderType">आदेश प्रकार</string>
     <string name="OrderTypeTelephonic">टेलीफोनिक</string>
-    <string name="OrderTypeActualVisit">वास्तविक विज़िट</string>
 
 
     <!--DSR_Registrion starts here-->
     <string name="txtWelcome">स्वागत है  </string>
-    <string name="txtDayStart">दिन का आरंभ करें</string>
     <string name="radioYes">हाँ</string>
     <string name="radioNo">नहीं</string>
     <string name="txtUpdate">अभी अपडेट करें</string>
@@ -201,7 +196,6 @@
     <string name="txtNextDay">अगला दिन </string>
     <string name="txtClose">बंद करे</string>
     <string name="txtAddStore">स्टोर ऐड करे</string>
-    <string name="txtStart">शुरुआत करे</string>
     <string name="txtStoreName">स्टोर का नाम</string>
     <string name="hintManagerName">मेनेजेर का नाम</string>
     <string name="searchingnearbystores">आसपास के स्टोरों की खोज कर रहे हैं</string>
@@ -386,7 +380,6 @@
     <string name="AmtCollctd">एकत्र राशि: </string>
     <string name="AmtOutStnding">बकाया राशि: </string>
     <string name="StockQty">स्टोक मात्रा</string>
-    <string name="O.Qty">ऑर्डर की मात्रा</string>
     <string name="PleasefillRatefirst">कृपया मुल्य पहले भरें</string>
     <string name="PleasefillproperRatefirst">कृपया उचित मुल्य पहले भरें</string>
     <string name="RemoveProdct">क्या आप वाकई इस उत्पाद को हटाना चाहते हैं??</string>
@@ -421,7 +414,6 @@
     <string name="CategoryName">श्रेणी नाम</string>
 
     <string name="StoreStock">स्टोर का स्टॉक</string>
-    <string name="Smpl.Qty">नमूना मात्रा</string>
     <string name="AlertExecNoSum">एक्सिस्यूशन सारांश के लिए कोई डेटा उपलब्ध नहीं है</string>
     <string name="AlertCancelOrder">क्या आप स्टोर के आदेश को रद्द करना चाहते हैं?</string>
     <string name="FreeOffer">निःशुल्क ऑफ़र</string>
@@ -507,7 +499,6 @@
     <string name="prodlstFQty">मुफ्त मात्रा</string>
     <string name="OrderVal">ऑर्डर का मूल्य :</string>
     <string name="ExecutionVal">वितरण मूल्य:</string>
-    <string name="lastvisitdetails_stock">स्टॉक</string>
     <string name="Executed">निष्पादित</string>
     <!-- LastVisitDetails SecondPart Activity ends -->
 
@@ -527,19 +518,10 @@
     <string name="SubmitDistrbtrStck">क्या आप डिस्ट्रिबुटर स्टॉक जमा करना चाहते.</string>
     <string name="SubmitDistrbtrDetail">डिस्ट्रिबुटर स्टॉक जमा हो रहा है</string>
     <string name="DistrbtrENtryHeader">डिस्ट्रिबुटर स्टॉक</string>
-    <string name="StockDate">स्टॉक तिथि: </string>
-    <string name="StckInPcs">स्टॉक (गिनती में)</string>
-    <string name="Pieces">गिनती में</string>
-    <string name="Cases">डिब्बों में</string>
     <string name="PKDMonth">पीकेडी महीना</string>
-    <string name="OldStck">पुराना स्टॉक</string>
-    <string name="FreeStock">फ्री स्टॉक</string>
-    <string name="SMPSTK">सैम्पल स्टॉक</string>
-    <string name="NoRsltFound">माफ़ कीजिये! \ nकोई परिणाम नहीं मिला</string>
     <string name="StockValue">स्टॉक मूल्य</string>
 
     <string name="StockAsOn">आज तक का स्टॉक</string>
-    <string name="StckInCases">स्टॉक (डिब्बों में)</string>
     <!-- Distributor Entry Activity ends -->
 
     <!-- Invoice store selection Activity starts -->
@@ -575,7 +557,6 @@
     <string name="SaveandExit">सेव करे और बहर जाए</string>
     <string name="Pleaseselectvalue">मूल्य का चयन करें</string>
     <string name="PleaseFillNameToSave">कृपया सहेजने के लिए नाम भरे</string>
-    <string name="SveDataBeforeExit">कृपया सुनिश्चित करें कि आपने बाहर निकलने से पहले डेटा सेव कर लिया है?</string>
     <string name="rtrvng_loc">अपने वर्तमान स्थान को पुन र्प्राप्त करे</string>
     <string name="Datawillbesaved">डेटा सहेजा जाएगा</string>
     <string name="SaveData">डेटा बचा लिया जाएगा</string>
@@ -626,8 +607,6 @@
 
     <!--  Selection header starts -->
     <string name="ChangeLanguage">भाषा बदले</string>
-    <string name="Language">भाषा</string>
-    <string name="LanguageSelection">कृपया भाषा चुनें</string>
     <string name="Hindi">हिंदी</string>
     <string name="English">अंग्रेज़ी</string>
     <string name="DayEnd">दिन की समाप्ति</string>
@@ -650,36 +629,19 @@
     <string name="genlocaldataMsg">डेटा स्थानीय रूप से फोन मे सहेजा गया है, इंटरनेट एक्सेस करने के बाद सर्वर पर भेज दिया जायेगा</string>
     <string name="reason_prompt">Please Select Reason</string>
     <string name="category_prompt">Please Select Category</string>
-    <string name="phone_nos">Phone Num:</string>
-    <string name="spinner_route">Routes </string>
     <string name="remarks">.,/- abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890</string>
-    <string name="spinner_store_type">Store Type </string>
-    <string name="spinner_trade_channel">Trade Channel </string>
-    <string name="spinner_store_Category">Store Category </string>
-    <string name="spinner_retailer_sales_type">रिटेलर सेलस के प्रकार</string>
-    <string name="spinner_store_potential_type">Store Potential Type </string>
     <string name="only_alpha_numeric_new">.- ,abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
     <string name="only_character_Space_no_slash">.- abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789</string>
     <string name="spinnerloc">Distributor Names </string>
     <string name="spinnerarea">Route Names </string>
-    <string name="spinnerstore">Store Type </string>
     <string name="only_alpha_numeric">.- abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
     <string name="nameValidation">. abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
     <string name="syncAlertStoreQuotationOKMsg"><small>स्टोर कोटेशन सफलतापूर्वक सबमिट हो गया है</small></string>
     <string name="syncAlertInvoiceOKMsg"><small>डिलीवरी डिटेल सबमिट हो गया है</small></string>
     <string name="syncAlertErrMsg"><small>समन्वयन सफल नहीं हुआ|\n कृपया पुन: प्रयास करें।</small></string>
     <string name="syncAlertErrMsgDayEndOrChangeRoute"><small>इंटरनेट कनेक्टिविटी टूटने के कारण ऑर्डर सबमिट नहीं हुआ है| कृपया पुन: प्रयास करें।</small></string>
-    <string name="title_activity_store_selection">स्टोर चयन</string>
-    <string name="title_activity_last_visit_details">अंतिम विज़िट विवरण</string>
     <string name="title_activity_stores_summary">स्टोर सारांश</string>
     <string name="title_activity_return">स्टोक रिटर्न</string>
-    <string name="productlist_orderbooking">ऑर्डर बुकिंग फॉर्म</string>
-    <string name="productlist_returnbutton">عودة المنتج</string>
-    <string name="productlist_storebutton">स्टोर की फोटो</string>
-    <string name="productlist_currentproduct"> वर्तमान उत्पाद</string>
-    <string name="productlist_sampleqty">सैम्पल मात्रा</string>
-    <string name="productlist_samplehint">सैम्पल मात्रा यहां दर्ज करें</string>
-    <string name="productlist_sampletotalhint">जारी किए गए कुल सैम्पल</string>
     <string name="productlist_cramt">राशी जमा करें</string>
     <string name="productlist_cradj">क्रेडिट समायोजन</string>
     <string name="productlist_crbal">जमा शेष</string>
@@ -692,16 +654,12 @@
     <string name="productlist_grossinvoicevalue">सकल क्रम मूल्य :</string>
     <string name="productlist_noofcoupons">कूपन की संख्या :</string>
     <string name="productlist_totalcouponamount">कुल कूपन राशि :</string>
-    <string name="productlist_amountprevdue">पहले की राशि :</string>
-    <string name="productlist_amountoutstanding">बकाया राशि:</string>
-    <string name="prodlstAmtCollected">एकत्रित राशि:</string>
     <string name="genTermSelectStoresPendingToComplete">क्या आप चयनित स्टोर ऑर्डर की पुष्टि करना चाहते हैं?</string>
     <string name="genTermSelectStoresPendingToCancel">क्या आप चयनित स्टोर ऑर्डर रद्द करना चाहते हैं?</string>
     <string name="genTermSubmitSelectedInvoice">चयनित की पुष्टि करें</string>
     <string name="genTermSubmitCancelInvoiceList">ठीक</string>
     <string name="txtYes">हाँ</string>
     <string name="txtCancle">रद्द करना</string>
-    <string name="mysummary_back">वापस</string>
     <string name="second_msg_for_map">कृपया अपना स्थान एक बार फिर प्राप्त करने का प्रयास करें, यदि सिस्टम को सिस्टम के अनुसार यथोचित रूप से सटीक पाया जाता है तो इसे सहेजा जाएगा।</string>
     <string name="third_msg_for_map">डेटा को वर्तमान स्थान के साथ सहेजा जाएगा जो सही दिखाई देगा...</string>
     <string name="title_activity_view_added_store">जोड़ा गया स्टोर देखें</string>
@@ -712,10 +670,6 @@
 
     <string name="DistributorLocation">वितरक स्थान</string>
     <string name="home">होम</string>
-    <string name="DistributorCheckInMsg">कृपया पहले वितरक की पुष्टि करें</string>
-    <string name="NoPendingDataMsg">अपलोड के लिए कोई लंबित डेटा नहीं है</string>
-
-
 
 
     <!--Distributor Check In First Activity starts here-->
@@ -725,12 +679,6 @@
     <string name="StateMessage">राज्य</string>
 
     <string name="PleaseSelectDistributor">कृपया वितरक का चयन करें।</string>
-    <string name="PleaseFillAddress">कृपया पता मूल्य भरें</string>
-    <string name="PleaseFillProperAddress">कृपया सही पते को भरें</string>
-    <string name="PleaseFillPincode">कृपया पिनकोड को भरें</string>
-    <string name="PleaseFillPincodeAllDigits">पिन कोड का मान 6 अंकों से कम नहीं हो सकता।</string>
-    <string name="PleaseFillCity">कृपया शहर का नाम भरें</string>
-    <string name="PleaseFillState">कृपया राज्य का नाम भरें</string>
 
     <!--Distributor Check In First Activity starts here-->
 
@@ -740,15 +688,11 @@
     <!--All Button  Activity ends here-->
 
 
-    <string name="ClickPhoto">फोटो क्लिक करें</string>
-
     <string name="Dashboard">डैशबोर्ड</string>
     <string name="MarketVisit">मार्केट विजिट</string>
     <string name="Execution">निष्पादन</string>
     <string name="StoreMapping">स्टोर मैपिंग</string>
-    <string name="DistributorCheckIn">वितरक चेक इन</string>
     <string name="DSMTracker">डीएसएम ट्रैकर</string>
-    <string name="MapDistributor">मानचित्र वितरक</string>
     <string name="NoVisit">कोई यात्रा नहीं</string>
 
 
@@ -756,7 +700,6 @@
     <string name="DistributorDataSubmit">वितरक डेटा सफलतापूर्वक सबमिट हो चूका हैं</string>
 
     <string name="AlertDialogHeaderErrorMsg">त्रुटि</string>
-    <string name="distributorSubmitMessage">क्या आप वितरकों की जानकारी सबमिट करना चाहते हैं?</string>
     <string name="SubmittingDataMsg">डेटा जमा हो रहा है ...</string>
     <string name="PleaseWaitMsg">कृपया प्रतीक्षा करें ...</string>
     <string name="Route_prompt">मार्ग बदलें</string>
@@ -766,7 +709,6 @@
     <string name="StrClosed">स्टोर बंद</string>
     <string name="StrClosedHeader">स्टोर बंद सूचना</string>
     <string name="StrClosedReason">स्टोर बंद रहने का कारण</string>
-    <string name="alertSaveMsg">कृपया यहाँ से जाने से पहले डेटा सुरक्षित करे नहीं तो परिवर्तन सहेज नहीं किए जाएंगे।</string>
     <string name="alertAskSaveMsg">क्या आप डेटा को सुरक्षित करना चाहते हैं?</string>
 
     <string name="clkStrClosePic">बंद स्टोर की तस्वीर क्लिक करें</string>
@@ -779,12 +721,9 @@
 
     <string name="DistributorCheckInAlrady">आपने पहले से ही वितरक का चेक आज के लिए किया हुआ है </string>
 
-    <string name="ActualVisitHeader">वास्तविक विज़िट</string>
-
     <string name="AccountCensusBtn">खाता जनगणना रिपोर्ट</string>
 
     <string name="DistributorStockMessage">कृपया पहले वितरक स्टॉक भरें</string>
-    <string name="Calculating">गणना...</string>
 
 
     <!--Collection Activity-->

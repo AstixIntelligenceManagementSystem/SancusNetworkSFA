@@ -151,7 +151,7 @@ public class DatabaseAssistant
 
 			exportTable("tblAllCollectionData");
 			exportTableAttandance("tblAttandanceDetails");
-
+			exportTable("tblMerchandisingInstructionDetails");
 
 			//String routeID=GetActiveRouteIDSunil();
 		}

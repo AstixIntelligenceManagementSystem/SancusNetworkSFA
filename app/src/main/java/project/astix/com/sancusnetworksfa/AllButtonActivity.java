@@ -273,10 +273,10 @@ public class AllButtonActivity extends BaseActivity implements LocationListener,
     protected void onResume()
     {
         super.onResume();
-        int alreadyLocFind=dbengine.fetchtblIsDBRStockSubmitted();
+        /*int alreadyLocFind=dbengine.fetchtblIsDBRStockSubmitted();
         if(alreadyLocFind==0)
         {
-           // int checkData= dbengine.checkDSRCheckIntblDistributorMapping();
+
             int checkStockFilled=dbengine.checkStockFilledByDSR();
             TextView DistributorCheckTextView=(TextView)findViewById(R.id.DistributorCheckTextView);
             if(checkStockFilled==1)
@@ -295,11 +295,20 @@ public class AllButtonActivity extends BaseActivity implements LocationListener,
         else
         {
 
-        }
+        }*/
 
         if(isDayEndClicked)
         {
             DayEndCodeAfterSummary();
+        }
+        if(CommonInfo.DayStartClick==2)
+        {
+            SharedPreferences.Editor editor1=sPrefAttandance.edit();
+            editor1.clear();
+            editor1.commit();
+            CommonInfo.DayStartClick=0;
+            finish();
+
         }
       /*  if(CommonInfo.DayStartClick==2)
         {
@@ -1833,7 +1842,7 @@ public class AllButtonActivity extends BaseActivity implements LocationListener,
             {
 
 
-                    if(false)
+                    if(true)
                 {
                    // int checkDataNotSync = dbengine.CheckUserDoneGetStoreOrNot();
                     int CheckCountAllWebServiceSuccesful=dbengine.CheckCounttblAllServicesCalledSuccessfull();

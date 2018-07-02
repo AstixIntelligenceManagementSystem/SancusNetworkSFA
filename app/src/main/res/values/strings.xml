@@ -17,10 +17,7 @@
 
     <string name="today_working">Today Working</string>
     <string name="today_Notworking">Not Working</string>
-    <string name="select_attendance_scope">View Attendance Report</string>
-    <string name="select_attendance_report">DSR Attendance Report</string>
     <string name="selectDistributorProceeds">Please select Distributor to Proceed.</string>
-    <string name="dsr_profile">DSR Profile</string>
 
 
     <string name="working">Working</string>
@@ -50,7 +47,6 @@
 
 
     <!--Distributo Activity starts here-->
-    <string name="distributorSubmitMessage">Do you want to submit distributors information</string>
 
 
     <!--Distributor Check In First Activity starts here-->
@@ -60,13 +56,7 @@
     <string name="StateMessage">State</string>
 
    <string name="PleaseSelectDistributor">Please Select Distributor.</string>
-   <string name="PleaseFillAddress">Please Fill Address Value.</string>
-   <string name="PleaseFillProperAddress">Please fill Proper address.</string>
-   <string name="PleaseFillPincode">Please Fill Pincode Value.</string>
-   <string name="PleaseFillPincodeAllDigits">Pin Code value cannot be less than 6 digits.</string>
-   <string name="PleaseFillCity">Please Fill City Value.</string>
-   <string name="PleaseFillState">Please Fill State Value.</string>
-  <!--Distributor Check In First Activity starts here-->
+    <!--Distributor Check In First Activity starts here-->
 
  <!--All Button  Activity starts here-->
  <string name="DayEndBeforeLogout">Please Day End Before Logging Out.</string>
@@ -99,7 +89,6 @@
     <string name="Contact_No">Contact No</string>
     <string name="DOB">DOB</string>
 
-    <string name="txtDayStart">Day Start</string>
     <string name="radioYes">Yes</string>
     <string name="radioNo">No</string>
     <string name="txtUpdate">Update Now</string>
@@ -221,7 +210,6 @@
     <string name="txtNextDay">NextDay</string>
     <string name="txtClose">Close</string>
     <string name="txtAddStore">Add Store</string>
-    <string name="txtStart">Start</string>
     <string name="txtStoreName">Store Name</string>
     <string name="hintManagerName">Manager Name</string>
     <string name="searchingnearbystores">Searching Nearby Stores</string>
@@ -411,7 +399,6 @@
     <string name="crntInvoice">Current Invoice: </string>
     <string name="minAmountDue">Minimum Amount Due: </string>
     <string name="StockQty">Stock.Qty</string>
-    <string name="O.Qty">O.Qty</string>
     <string name="PleasefillRatefirst">Please fill Rate first</string>
     <string name="PleasefillproperRatefirst">Please fill proper Rate first</string>
     <string name="RemoveProdct">Are you sure you want remove this product?</string>
@@ -445,7 +432,6 @@
     <string name="OrderDetail">Order Detail</string>
     <string name="CategoryName">Category Name</string>
     <string name="StoreStock">Store Stock</string>
-    <string name="Smpl.Qty">Smpl.Qty</string>
     <string name="AlertExecNoSum">There is no Data Available For Exceution Summary</string>
     <string name="AlertCancelOrder">Are you sure to cancel the order of the store?</string>
     <string name="FreeOffer">FREE OFFER</string>
@@ -457,7 +443,6 @@
     <string name="ChangeQty">Change Qty</string>
     <string name="SubmittingOrderDetails">Submitting Order Details...</string>
     <string name="Loading">Loading...</string>
-    <string name="Calculating">Calculating...</string>
     <string name="MyNameAbhinav">My Name Abhinav</string>
     <string name="AvailableQty">Available Qty :</string>
     <string name="OrderQty">Order Qty : </string>
@@ -475,10 +460,7 @@
 
     <!-- LastVisitDetails Activity start -->
 
-    <string name="OrderType">Order Type</string>
     <string name="OrderTypeTelephonic">Telephonic</string>
-    <string name="OrderTypeActualVisit">Actual Visit</string>
-
 
 
     <string name="LastVisitDate">Last Visit Date :</string>
@@ -559,19 +541,10 @@
     <string name="SubmitDistrbtrStck">Are you sure to submit Distributor Stock Entry. </string>
     <string name="SubmitDistrbtrDetail">Submitting Distributor Entry Details...</string>
     <string name="DistrbtrENtryHeader">Distributor Stock Entry</string>
-    <string name="StockDate">Stock Date: </string>
-    <string name="StckInPcs">Stock Entry(In Pieces)</string>
-    <string name="Pieces">In Pieces</string>
-    <string name="Cases">In Cases</string>
     <string name="PKDMonth">PKD Month</string>
-    <string name="OldStck">Old STK</string>
-    <string name="FreeStock">Free Stock</string>
-    <string name="SMPSTK">SMP STK</string>
-    <string name="NoRsltFound">Sorry!! \n No Results Found</string>
     <string name="StockValue">Stock Value</string>
 
     <string name="StockAsOn">Stock as on-</string>
-    <string name="StckInCases">Stock Entry(In Cases)</string>
 
 
     <!-- Distributor Entry Activity ends -->
@@ -612,16 +585,13 @@
     <string name="SaveandExit">Save and Exit</string>
     <string name="Pleaseselectvalue">Please select value</string>
     <string name="PleaseFillNameToSave">Please Fill Name To Save</string>
-    <string name="SveDataBeforeExit">Please ensure that you have saved data before exiting?</string>
     <string name="rtrvng_loc">Retrieving your current location</string>
     <string name="SaveData">Save Data</string>
     <string name="Datawillbesaved">Data will be saved</string>
 
     <string name="DistributorLocation">Distributor Location</string>
     <string name="home">Home</string>
-    <string name="DistributorCheckInMsg">Please first confirm the Distributor Check In.</string>
     <string name="DistributorStockMessage">Please first fill Distributor stock.</string>
-    <string name="NoPendingDataMsg">There is no Pending data for upload</string>
 
     <!--NewStoreForm starts here-->
     <string name="PleaseFill">Please Fill </string>
@@ -631,8 +601,6 @@
     <string name="STDAndLandline">Please Fill STD code And Landline No.</string>
     <string name="ProvideSTDAndLandline">Please Provide Proper STD code And Landline No.</string>
     <string name="OutletNametoSaveandExit">Please Fill Name of Outlet to Save and Exit</string>
-
-    <string name="ClickPhoto">Click Photo</string>
 
 
     <!--NewStoreForm ends here-->
@@ -676,8 +644,6 @@
 
     <!--  Selection header starts -->
     <string name="ChangeLanguage">Change Language</string>
-    <string name="Language">Language</string>
-    <string name="LanguageSelection">Please Select Language</string>
     <string name="Hindi">Hindi</string>
     <string name="English">English</string>
     <string name="DayEnd">Day End</string>
@@ -706,37 +672,20 @@
     <string name="reason_prompt">Please Select Reason</string>
     <string name="category_prompt">Please Select Category</string>
     <!-- start of Internet Message -->
-    <string name="phone_nos">Phone Num:</string>
     <!-- End of Internet Message -->
-    <string name="spinner_route">Routes </string>
     <string name="remarks">.,/- abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890</string>
-    <string name="spinner_store_type">Store Type </string>
-    <string name="spinner_trade_channel">Trade Channel </string>
-    <string name="spinner_store_Category">Store Category </string>
-    <string name="spinner_retailer_sales_type">Retailer Sales Type </string>
-    <string name="spinner_store_potential_type">Store Potential Type </string>
     <string name="only_alpha_numeric_new">.- ,abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
     <string name="only_character_Space_no_slash">.- abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789</string>
     <string name="spinnerloc">Distributor Names </string>
     <string name="spinnerarea">Route Names </string>
-    <string name="spinnerstore">Store Type </string>
     <string name="only_alpha_numeric">.- abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
     <string name="nameValidation">. abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
     <string name="syncAlertStoreQuotationOKMsg"><small>Store Quotation submission was successful</small></string>
     <string name="syncAlertInvoiceOKMsg"><small>Delivery details submitted!</small></string>
     <string name="syncAlertErrMsg"><small>Sync was not successful. \nPlease try again.</small></string>
     <string name="syncAlertErrMsgDayEndOrChangeRoute"><small>Due to Internet connectivity breakdown, not able to submitt orders. \nPlease try again.</small></string>
-    <string name="title_activity_store_selection">StoreSelection</string>
-    <string name="title_activity_last_visit_details">LastVisitDetails</string>
     <string name="title_activity_stores_summary">Stores Summary</string>
     <string name="title_activity_return">Stock Returns</string>
-    <string name="productlist_orderbooking">Order Booking Form</string>
-    <string name="productlist_returnbutton">عودة المنتج</string>
-    <string name="productlist_storebutton">Store Photo</string>
-    <string name="productlist_currentproduct">Current Product</string>
-    <string name="productlist_sampleqty">Sample Qty.</string>
-    <string name="productlist_samplehint">Enter Sample Qty. here</string>
-    <string name="productlist_sampletotalhint">of Total Sample Issued</string>
     <string name="productlist_cramt">Cr. Amt</string>
     <string name="productlist_cradj">Cr. Adj</string>
     <string name="productlist_crbal">Cr. Bal</string>
@@ -749,9 +698,6 @@
     <string name="productlist_grossinvoicevalue">Gross Order Value :</string>
     <string name="productlist_noofcoupons">No. of Coupons :</string>
     <string name="productlist_totalcouponamount">Total Coupon Amount :</string>
-    <string name="productlist_amountprevdue">Amount Previous Due:</string>
-    <string name="productlist_amountoutstanding">Amount Outstanding:</string>
-    <string name="prodlstAmtCollected">Amount Collected:</string>
     <string name="genTermSelectStoresPendingToComplete">Are you sure to confirm the selected store orders?</string>
     <string name="genTermSelectStoresPendingToCancel">Are you sure to cancel the selected store orders?</string>
     <string name="genTermSubmitSelectedInvoice">Confirm Selected</string>
@@ -759,7 +705,6 @@
     <string name="txtYes">Yes</string>
     <string name="txtNo">No</string>
     <string name="txtCancle">Cancel</string>
-    <string name="mysummary_back">Back</string>
     <string name="loc_not_found">Location cannot be found accurately by the system , store will be saved without Location.This can be done later.</string>
     <string name="second_msg_for_map">Please try to get your location once again, If location found to be reasonably accurate as per system it wil be saved.</string>
     <string name="third_msg_for_map">Data will be saved with the current location which appear to be accurate..</string>
@@ -780,13 +725,10 @@
     <string name="MarketVisit">Market Visit</string>
     <string name="Execution">Execution</string>
     <string name="StoreMapping">Store Mapping</string>
-    <string name="DistributorCheckIn">Distributor Check In</string>
     <string name="DSMTracker">DSM Tracker</string>
-    <string name="MapDistributor">Map Distributor</string>
     <string name="NoVisit">No Visit</string>
 
     <string name="NoStocks">There are no Stocks to Return Product</string>
-    <string name="lastvisitdetails_stock">Stock</string>
 
     <string name="DistributorDataSubmit">Distributor Data Submit Successfully.</string>
 
@@ -794,7 +736,6 @@
     <string name="StrClosed">Store Closed</string>
     <string name="StrClosedHeader">Store Closed Information</string>
     <string name="StrClosedReason">Store Closed Reason</string>
-    <string name="alertSaveMsg">Please save data before leaving or changes done will not be saved.</string>
     <string name="alertAskSaveMsg">Do you want to save data?</string>
     <string name="clkStrClosePic">Click Store Close Pic</string>
     <string name="reason">Select Reason</string>
@@ -807,8 +748,6 @@
 
     <string name="DistributorCheckInAlrady">You have already done Distributor Check In For Today.</string>
 
-
-    <string name="ActualVisitHeader">Actual Visit</string>
 
     <string name="AccountCensusBtn">Account Census Report</string>
 

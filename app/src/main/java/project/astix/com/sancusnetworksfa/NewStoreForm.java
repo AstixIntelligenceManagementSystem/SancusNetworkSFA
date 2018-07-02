@@ -90,7 +90,7 @@ public class NewStoreForm extends Fragment  {
 	LinkedHashMap<String,String> hmapCityAgainstState;
 	String defaultCity="";
 
-	String beatNameTag="20^8^38";
+	String beatNameTag="1^8^1";
 	String beatOptnSlctd="0-0-0";
 	LinkedHashMap<String, String> hmapState_details=new LinkedHashMap<String, String>();
 	String previousSlctdState="Select";
@@ -3840,7 +3840,7 @@ public class NewStoreForm extends Fragment  {
 				}
 			});
 		}
-		if(tagVal.split(Pattern.quote("^"))[0].toString().equals("20"))
+		if(tagVal.split(Pattern.quote("^"))[0].toString().equals("1"))
 		{
 			if(activityFrom.equals("StoreSelection"))
 			{
@@ -5225,7 +5225,7 @@ public void selectedOption(String optId, String optionVal, EditText editext,List
 			public boolean validate()
 			{
 
-				boolean isStateCityValidate=fnValidateStateCity();
+				boolean isStateCityValidate=true;//=fnValidateStateCity();
 				if(!isStateCityValidate)
 				{
 					return isStateCityValidate;
@@ -5700,8 +5700,8 @@ public void selectedOption(String optId, String optionVal, EditText editext,List
 		 public void saveDynamicQuesAns(boolean isSaveAsDraft)
 		 {
 
-				if(ll_address_section.getVisibility()==View.VISIBLE)
-				{
+				/*if(ll_address_section.getVisibility()==View.VISIBLE)
+				{*/
 
 					if(addressKey!=null)
 					{
@@ -5807,7 +5807,7 @@ public void selectedOption(String optId, String optionVal, EditText editext,List
 						hmapAddress.put("9","NA");
 					}
 
-				}
+				//}
 			
 				for(Entry<String, String> entry:AddNewStore_DynamicSectionWise.hmapQuesIdValues.entrySet())
 				{

@@ -24,7 +24,9 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import com.astix.Common.CommonInfo;
@@ -99,11 +101,12 @@ import org.json.JSONObject;
 
 public class StoreSelection extends BaseActivity implements com.google.android.gms.location.LocationListener,GoogleApiClient.ConnectionCallbacks,GoogleApiClient.OnConnectionFailedListener
 {
+	public EditText ed_search;
 	public String currSysDate;
 	public int chkFlgForErrorToCloseApp=0;
 	Spinner spinner_manager;
 	Spinner spinner_RouteList;
-
+	LinkedHashMap<View, String> hmapStoreViewAndName=new LinkedHashMap<View,String>();
 	String[] Manager_names=null;
 	String[] Route_names=null;
 	//String[] Manager_names= { "Select Market Location", "sec-20", "sec-24", "other"};
@@ -2632,7 +2635,7 @@ public void DayEndWithoutalert()
 		
 
 		relativeLayout1=(RelativeLayout) findViewById(R.id.relativeLayout1);
-
+		ed_search=(EditText) findViewById(R.id.ed_search);
 		dbengine.open();
 		rID=dbengine.GetActiveRouteID();
 		if(rID.equals("0"))
@@ -2841,7 +2844,46 @@ public void DayEndWithoutalert()
 			
 		setUpVariable();
 
+		ed_search.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				if(s.toString().trim().length()==0)
+				{
+					if (hmapStoreViewAndName != null) {
+						if(hmapStoreViewAndName.size()>0) {
+							for (Map.Entry<View, String> entry : hmapStoreViewAndName.entrySet()) {
+								View storeRow = entry.getKey();
+								storeRow.setVisibility(View.VISIBLE);
+							}
+						}
+					}
+				}
+				else {
+					if (hmapStoreViewAndName != null) {
+						if(hmapStoreViewAndName.size()>0) {
+							for (Map.Entry<View, String> entry : hmapStoreViewAndName.entrySet()) {
+								View storeRow = entry.getKey();
+								if (entry.getValue().toString().trim().toLowerCase().contains(s.toString().trim().toLowerCase())) {
+									storeRow.setVisibility(View.VISIBLE);
+								} else {
+									storeRow.setVisibility(View.GONE);
+								}
+							}
+						}
+					}
+				}
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+
+			}
+		});
 		//
 		String routeNametobeSelectedInSpinner=dbengine.GetActiveRouteDescr();
 		int index=0;
@@ -2938,6 +2980,7 @@ public void DayEndWithoutalert()
 		if(tl2!=null)
 		{
 			tl2.removeAllViews();
+			hmapStoreViewAndName.clear();
 		}
 		dbengine.open();
 		
@@ -2997,8 +3040,10 @@ public void DayEndWithoutalert()
 			check2.setTag(storeCode[current]);
 			check2.setChecked(false);
 			check2.setEnabled(false);
+			//row.setTag(storeRouteIdType[current]);
 			row.setTag(storeRouteIdType[current]);
-
+			row.setVisibility(View.VISIBLE);
+			hmapStoreViewAndName.put(row,storeName[current]);
 			if ((storeCloseStatus[current].equals("1")))
 			{
 				check1.setChecked(true);
@@ -3614,7 +3659,7 @@ public void DayEndWithoutalert()
 
 		 final Button butn_Census_report = (Button) dialog.findViewById(R.id.butn_Census_report);
 
-		 butn_Census_report.setOnClickListener(new View.OnClickListener() {
+		 butn_Census_report.setOnClickListener(new OnClickListener() {
 			 @Override
 			 public void onClick(View v) {
 				 Intent intent=new Intent(StoreSelection.this,AddedOutletSummaryReportActivity.class);
@@ -3752,7 +3797,7 @@ public void DayEndWithoutalert()
 				 dialog.dismiss();
 				 final Dialog dialogLanguage = new Dialog(StoreSelection.this);
 				 dialogLanguage.requestWindowFeature(Window.FEATURE_NO_TITLE);
-				 dialogLanguage.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.WHITE));
+				 dialogLanguage.getWindow().setBackgroundDrawable(new ColorDrawable(Color.WHITE));
 
 				 dialogLanguage.setCancelable(false);
 				 dialogLanguage.setContentView(R.layout.language_popup);

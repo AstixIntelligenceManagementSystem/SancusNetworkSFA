@@ -3,7 +3,8 @@
                         android:id="@+id/tblDynRow"
                         android:layout_margin="0.1dp"
                         android:background="#ffffff"
-                        android:layout_height="wrap_content" 
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
                         >
 
                         <RadioButton
