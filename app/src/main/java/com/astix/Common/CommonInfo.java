@@ -77,7 +77,7 @@ public class CommonInfo
         public static int DayStartClick=0;
 	   public static String ImagesFolderServer="SancusNetworksSFAImagesServer";
 
-
+//a
 
 
 
