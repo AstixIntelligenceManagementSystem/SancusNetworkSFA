@@ -650,7 +650,7 @@ public class NewStoreForm extends Fragment  {
 			}
 
 			ll_local_area.setVisibility(View.GONE);
-			ll_address_section.setVisibility(View.GONE);
+			ll_address_section.setVisibility(View.VISIBLE);
 		}
 		  //if(section==AddNewStore_DynamicSectionWise.hmapSctnId_GrpId.size())
 		    /*{
@@ -5225,7 +5225,7 @@ public void selectedOption(String optId, String optionVal, EditText editext,List
 			public boolean validate()
 			{
 
-				boolean isStateCityValidate=true;//=fnValidateStateCity();
+				boolean isStateCityValidate=fnValidateStateCity();
 				if(!isStateCityValidate)
 				{
 					return isStateCityValidate;

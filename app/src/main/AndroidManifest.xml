@@ -469,6 +469,11 @@
 
         <activity android:name="project.astix.com.sancusnetworksfa.ActualVisitStock"
             android:screenOrientation="portrait" />
+        <activity android:name="project.astix.com.sancusnetworksfa.MerchandisingInstruction"
+            android:screenOrientation="portrait" />
+
+
+
 
     </application>
 
