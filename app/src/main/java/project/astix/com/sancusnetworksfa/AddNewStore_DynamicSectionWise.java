@@ -86,9 +86,11 @@ import java.util.UUID;
 import java.util.regex.Pattern;
 
 
-public class AddNewStore_DynamicSectionWise extends FragmentActivity implements LocationListener,GoogleApiClient.ConnectionCallbacks,GoogleApiClient.OnConnectionFailedListener,SearchListCommunicator,OnMapReadyCallback,CategoryCommunicatorCityState
+public class AddNewStore_DynamicSectionWise extends BaseFragmentActivity implements LocationListener,GoogleApiClient.ConnectionCallbacks,GoogleApiClient.OnConnectionFailedListener,SearchListCommunicator,OnMapReadyCallback,CategoryCommunicatorCityState
 {
-
+    int flgCheckNewOldStore=0;
+    String StoreNameFromBack="";
+    public static String currentBeatName="All";
 
     public String flgGSTCapture="1";
     public String flgGSTCompliance="0";
@@ -406,7 +408,7 @@ public class AddNewStore_DynamicSectionWise extends FragmentActivity implements 
         Date dateobj1 = new Date(syncTIMESTAMP1);
         SimpleDateFormat df1 = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss",Locale.ENGLISH);
          VisitStartTS = df1.format(dateobj1);
-int flgCheckNewOldStore=0;
+
         if(!isGPSok)
         {
             isGPSok = false;
@@ -431,38 +433,38 @@ int flgCheckNewOldStore=0;
         }
         storeNameToShow="";
         this.registerReceiver(this.mBatInfoReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
-       /* Intent extras = getIntent();
+        Intent extras = getIntent();
         FLAG_NEW_UPDATE=  extras.getStringExtra("FLAG_NEW_UPDATE");
+        activityFrom=extras.getStringExtra("activityFrom");
         if(FLAG_NEW_UPDATE.equals("UPDATE"))
         {
             selStoreID=  extras.getStringExtra("StoreID");
             StoreName=    extras.getStringExtra("StoreName");
             storeNameToShow=StoreName;
+           // currentBeatName="All";
+            currentBeatName= extras.getStringExtra("CurrntRouteName");
         }
         else
         {
+            currentBeatName= extras.getStringExtra("CurrntRouteName");
+
             flgCheckNewOldStore=1;
             selStoreID=genTempID();
+            StoreNameFromBack= extras.getStringExtra("StoreName");
+            if(StoreNameFromBack.equals("NA") || StoreNameFromBack.equals(""))
+            {
+                StoreNameFromBack="";
+            }
 
         }
 
 
-        if(extras !=null)
-        {
-
-
-            date_value="28-Jun-2017";
-            pickerDate= "28-Jun-2017";
-            //imei="123";
-            rID="1";
-        }*/
-
-
-        Intent extras = getIntent();
+      /*  Intent extras = getIntent();
         if(extras !=null)
         {
             StoreName="NA";
-            selStoreID=extras.getStringExtra("storeID");
+            selStoreID=extras.getStringExtra("StoreID");
+            StoreName=    extras.getStringExtra("StoreName");
 
             if(selStoreID.equals("0"))
             {
@@ -474,7 +476,7 @@ int flgCheckNewOldStore=0;
             pickerDate= extras.getStringExtra("pickerDate");
             imei=extras.getStringExtra("imei");
             rID=extras.getStringExtra("rID");
-        }
+        }*/
 
 
         TelephonyManager tManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
@@ -861,7 +863,8 @@ int flgCheckNewOldStore=0;
             }
         });
 
-        ll_back.setOnClickListener(new OnClickListener() {
+        ll_back.setOnClickListener(new OnClickListener()
+        {
 
             @Override
             public void onClick(View v) {
@@ -903,7 +906,7 @@ int flgCheckNewOldStore=0;
 
 if(flgCheckNewOldStore==1)
 {
-    flgCheckNewOldStore=0;
+  //  flgCheckNewOldStore=0;
     // 28.4869721   77.1023821  13.229
    // if(!checkLastFinalLoctionIsRepeated("28.4866314","77.101591","100.0"))
     if(!checkLastFinalLoctionIsRepeated(LattitudeFromLauncher,LongitudeFromLauncher,AccuracyFromLauncher))
@@ -1058,7 +1061,9 @@ if(flgCheckNewOldStore==1)
 
 
 
-
+                String selectedBeatName="";
+                String slctdBeatId="0";
+                String slctdBeatNodeType="0";
 
 
                NewStoreForm recFragment = (NewStoreForm) getFragmentManager().findFragmentByTag("NewStoreFragment");
@@ -1067,6 +1072,12 @@ if(flgCheckNewOldStore==1)
                     recFragment.saveDynamicQuesAns(true);
                     hmapStoreQuestAnsNew = recFragment.hmapAnsValues;
                     hmapStoreAddress=recFragment.hmapAddress;
+                    selectedBeatName= recFragment.getSelectedBeatName();
+                    if(!selectedBeatName.equals("0") && (selectedBeatName.contains("-")))
+                    {
+                        slctdBeatId= selectedBeatName.split(Pattern.quote("-"))[1];
+                        slctdBeatNodeType=selectedBeatName.split(Pattern.quote("-"))[2];
+                    }
                     if(!TextUtils.isEmpty(recFragment.distBId))
                     {
                         distID=recFragment.distBId;
@@ -1175,6 +1186,8 @@ if(flgCheckNewOldStore==1)
 
     public void addStoreOffline()
     {
+
+
         helperDb.fnsaveOutletQuestAnsMstrSectionWise(hmapStoreQuestAnsNew, 0, selStoreID);
 
         long syncTIMESTAMP = System.currentTimeMillis();
@@ -1192,9 +1205,47 @@ if(flgCheckNewOldStore==1)
         String VisitStartTS=df.format(datefromat);
         fnGettingGSTOFflineVal();
         checkHighAccuracyLocationMode(AddNewStore_DynamicSectionWise.this);
+
+
+
+        String selectedBeatName="";
+        String slctdBeatId="0";
+        String slctdBeatNodeType="0";
+        LinkedHashMap<String, String> hmapStoreQuestAnsNew = new LinkedHashMap<String, String>();
+        LinkedHashMap<String, String> hmapStoreAddress = new LinkedHashMap<String, String>();
+        NewStoreForm recFragment = (NewStoreForm) getFragmentManager().findFragmentByTag("NewStoreFragment");
+        if (null != recFragment)
+        {
+            recFragment.saveDynamicQuesAns(true);
+            hmapStoreQuestAnsNew = recFragment.hmapAnsValues;
+            hmapStoreAddress=recFragment.hmapAddress;
+            selectedBeatName= recFragment.getSelectedBeatName();
+            if(!selectedBeatName.equals("0") && (selectedBeatName.contains("-")))
+            {
+                slctdBeatId= selectedBeatName.split(Pattern.quote("-"))[1];
+                slctdBeatNodeType=selectedBeatName.split(Pattern.quote("-"))[2];
+            }
+        }
+         if (FLAG_NEW_UPDATE.equals("UPDATE")) {
+            helperDb.open();
+            helperDb.UpdateStoreReturnphotoFlagSM(selStoreID, StoreName,0);
+            helperDb.close();
+        } else
+        {
+            helperDb.open();
+            helperDb.saveTblPreAddedStores(selStoreID, StoreName, LattitudeFromLauncher, LongitudeFromLauncher, VisitDate, 1,0, 3,Integer.parseInt(slctdBeatId),Integer.parseInt(slctdBeatNodeType));
+            helperDb.close();
+        }
+
+
+
+
+
         helperDb.open();
 
         helperDb.deletetblstoreMstrOnStoreIDBasis(selStoreID);
+        helperDb.saveTblPreAddedStores(selStoreID, StoreName, LattitudeFromLauncher, LongitudeFromLauncher, VisitDate, 1,0, 3,Integer.parseInt(slctdBeatId),Integer.parseInt(slctdBeatNodeType));
+
 
         helperDb.savetblStoreMain(beatSelected.split(Pattern.quote("-"))[1],beatSelected.split(Pattern.quote("-"))[2],selStoreID,StoreName,"NA","NA","NA","NA","NA","NA","NA","0",StoreTypeTradeChannel,
                 Integer.parseInt("1"),0,0, 0, "NA",VisitStartTS,imei,""+battLevel,3,String.valueOf(LattitudeFromLauncher),String.valueOf(LongitudeFromLauncher),"" + AccuracyFromLauncher,"" + fnAccurateProvider,0,hmapStoreAddress.get("0"),allValuesOfPaymentStageID,flgHasQuote,flgAllowQuotation,flgSubmitFromQuotation,flgGSTCapture,flgGSTCompliance,GSTNumber,flgGSTRecordFromServer,flgLocationServicesOnOff,flgGPSOnOff,flgNetworkOnOff,flgFusedOnOff,flgInternetOnOffWhileLocationTracking,flgRestart,flgStoreOrder, hmapStoreAddress.get("2"), hmapStoreAddress.get("1"), hmapStoreAddress.get("3"),distID, hmapStoreAddress.get("4"), hmapStoreAddress.get("5"), hmapStoreAddress.get("6"), hmapStoreAddress.get("7"), hmapStoreAddress.get("8"), hmapStoreAddress.get("9"));
@@ -1243,12 +1294,17 @@ if(flgCheckNewOldStore==1)
         // new code
         if(activityFrom.equals("StoreSelection"))
         {
-            Intent ide=new Intent(AddNewStore_DynamicSectionWise.this,StoreSelection.class);
+            /*Intent ide=new Intent(AddNewStore_DynamicSectionWise.this,StoreSelection.class);
             ide.putExtra("userDate", date_value);
             ide.putExtra("pickerDate", pickerDate);
             ide.putExtra("imei", imei);
             ide.putExtra("rID", rID);
             AddNewStore_DynamicSectionWise.this.startActivity(ide);
+            finish();*/
+
+            Intent intent =new Intent(AddNewStore_DynamicSectionWise.this,StorelistActivity.class);
+            intent.putExtra("activityFrom", "StoreSelection");
+            startActivity(intent);
             finish();
 
         }
@@ -1256,12 +1312,23 @@ if(flgCheckNewOldStore==1)
         else if(activityFrom.equals("AllButtonActivity"))
         {
 
-            Intent ide=new Intent(AddNewStore_DynamicSectionWise.this,AllButtonActivity.class);
+           /* Intent ide=new Intent(AddNewStore_DynamicSectionWise.this,AllButtonActivity.class);
             ide.putExtra("userDate", date_value);
             ide.putExtra("pickerDate", pickerDate);
             ide.putExtra("imei", imei);
             ide.putExtra("rID", rID);
             AddNewStore_DynamicSectionWise.this.startActivity(ide);
+            finish();*/
+            Intent intent =new Intent(AddNewStore_DynamicSectionWise.this,StorelistActivity.class);
+            intent.putExtra("activityFrom", "AllButtonActivity");
+            startActivity(intent);
+            finish();
+        }
+        else
+        {
+            Intent intent =new Intent(AddNewStore_DynamicSectionWise.this,StorelistActivity.class);
+            intent.putExtra("activityFrom", "AllButtonActivity");
+            startActivity(intent);
             finish();
         }
 
@@ -1342,8 +1409,16 @@ if(flgCheckNewOldStore==1)
         startLocationUpdates();
     }
 
-    protected void startLocationUpdates() {
-        PendingResult<Status> pendingResult = LocationServices.FusedLocationApi.requestLocationUpdates( mGoogleApiClient, mLocationRequest, this);
+    protected void startLocationUpdates()
+    {
+        try
+        {
+            PendingResult<Status> pendingResult = LocationServices.FusedLocationApi.requestLocationUpdates( mGoogleApiClient, mLocationRequest, this);
+        }
+        catch (SecurityException e)
+        {
+
+        }
 
     }
     @Override
@@ -1392,7 +1467,12 @@ if(flgCheckNewOldStore==1)
         if(!LattitudeFromLauncher.equals("NA") && !LattitudeFromLauncher.equals("0.0"))
         {
             googleMap.clear();
-            googleMap.setMyLocationEnabled(false);
+            try {
+                googleMap.setMyLocationEnabled(false);
+            }catch (SecurityException e)
+            {
+
+            }
             MarkerOptions marker = new MarkerOptions().position(new LatLng(Double.parseDouble(LattitudeFromLauncher), Double.parseDouble(LongitudeFromLauncher)));
             Marker locationMarker=googleMap.addMarker(marker);
             locationMarker.showInfoWindow();
@@ -1407,7 +1487,15 @@ if(flgCheckNewOldStore==1)
                     txt_rfrshCmnt.setText(getString(R.string.loc_not_found));
                     btn_refresh.setVisibility(View.GONE);
                 }
-            googleMap.setMyLocationEnabled(true);
+                try
+                {
+                    googleMap.setMyLocationEnabled(true);
+                }
+                catch (SecurityException e)
+                {
+
+                }
+
             googleMap.moveCamera(CameraUpdateFactory.zoomIn());
             googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
                 @Override
@@ -2591,7 +2679,7 @@ if(flgCheckNewOldStore==1)
             if (addresses != null && addresses.size() > 0){
                 if(addresses.get(0).getAddressLine(1)!=null){
                     addr=addresses.get(0).getAddressLine(1);
-                    address=addr;
+
                 }
 
 
@@ -2627,7 +2715,8 @@ if(flgCheckNewOldStore==1)
                         countryname=addresses.get(0).getCountryName();
                     }
 
-                    addr=  getAddressNewWay(addresses.get(0).getAddressLine(0),city,state,zipcode,countryname);
+                    address=  getAddressNewWay(addresses.get(0).getAddressLine(0),city,state,zipcode,countryname);
+                     addr=address;
                 }
 
 
@@ -2889,6 +2978,17 @@ if(flgCheckNewOldStore==1)
 
 
         }
+        if(flgCheckNewOldStore==1)
+        {
+            flgCheckNewOldStore=0;
+            // setStoreName(StoreNameFromBack);
+            NewStoreForm recFragment = (NewStoreForm)getFragmentManager().findFragmentByTag("NewStoreFragment");
+            if(null != recFragment)
+            {
+                recFragment.setStoreName(StoreNameFromBack);
+            }
+        }
+
     }
     /*public String getAddressOfProviders(String latti, String longi){
 

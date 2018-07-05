@@ -18801,4 +18801,340 @@ String RouteType="0";
 		}
 
 	}
+	public ServiceWorker getStoreAllDetails(Context ctx,String uuid,String CurDate,int DatabaseVersion,int ApplicationID,String RegistrationID)
+	{
+
+		this.context = ctx;
+		DBAdapterKenya dbengine = new DBAdapterKenya(context);
+		dbengine.open();
+
+		decimalFormat.applyPattern(pattern);
+
+		int chkTblStoreListContainsRow=1;
+		StringReader read;
+		InputSource inputstream;
+		final String SOAP_ACTION = "http://tempuri.org/fnGetLTSummaryAndPreAddedOutletDetails";
+		final String METHOD_NAME = "fnGetLTSummaryAndPreAddedOutletDetails";
+		final String NAMESPACE = "http://tempuri.org/";
+		final String URL = UrlForWebService;
+		//Create request
+		SoapObject table = null; // Contains table of dataset that returned
+		// through SoapObject
+		SoapObject client = null; // Its the client petition to the web service
+		SoapObject tableRow = null; // Contains row of table
+		SoapObject responseBody = null; // Contains XML content of dataset
+
+		//SoapObject param
+		HttpTransportSE transport = null; // That call webservice
+		SoapSerializationEnvelope sse = null;
+
+		sse = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+
+		sse.dotNet = true;
+		HttpTransportSE androidHttpTransport = new HttpTransportSE(URL,timeout);
+
+		ServiceWorker setmovie = new ServiceWorker();
+
+
+		// // System.out.println("Kajol 100");
+
+		try {
+			client = new SoapObject(NAMESPACE, METHOD_NAME);
+
+
+
+			// // System.out.println("Kajol 101");
+			client.addProperty("uuid", uuid.toString());
+			client.addProperty("DatabaseVersion", DatabaseVersion);
+			client.addProperty("ApplicationID", ApplicationID);
+			client.addProperty("RegistrationID", RegistrationID);
+
+			// // System.out.println("Kajol 102");
+			sse.setOutputSoapObject(client);
+			// // System.out.println("Kajol 103");
+			sse.bodyOut = client;
+			// // System.out.println("Kajol 104");
+
+			androidHttpTransport.call(SOAP_ACTION, sse);
+
+			// // System.out.println("Kajol 1");
+
+			responseBody = (SoapObject)sse.bodyIn;
+			// This step: get file XML
+			//responseBody = (SoapObject) sse.getResponse();
+			int totalCount = responseBody.getPropertyCount();
+
+			// // System.out.println("Kajol 2 :"+totalCount);
+			String resultString=androidHttpTransport.responseDump;
+
+			String name=responseBody.getProperty(0).toString();
+
+			// // System.out.println("Kajol 3 :"+name);
+
+			XMLParser xmlParser = new XMLParser();
+			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+			DocumentBuilder db = dbf.newDocumentBuilder();
+			InputSource is = new InputSource();
+			is.setCharacterStream(new StringReader(name));
+			Document doc = db.parse(is);
+
+
+			dbengine.delete_all_storeDetailTables();
+
+
+
+
+			NodeList tblUserNameNode = doc.getElementsByTagName("tblUserName");
+			for (int i = 0; i < tblUserNameNode.getLength(); i++)
+			{
+
+				String UserName="0";
+
+				Element element = (Element) tblUserNameNode.item(i);
+				if(!element.getElementsByTagName("UserName").equals(null))
+				{
+					NodeList UserNameNode = element.getElementsByTagName("UserName");
+					Element     line = (Element) UserNameNode.item(0);
+					if (UserNameNode.getLength()>0)
+					{
+						UserName=xmlParser.getCharacterDataFromElement(line);
+					}
+				}
+
+				dbengine.saveTblUserName(UserName);
+			}
+
+			NodeList tblStoreCountDetailsNode = doc.getElementsByTagName("tblStoreCountDetails");
+			for (int i = 0; i < tblStoreCountDetailsNode.getLength(); i++)
+			{
+
+				String TotStoreAdded="0";
+				String TodayStoreAdded ="0";
+
+
+				Element element = (Element) tblStoreCountDetailsNode.item(i);
+				if(!element.getElementsByTagName("TotStoreAdded").equals(null))
+				{
+					NodeList TotStoreAddedNode = element.getElementsByTagName("TotStoreAdded");
+					Element     line = (Element) TotStoreAddedNode.item(0);
+					if (TotStoreAddedNode.getLength()>0)
+					{
+						TotStoreAdded=xmlParser.getCharacterDataFromElement(line);
+					}
+				}
+				if(!element.getElementsByTagName("TodayStoreAdded").equals(null))
+				{
+					NodeList TodayStoreAddedNode = element.getElementsByTagName("TodayStoreAdded");
+					Element     line = (Element) TodayStoreAddedNode.item(0);
+					if (TodayStoreAddedNode.getLength()>0)
+					{
+						TodayStoreAdded=xmlParser.getCharacterDataFromElement(line);
+					}
+				}
+
+				dbengine.saveTblStoreCountDetails(TotStoreAdded, TodayStoreAdded);
+			}
+
+			NodeList tblPreAddedStoresNode = doc.getElementsByTagName("tblPreAddedStores");
+			for (int i = 0; i < tblPreAddedStoresNode.getLength(); i++)
+			{
+
+				String StoreID="0";
+				String StoreName ="0";
+				String LatCode ="0";
+				String LongCode ="0";
+				String DateAdded ="0";
+				int flgOldNewStore=0;
+				int flgRemap=0;
+				int Sstat=0;
+				int RouteID=0;
+				int RouteNodeType=0;
+				Element element = (Element) tblPreAddedStoresNode.item(i);
+
+
+				if(!element.getElementsByTagName("RouteNodeID").equals(null))
+				{
+					NodeList RouteIDNode = element.getElementsByTagName("RouteNodeID");
+					Element     line = (Element) RouteIDNode.item(0);
+					if (RouteIDNode.getLength()>0)
+					{
+						RouteID=Integer.parseInt(xmlParser.getCharacterDataFromElement(line));
+					}
+				}
+
+
+				if(!element.getElementsByTagName("RouteNodeType").equals(null))
+				{
+					NodeList RouteNodeTypeNode = element.getElementsByTagName("RouteNodeType");
+					Element     line = (Element) RouteNodeTypeNode.item(0);
+					if (RouteNodeTypeNode.getLength()>0)
+					{
+						RouteNodeType=Integer.parseInt(xmlParser.getCharacterDataFromElement(line));
+					}
+				}
+
+				if(!element.getElementsByTagName("StoreIDDB").equals(null))
+				{
+					NodeList StoreIDNode = element.getElementsByTagName("StoreIDDB");
+					Element     line = (Element) StoreIDNode.item(0);
+					if (StoreIDNode.getLength()>0)
+					{
+						StoreID=xmlParser.getCharacterDataFromElement(line);
+					}
+				}
+				if(!element.getElementsByTagName("StoreName").equals(null))
+				{
+					NodeList StoreNameNode = element.getElementsByTagName("StoreName");
+					Element     line = (Element) StoreNameNode.item(0);
+					if (StoreNameNode.getLength()>0)
+					{
+						StoreName=xmlParser.getCharacterDataFromElement(line);
+					}
+				}
+				if(!element.getElementsByTagName("LatCode").equals(null))
+				{
+					NodeList LatCodeNode = element.getElementsByTagName("LatCode");
+					Element     line = (Element) LatCodeNode.item(0);
+					if (LatCodeNode.getLength()>0)
+					{
+						LatCode=xmlParser.getCharacterDataFromElement(line);
+					}
+				}
+				if(!element.getElementsByTagName("LongCode").equals(null))
+				{
+					NodeList LongCodeNode = element.getElementsByTagName("LongCode");
+					Element     line = (Element) LongCodeNode.item(0);
+					if (LongCodeNode.getLength()>0)
+					{
+						LongCode=xmlParser.getCharacterDataFromElement(line);
+					}
+				}
+				if(!element.getElementsByTagName("DateAdded").equals(null))
+				{
+					NodeList DateAddedNode = element.getElementsByTagName("DateAdded");
+					Element     line = (Element) DateAddedNode.item(0);
+					if (DateAddedNode.getLength()>0)
+					{
+						DateAdded=xmlParser.getCharacterDataFromElement(line);
+					}
+				}
+
+				if(!element.getElementsByTagName("flgRemap").equals(null))
+				{
+					NodeList flgRemapNode = element.getElementsByTagName("flgRemap");
+					Element     line = (Element) flgRemapNode.item(0);
+					if (flgRemapNode.getLength()>0)
+					{
+						flgRemap=Integer.parseInt(xmlParser.getCharacterDataFromElement(line));
+					}
+				}
+
+
+				dbengine.saveTblPreAddedStores(StoreID, StoreName, LatCode, LongCode, DateAdded,flgOldNewStore,flgRemap,Sstat,RouteID,RouteNodeType);
+			}
+
+			NodeList tblPreAddedStoresDataDetailsNode = doc.getElementsByTagName("tblPreAddedStoresDataDetails");
+			for (int i = 0; i < tblPreAddedStoresDataDetailsNode.getLength(); i++)
+			{
+
+				String StoreIDDB="0";
+				String GrpQuestID ="0";
+				String QstId ="0";
+				String AnsControlTypeID ="0";
+
+				String AnsTextVal ="0";
+
+				String flgPrvVal ="2";
+
+
+				Element element = (Element) tblPreAddedStoresDataDetailsNode.item(i);
+
+				if(!element.getElementsByTagName("StoreIDDB").equals(null))
+				{
+					NodeList StoreIDDBNode = element.getElementsByTagName("StoreIDDB");
+					Element     line = (Element) StoreIDDBNode.item(0);
+					if (StoreIDDBNode.getLength()>0)
+					{
+						StoreIDDB=xmlParser.getCharacterDataFromElement(line);
+					}
+				}
+				if(!element.getElementsByTagName("GrpQuestID").equals(null))
+				{
+					NodeList GrpQuestIDNode = element.getElementsByTagName("GrpQuestID");
+					Element     line = (Element) GrpQuestIDNode.item(0);
+					if (GrpQuestIDNode.getLength()>0)
+					{
+						GrpQuestID=xmlParser.getCharacterDataFromElement(line);
+					}
+				}
+				if(!element.getElementsByTagName("QstId").equals(null))
+				{
+					NodeList QstIdNode = element.getElementsByTagName("QstId");
+					Element     line = (Element) QstIdNode.item(0);
+					if (QstIdNode.getLength()>0)
+					{
+						QstId=xmlParser.getCharacterDataFromElement(line);
+					}
+				}
+				if(!element.getElementsByTagName("AnsControlTypeID").equals(null))
+				{
+					NodeList AnsControlTypeIDNode = element.getElementsByTagName("AnsControlTypeID");
+					Element     line = (Element) AnsControlTypeIDNode.item(0);
+					if (AnsControlTypeIDNode.getLength()>0)
+					{
+						AnsControlTypeID=xmlParser.getCharacterDataFromElement(line);
+					}
+				}
+
+				if(!element.getElementsByTagName("Ans").equals(null))
+				{
+					NodeList AnsTextValNode = element.getElementsByTagName("Ans");
+					Element     line = (Element) AnsTextValNode.item(0);
+					if (AnsTextValNode.getLength()>0)
+					{
+						AnsTextVal=xmlParser.getCharacterDataFromElement(line);
+					}
+				}
+
+				if(!element.getElementsByTagName("flgPrvValue").equals(null))
+				{
+					NodeList OptionValueNode = element.getElementsByTagName("flgPrvValue");
+					Element     line = (Element) OptionValueNode.item(0);
+					if (OptionValueNode.getLength()>0)
+					{
+						flgPrvVal=xmlParser.getCharacterDataFromElement(line);
+					}
+				}
+
+
+				dbengine.saveTblPreAddedStoresDataDetails(StoreIDDB, GrpQuestID, QstId, AnsControlTypeID,AnsTextVal,flgPrvVal);
+			}
+
+
+
+
+
+
+
+
+
+			setmovie.director = "1";
+			dbengine.close();
+			return setmovie;
+
+		} catch (Exception e) {
+
+			// System.out.println("Aman Exception occur in GetIMEIVersionDetailStatusNew :"+e.toString());
+			setmovie.director = e.toString();
+			setmovie.movie_name = e.toString();
+			dbengine.close();
+
+			return setmovie;
+		}
+
+
+
+
+
+	}
 }

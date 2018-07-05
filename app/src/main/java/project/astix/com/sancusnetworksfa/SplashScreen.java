@@ -138,7 +138,7 @@ public class SplashScreen extends BaseActivity
 
 
       //  imei="359632061313398";
-        imei="354010084603910"; //for development given by avinash sir
+       // imei="354010084603910"; //for development given by avinash sir
 
     if(CommonInfo.imei.trim().equals(null) || CommonInfo.imei.trim().equals(""))
     {
@@ -1013,10 +1013,12 @@ public class SplashScreen extends BaseActivity
         @Override
         protected Void doInBackground(Void... params)
         {
+            int DatabaseVersion = dbengine.DATABASE_VERSION;
+            int ApplicationID = dbengine.Application_TypeID;
 
             try
             {
-                for(int mm = 1; mm<9; mm++)
+                for(int mm = 1; mm<10; mm++)
                 {
                     if(mm==1)
                     {
@@ -1039,8 +1041,8 @@ public class SplashScreen extends BaseActivity
                     }
                     if(mm==3)
                     {
-                        int DatabaseVersion=CommonInfo.DATABASE_VERSIONID;
-                        int ApplicationID=CommonInfo.Application_TypeID;
+                       // int DatabaseVersion=CommonInfo.DATABASE_VERSIONID;
+                       // int ApplicationID=CommonInfo.Application_TypeID;
                         newservice = newservice.callfnSingleCallAllWebService(getApplicationContext(),ApplicationID,imei);
                         if(!newservice.director.toString().trim().equals("1"))
                         {
@@ -1104,6 +1106,17 @@ public class SplashScreen extends BaseActivity
                             if(chkFlgForErrorToCloseApp==0)
                             {
                                 chkFlgForErrorToCloseApp=1;
+                                break;
+                            }
+
+                        }
+                    }
+                    if(mm==9)
+                    {
+                        newservice = newservice.getStoreAllDetails(getApplicationContext(), imei, fDate, DatabaseVersion, ApplicationID,"NA");
+                        if (!newservice.director.toString().trim().equals("1")) {
+                            if (chkFlgForErrorToCloseApp == 0) {
+                                chkFlgForErrorToCloseApp = 1;
                                 break;
                             }
 

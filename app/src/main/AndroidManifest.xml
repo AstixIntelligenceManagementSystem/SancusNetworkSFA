@@ -448,6 +448,9 @@
         <activity android:name="project.astix.com.sancusnetworksfa.StoreClosedActivity"
             android:screenOrientation="portrait" />
 
+        <activity android:name="project.astix.com.sancusnetworksfa.StorelistActivity"
+            android:screenOrientation="portrait" />
+
 
         <provider
             android:name="android.support.v4.content.FileProvider"

@@ -1756,9 +1756,7 @@ public void DayEndWithoutalert()
 				public void onClick(View v) 
 				{
 					// TODO Auto-generated method stub
-					Intent intent = new Intent(StoreSelection.this, AddNewStore_DynamicSectionWise.class);
-					//Intent intent = new Intent(StoreSelection.this, Add_New_Store_NewFormat.class);
-					//Intent intent = new Intent(StoreSelection.this, Add_New_Store.class);
+					/*Intent intent = new Intent(StoreSelection.this, AddNewStore_DynamicSectionWise.class);
 					intent.putExtra("storeID", "0");
 					intent.putExtra("activityFrom", "StoreSelection");
 					intent.putExtra("userdate", userDate);
@@ -1766,18 +1764,13 @@ public void DayEndWithoutalert()
 					intent.putExtra("imei", imei);
 					intent.putExtra("rID", rID);
 					StoreSelection.this.startActivity(intent);
-					finish();
-					
-					/*// TODO Auto-generated method stub
-					Intent intent = new Intent(StoreSelection.this, Add_New_Store_DynamicSectionWise.class);
+					finish();*/
+					Intent intent =new Intent(StoreSelection.this,StorelistActivity.class);
 					intent.putExtra("activityFrom", "StoreSelection");
-					intent.putExtra("userdate", userDate);
-					intent.putExtra("pickerDate", pickerDate);
-					intent.putExtra("imei", imei);
-					intent.putExtra("rID", rID);
-					StoreSelection.this.startActivity(intent);
+					startActivity(intent);
 					finish();
-*/				}
+
+				}
 			});
 			
 			/*Button but_SalesSummray = (Button) findViewById(R.id.btnSalesSummary);
@@ -2621,14 +2614,16 @@ public void DayEndWithoutalert()
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_store_selection);
 		tl2 = (TableLayout) findViewById(R.id.dynprodtable);
+		imei=getIMEI();
 		Intent getStorei = getIntent();
-		if(getStorei !=null)
+		pickerDate=getDateInMonthTextFormat();
+		userDate=getDateInMonthTextFormat();
+		/*if(getStorei !=null)
 		{
-		imei = getStorei.getStringExtra("imei").trim();
-        pickerDate = getStorei.getStringExtra("pickerDate").trim();
-        userDate = getStorei.getStringExtra("userDate");
+		 pickerDate = getStorei.getStringExtra("pickerDate").trim();
+         userDate = getStorei.getStringExtra("userDate");
 		}
-
+*/
 		locationManager = (LocationManager) mContext.getSystemService(LOCATION_SERVICE);
 		
 		this.registerReceiver(this.mBatInfoReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));

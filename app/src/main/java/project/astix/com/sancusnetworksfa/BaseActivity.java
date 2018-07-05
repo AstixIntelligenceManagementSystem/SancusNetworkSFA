@@ -48,11 +48,6 @@ public class BaseActivity extends Activity
         {
             TelephonyManager tManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
             imei = tManager.getDeviceId();
-
-            //  imei="354010084603910";
-            imei="865404034791887";   //Developement Imei
-
-
         }
         catch(SecurityException e)
         {

@@ -87,6 +87,7 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 
 public class NewStoreForm extends Fragment  {
 
+	public String currentSelectedBeat="0";
 	LinkedHashMap<String,String> hmapCityAgainstState;
 	String defaultCity="";
 
@@ -134,7 +135,7 @@ public class NewStoreForm extends Fragment  {
 	int flgSubmitFromQuotation=0;
 	LinkedHashMap<String, String> hmapQuestionflgPrvValue=new LinkedHashMap<String, String>();
 	LinkedHashMap<String, String> hmapPreviousVisitServerQuestionSavedAns=new LinkedHashMap<String,String>();
-	String grpQstId_qstIdForName,grpQstIdForChannel,nameForStore;
+	String grpQstId_qstIdForName,grpQstIdForChannel,nameForStore,nameForBeatName;
 	LinkedHashMap<String,String> hmapGetCheckBoxVisible=new LinkedHashMap<String,String>();
 	TextView PaymentStageTextView,paymentModeTextviewNew,creditdaysTextboxNew,CreditlimitTextboxNew,percentageTextviewNew,paymentstagetextviewNew, CreditDaysTextbox, PaymentModeTextView, Date,SalesQuoteTypeSpinner,ValFrom,ValTo,SalesQuoteType,ValidityFrom,PaymentTerms,headerstring;
 	 Calendar calendarS ;
@@ -270,7 +271,7 @@ public class NewStoreForm extends Fragment  {
 		hmapQuestGrpId_QstId=helperDb.getQuestGrpIdLnkWdQstId();
 		hmapQuestionSavedAns=helperDb.getQuestAnswer(AddNewStore_DynamicSectionWise.selStoreID);
 
-		//hmapQuestionflgPrvValue=helperDb.fnGetQuestionIdFlgPrvValue(AddNewStore_DynamicSectionWise.selStoreID);
+		hmapQuestionflgPrvValue=helperDb.fnGetQuestionIdFlgPrvValue(AddNewStore_DynamicSectionWise.selStoreID);
 		hmapPreviousVisitServerQuestionSavedAns=helperDb.getPDAUserPreviousQuestionAnswerMasterServer(AddNewStore_DynamicSectionWise.selStoreID);
 
 
@@ -280,6 +281,7 @@ public class NewStoreForm extends Fragment  {
 		
 		grpQstId_qstIdForName=helperDb.getNameQstGrpId_QstId();
 		nameForStore=grpQstId_qstIdForName.split(Pattern.quote("^"))[1]+"^"+hmapQuesIdandGetAnsCntrlType.get(grpQstId_qstIdForName.split(Pattern.quote("^"))[1])+"^"+grpQstId_qstIdForName.split(Pattern.quote("^"))[0];
+		nameForBeatName="1"+"^"+hmapQuesIdandGetAnsCntrlType.get("1")+"^"+"1";
 		hmapgetOptDepMstr=helperDb.getDepOptMstr();
 		listimagePath=helperDb.getImagePath(AddNewStore_DynamicSectionWise.selStoreID);
 		
@@ -2450,7 +2452,7 @@ public class NewStoreForm extends Fragment  {
 	{
 		View viewEditText = null;
 		EditText editText = null;//=new EditText(getActivity());
-		if(ansControlInputTypeID.equals("9"))
+		/*if(ansControlInputTypeID.equals("9"))
 		{
 			addressKey=tagVal;
 			viewEditText=getActivity().getLayoutInflater().inflate(R.layout.edit_text_ans_address, null);
@@ -2459,13 +2461,25 @@ public class NewStoreForm extends Fragment  {
 			{
 				editText.setText("\n\n"+AddNewStore_DynamicSectionWise.address);
 			}
-			/*editText.setSingleLine(isSingleLine);
+			*//*editText.setSingleLine(isSingleLine);
 			if(!isSingleLine)
 			{
 				//et_numeric_alpha.setInputType(T)
 				editText.setInputType(InputType.TYPE_CLASS_TEXT |
 						InputType.TYPE_TEXT_FLAG_MULTI_LINE);
-			}*/
+			}*//*
+
+		}*/
+		if(tagVal.split(Pattern.quote("^"))[1].equals("18"))
+		{
+			addressKey=tagVal;
+			viewEditText=getActivity().getLayoutInflater().inflate(R.layout.edit_text_ans_address, null);
+			editText=(EditText) viewEditText.findViewById(R.id.et_numeric_alpha_address);
+			if(!AddNewStore_DynamicSectionWise.address.equals("NA"))
+			{
+				editText.setText("\n\n"+AddNewStore_DynamicSectionWise.address);
+
+			}
 
 		}
 		else if(ansControlInputTypeID.equals("1"))
@@ -3130,7 +3144,7 @@ public class NewStoreForm extends Fragment  {
 						}
 					listDialogMulti.dismiss();
 					isSelectedSearch=false;
-					/*if(sbMultiple.toString().contains("Others") || sbMultiple.toString().contains("Other"))
+					if(sbMultiple.toString().contains("Others") || sbMultiple.toString().contains("Other"))
 					{
 						EditText edText=(EditText) ll_data.findViewWithTag(tagVal+"_ed");
 						edText.setVisibility(View.VISIBLE);
@@ -3139,7 +3153,7 @@ public class NewStoreForm extends Fragment  {
 					{
 						EditText edText=(EditText) ll_data.findViewWithTag(tagVal+"_ed");
 						edText.setVisibility(View.GONE);
-					}*/
+					}
 					}
 					else
 					{
@@ -3840,7 +3854,7 @@ public class NewStoreForm extends Fragment  {
 				}
 			});
 		}
-		if(tagVal.split(Pattern.quote("^"))[0].toString().equals("1"))
+		/*if(tagVal.split(Pattern.quote("^"))[0].toString().equals("1"))
 		{
 			if(activityFrom.equals("StoreSelection"))
 			{
@@ -3856,11 +3870,37 @@ public class NewStoreForm extends Fragment  {
 
 			}
 
+		}*/
+		if((nameForBeatName!=null) && (!AddNewStore_DynamicSectionWise.currentBeatName.equals("All")))
+		{
+			if(tagVal.equals(nameForBeatName))
+			{
+				if(adapter.getPosition(AddNewStore_DynamicSectionWise.currentBeatName)!=-1)
+					spinner_view.setSelection(adapter.getPosition(AddNewStore_DynamicSectionWise.currentBeatName));
+			}
 		}
 
 		return viewSpinner;
 	}
-	
+	public String getSelectedBeatName()
+	{
+		if(nameForBeatName!=null)
+		{
+			Spinner spinnerSelected=(Spinner) ll_data.findViewWithTag(nameForBeatName);
+
+
+			if(spinnerSelected!=null)
+			{
+				if(!spinnerSelected.getSelectedItem().equals("Select"))
+				{
+					currentSelectedBeat=hmapOptionId.get((nameForBeatName.split(Pattern.quote("^"))[2])+"^"+spinnerSelected.getSelectedItem().toString());
+				}
+			}
+
+		}
+		return currentSelectedBeat;
+		//currentSelectedBeat=edValBeat.getText().toString();
+	}
 
 	public Button getButtonView(String buttonDesc,String tagValue)
 	{
@@ -4040,7 +4080,7 @@ public class NewStoreForm extends Fragment  {
 	
 		
 		
-		if(AnsControlType.equals("2"))
+		if(AnsControlType.equals("2") || AnsControlType.equals("18"))
 		{
 			 if(AsnControlInputTypeID.equals("6"))
 			{
@@ -7253,6 +7293,17 @@ public void selectedOption(String optId, String optionVal, EditText editext,List
 					getActivity().finish();
 
 				}
+				else
+					{
+					Intent intent = new Intent(getActivity(), AllButtonActivity.class);
+					intent.putExtra("imei", AddNewStore_DynamicSectionWise.imei);
+					intent.putExtra("userDate", AddNewStore_DynamicSectionWise.date_value);
+					intent.putExtra("pickerDate", AddNewStore_DynamicSectionWise.pickerDate);
+					intent.putExtra("rID", getActiveRouteId);
+					getActivity().startActivity(intent);
+					getActivity().finish();
+
+				}
 
 
 			}
@@ -8792,23 +8843,29 @@ public void selectedOption(String optId, String optionVal, EditText editext,List
 
 				if(activityFrom.equals("StoreSelection")){
 
-					Intent intent = new Intent(getActivity(), StoreSelection.class);
+					Intent intent = new Intent(getActivity(), StorelistActivity.class);
 					intent.putExtra("imei", AddNewStore_DynamicSectionWise.imei);
 					intent.putExtra("userDate", AddNewStore_DynamicSectionWise.date_value);
 					intent.putExtra("pickerDate", AddNewStore_DynamicSectionWise.pickerDate);
 					intent.putExtra("rID", getActiveRouteId);
+					intent.putExtra("activityFrom", "StoreSelection");
 					getActivity().startActivity(intent);
 					getActivity().finish();
 
 				}
 				else if(activityFrom.equals("AllButtonActivity")){
-					Intent intent = new Intent(getActivity(), AllButtonActivity.class);
+					Intent intent = new Intent(getActivity(), StorelistActivity.class);
 					intent.putExtra("imei", AddNewStore_DynamicSectionWise.imei);
 					intent.putExtra("userDate", AddNewStore_DynamicSectionWise.date_value);
 					intent.putExtra("pickerDate", AddNewStore_DynamicSectionWise.pickerDate);
 					intent.putExtra("rID", getActiveRouteId);
+					intent.putExtra("activityFrom", "AllButtonActivity");
 					getActivity().startActivity(intent);
 					getActivity().finish();
+
+				}
+				else
+				{
 
 				}
 
@@ -8826,4 +8883,19 @@ public void selectedOption(String optId, String optionVal, EditText editext,List
 
 		// Showing Alert Message
 		alertDialog.show();}
+
+	public void setStoreName(String storeName)
+	{
+		if(nameForStore!=null)
+		{
+			View view=ll_data.findViewWithTag(nameForStore);
+
+			EditText edVal=(EditText)view;
+			if(edVal!=null)
+			{
+				edVal.setText(storeName);
+			}
+		}
+
+	}
 }

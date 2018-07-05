@@ -2280,7 +2280,12 @@ public class AllButtonActivity extends BaseActivity implements LocationListener,
             public void onClick(View view)
             {
 
-                dbengine.open();
+                Intent intent =new Intent(AllButtonActivity.this,StorelistActivity.class);
+                intent.putExtra("activityFrom", "AllButtonActivity");
+                startActivity(intent);
+                finish();
+
+               /* dbengine.open();
                 String allLoctionDetails=  dbengine.getLocationDetails();
                 dbengine.close();
                 if(allLoctionDetails.equals("0"))
@@ -2290,8 +2295,6 @@ public class AllButtonActivity extends BaseActivity implements LocationListener,
                 else {
 
                     Intent intent = new Intent(AllButtonActivity.this, AddNewStore_DynamicSectionWise.class);
-                    //Intent intent = new Intent(StoreSelection.this, Add_New_Store_NewFormat.class);
-                    //Intent intent = new Intent(StoreSelection.this, Add_New_Store.class);
                     intent.putExtra("storeID", "0");
                     intent.putExtra("activityFrom", "AllButtonActivity");
                     intent.putExtra("userDate",currSysDate);
@@ -2300,8 +2303,7 @@ public class AllButtonActivity extends BaseActivity implements LocationListener,
                     intent.putExtra("rID", rID);
                     AllButtonActivity.this.startActivity(intent);
                     finish();
-
-                }
+              }*/
 
 
             }
@@ -3020,15 +3022,7 @@ public class AllButtonActivity extends BaseActivity implements LocationListener,
                         }
                     }
                 }
-                //send direct to dynamic page-------------------------
-               /* Intent intent=new Intent(StorelistActivity.this,AddNewStore_DynamicSectionWise.class);
-                intent.putExtra("FLAG_NEW_UPDATE","NEW");
-                StorelistActivity.this.startActivity(intent);
-                finish();*/
 
-
-                //commenting below error message
-                // showAlertForEveryOne("Please try again, No Fused,GPS or Network found.");
             }
             else
             {
@@ -3071,15 +3065,6 @@ public class AllButtonActivity extends BaseActivity implements LocationListener,
                     {
                         pDialog2STANDBY.dismiss();
                     }
-
-                    //send to addstore Dynamic page direct-----------------------------
-                   /* Intent intent=new Intent(LauncherActivity.this,AddNewStore_DynamicSectionWise.class);
-                    intent.putExtra("FLAG_NEW_UPDATE","NEW");
-                    LauncherActivity.this.startActivity(intent);
-                    finish();*/
-
-
-                    //From, addr,zipcode,city,state,errorMessageFlag,username,totaltarget,todayTarget
 
 
                 }
@@ -3182,28 +3167,7 @@ public class AllButtonActivity extends BaseActivity implements LocationListener,
                     }
                     else
                     {
-                        //send to AddnewStore directly
-                       /* Intent intent=new Intent(LauncherActivity.this,AddNewStore_DynamicSectionWise.class);
-                        intent.putExtra("FLAG_NEW_UPDATE","NEW");
-                        LauncherActivity.this.startActivity(intent);
-                        finish();*/
 
-
-
-/*
-                        if(tl2.getChildCount()>0){
-                            tl2.removeAllViews();
-                            // dynamcDtaContnrScrollview.removeAllViews();
-                            //addViewIntoTable();
-                            setStoresList();
-                        }
-
-                        else
-                        {
-                            //addViewIntoTable();
-                            setStoresList();
-                        }
-*/
 
                     }
                     if(pDialog2STANDBY.isShowing())
@@ -3238,12 +3202,7 @@ public class AllButtonActivity extends BaseActivity implements LocationListener,
             }
 
 
-            //AddStoreBtn.setEnabled(true);
-
-
-            Intent intent = new Intent(AllButtonActivity.this, AddNewStore_DynamicSectionWise.class);
-            //Intent intent = new Intent(StoreSelection.this, Add_New_Store_NewFormat.class);
-            //Intent intent = new Intent(StoreSelection.this, Add_New_Store.class);
+           /* Intent intent = new Intent(AllButtonActivity.this, AddNewStore_DynamicSectionWise.class);
             intent.putExtra("storeID", "0");
             intent.putExtra("activityFrom", "AllButtonActivity");
             intent.putExtra("userDate",currSysDate);
@@ -3251,6 +3210,11 @@ public class AllButtonActivity extends BaseActivity implements LocationListener,
             intent.putExtra("imei", imei);
             intent.putExtra("rID", rID);
             AllButtonActivity.this.startActivity(intent);
+            finish();*/
+
+            Intent intent =new Intent(AllButtonActivity.this,StorelistActivity.class);
+            intent.putExtra("activityFrom", "AllButtonActivity");
+            startActivity(intent);
             finish();
         }
 

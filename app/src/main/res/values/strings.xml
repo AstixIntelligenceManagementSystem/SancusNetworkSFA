@@ -1,13 +1,20 @@
 <resources>
 
- <!--<string name="app_name">SANCUS NETWORK SFA</string>-->
+ <string name="app_name">SANCUS NETWORK SFA</string>
    <!-- <string name="app_name">SANCUS NETWORK SFAStagging</string>-->
  <!-- <string name="app_name">SANCUS NETWORK SFATest</string>-->
-    <string name="app_name">SANCUS NETWORK SFA Dev</string>
+    <!--<string name="app_name">SANCUS NETWORK SFA Dev</string>-->
   <!--<string name="app_name">SANCUS NETWORK SFA Test Release</string>-->
 
   <!-- <string name="app_name">SANCUS NETWORK SFA Training</string>-->
 
+    <string name="AddOrSelectStoreMsg">Please Add or Select Store To Proceed</string>
+    <string name="SameStoreMessage">A different Outlet seems to have the same name pattern. \n\n Click YES to consider this as new Outlet else NO</string>
+    <string name="pending_data">Submit Pending Data</string>
+    <string name="submit_pending_data">Looks data has been not submitted yet, Please submit data before refreshing complete data</string>
+    <string name="txtOk">OK</string>
+    <string name="editStoreMessage">Click YES to proceed the mapping of this store.</string>
+    <string name="uploading_error">Error while uploading image</string>
 
     <string name="comments">Comments</string>
     <string name="StockUnit">Unit</string>

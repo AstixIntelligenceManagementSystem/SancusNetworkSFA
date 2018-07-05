@@ -1711,7 +1711,8 @@ final Button btn_Cancel=(Button) findViewById(R.id.btn_Cancel);
 		
 		if(flgGSTCapture.equals("1")) 
 		  {
-			ll_gstDetails.setVisibility(View.VISIBLE);
+			 // ll_gstDetails.setVisibility(View.VISIBLE);  // according to varun sir,GST will not be visible on Sancus SFA 4 July 2018
+			ll_gstDetails.setVisibility(View.GONE);
 			     if(flgGSTCompliance.equals("0"))
 			     {
 				      rb_gst_no.setEnabled(true);

@@ -39,6 +39,19 @@ public class DBAdapterKenya
 	private static final String TAG = "DBAdapterKenya";
 	private boolean isDBOpenflag = false;
 
+
+    private static final String DATABASE_TABLE_tblUserName = "tblUserName";
+    private static final String DATABASE_TABLE_tblStoreCountDetails = "tblStoreCountDetails";
+    private static final String DATABASE_TABLE_tblPreAddedStores = "tblPreAddedStores";
+    private static final String DATABASE_TABLE_tblPreAddedStoresDataDetails = "tblPreAddedStoresDataDetails";
+
+    private static final String DATABASE_CREATE_TABLE_tblUserName = "create table tblUserName (UserName text null);";
+    private static final String DATABASE_CREATE_TABLE_tblStoreCountDetails = "create table tblStoreCountDetails (TotStoreAdded int null,TodayStoreAdded int null);";
+    private static final String DATABASE_CREATE_TABLE_tblPreAddedStores = "create table tblPreAddedStores (StoreID text null,StoreName text null,LatCode text null,LongCode text null,DateAdded text null,DistanceNear int null,flgOldNewStore int null,flgReMap int null,Sstat int null,RouteID int null,RouteNodeType int null);";
+    private static final String DATABASE_CREATE_TABLE_tblPreAddedStoresDataDetails = "create table tblPreAddedStoresDataDetails (StoreIDDB text null,GrpQuestID text null,QstId text null,AnsControlTypeID text null,AnsTextVal text null,flgPrvVal text null);";
+
+
+
     private static final String TABLE_tblMerchandisingInstructionDetails_Define = "tblMerchandisingInstructionDetails";
     private static final String TABLE_tblMerchandisingInstructionDetails_Defintion = "create table tblMerchandisingInstructionDetails(StoreID text null,OrderPDAID text null,PhotoName text null,InstructionText text null,ClickedDateTime text null,Sstat integer null);";
 
@@ -234,17 +247,7 @@ public class DBAdapterKenya
 
 
 
-	private static final String DATABASE_TABLE_tblUserName = "tblUserName";
-	private static final String DATABASE_CREATE_TABLE_tblUserName = "create table tblUserName (UserName text null);";
 
-//	private static final String DATABASE_TABLE_tblStoreCountDetails = "tblStoreCountDetails";
-//	private static final String DATABASE_CREATE_TABLE_tblStoreCountDetails = "create table tblStoreCountDetails (TotStoreAdded int null,TodayStoreAdded int null);";
-
-//	private static final String DATABASE_TABLE_tblPreAddedStores = "tblPreAddedStores";
-//	private static final String DATABASE_CREATE_TABLE_tblPreAddedStores = "create table tblPreAddedStores (StoreID text null,StoreName text null,LatCode text null,LongCode text null,DateAdded text null,DistanceNear int null,flgOldNewStore int null,flgReMap int null,Sstat int null);";
-
-//	private static final String DATABASE_TABLE_tblPreAddedStoresDataDetails = "tblPreAddedStoresDataDetails";
-//	private static final String DATABASE_CREATE_TABLE_tblPreAddedStoresDataDetails = "create table tblPreAddedStoresDataDetails (StoreIDDB text null,GrpQuestID text null,QstId text null,AnsControlTypeID text null,AnsTextVal text null,flgPrvVal text null);";
 
 	private static final String DATABASE_TABLE_tblLocationDetails = "tblLocationDetails";
 	private static final String DATABASE_CREATE_TABLE_tblLocationDetails = "create table tblLocationDetails (Lattitude text null,Longitude text null,Accuracy text null,Address text null,City text null,Pincode text null,State text null,fnAccurateProvider  text null,GpsLat  text null,GpsLong  text null,GpsAccuracy  text null,NetwLat  text null,NetwLong  text null,NetwAccuracy  text null,FusedLat  text null,FusedLong  text null,FusedAccuracy  text null,AllProvidersLocation  text null,GpsAddress  text null,NetwAddress  text null,FusedAddress  text null,FusedLocationLatitudeWithFirstAttempt  text null,FusedLocationLongitudeWithFirstAttempt  text null,FusedLocationAccuracyWithFirstAttempt  text null);";
@@ -915,6 +918,13 @@ private static final String DATABASE_TABLE_MAIN101 = "tblFirstOrderDetailsOnLast
 			
 			try
 			{
+
+                db.execSQL(DATABASE_CREATE_TABLE_tblUserName);
+                db.execSQL(DATABASE_CREATE_TABLE_tblStoreCountDetails);
+                db.execSQL(DATABASE_CREATE_TABLE_tblPreAddedStores);
+                db.execSQL(DATABASE_CREATE_TABLE_tblPreAddedStoresDataDetails);
+
+
                 db.execSQL(TABLE_tblMerchandisingInstructionDetails_Defintion);
                 db.execSQL(DATABASE_CREATE_tblAllServicesCalledSuccessfull);
                 db.execSQL(DATABASE_CREATE_TABLE_tblAttandanceDetails);
@@ -1166,6 +1176,11 @@ private static final String DATABASE_TABLE_MAIN101 = "tblFirstOrderDetailsOnLast
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 			try
 			{
+
+                db.execSQL("DROP TABLE IF EXISTS tblUserName");
+                db.execSQL("DROP TABLE IF EXISTS tblStoreCountDetails");
+                db.execSQL("DROP TABLE IF EXISTS tblPreAddedStores");
+                db.execSQL("DROP TABLE IF EXISTS tblPreAddedStoresDataDetails");
                 db.execSQL("DROP TABLE IF EXISTS tblMerchandisingInstructionDetails");
                 db.execSQL("DROP TABLE IF EXISTS tblAllServicesCalledSuccessfull");
                 db.execSQL("DROP TABLE IF EXISTS tblAttandanceDetails");
@@ -1350,6 +1365,125 @@ private static final String DATABASE_TABLE_MAIN101 = "tblFirstOrderDetailsOnLast
 			}
 		}
 	}
+
+    public void reCreateDB()
+    {
+
+
+        sPref=context.getSharedPreferences(CommonInfo.Preference, context.MODE_PRIVATE);
+        SharedPreferences.Editor editor=sPref.edit();
+        editor.clear();
+        editor.commit();
+
+        try {
+            sPrefAttandance=context.getSharedPreferences(CommonInfo.AttandancePreference, context.MODE_PRIVATE);
+            SharedPreferences.Editor editor1=sPrefAttandance.edit();
+            editor1.clear();
+            editor1.commit();
+        }
+        catch (Exception e)
+        {
+
+        }
+
+      /*  db.execSQL("Delete FROM tblPreAddedStoresDataDetails");
+        db.execSQL("Delete FROM tblPreAddedStores");
+        db.execSQL("Delete FROM tblStoreCountDetails");*/
+        db.execSQL("Delete FROM tblMerchandisingInstructionDetails");
+        db.execSQL("Delete FROM tblAllServicesCalledSuccessfull");
+        db.execSQL("Delete FROM tblLastOutstanding");
+
+        db.execSQL("Delete FROM tblInvoiceLastVisitDetails");
+        db.execSQL("Delete FROM tblProductAlertNearestSchmApld");
+
+        db.execSQL("Delete FROM tblDistributorSavedData");
+        db.execSQL("DELETE FROM tblStoreList");
+        db.execSQL("DELETE FROM tblProductList");
+        db.execSQL("DELETE FROM tblProductSegementMap");
+        db.execSQL("DELETE FROM tblCatagoryMstr");
+
+        db.execSQL("DELETE FROM tblVisibilityMstr");
+        db.execSQL("DELETE FROM tblVisibilityDetails");
+
+
+
+        db.execSQL("DELETE FROM tblNewStoreListEntries");
+        db.execSQL("DELETE FROM tblPDALastInvoiceDet");
+        db.execSQL("DELETE FROM tblPDATargetQtyForSecondPage");
+        db.execSQL("DELETE FROM tblPDAProductReturnMstr");
+        db.execSQL("DELETE FROM tblPDAProductReturnDetails");
+
+        db.execSQL("DELETE FROM tblTransac");
+        db.execSQL("DELETE FROM tblInvoice");
+        db.execSQL("DELETE FROM tblStoreProductMap");
+        db.execSQL("DELETE FROM tblSchemeList");
+        db.execSQL("DELETE FROM tblSchemeDetails");
+        db.execSQL("DELETE FROM tblschemeStoreTypeMap");
+        db.execSQL("DELETE FROM tblschemeProductMap");
+        db.execSQL("DELETE FROM tblspForPDASchemeApplicableList");
+        db.execSQL("DELETE FROM tblPDAIsSchemeApplicable");
+        db.execSQL("DELETE FROM tblLastTransactionDetails");
+        db.execSQL("DELETE FROM tblPDALastTranDateForSecondPage");
+        db.execSQL("DELETE FROM tblStorTypeMstr");
+        db.execSQL("DELETE FROM tblSyncSummuryDetails");
+
+        db.execSQL("DELETE FROM tblSyncSummuryForProductDetails");
+        db.execSQL("DELETE FROM tblStrachApplicableOnScheme");
+        db.execSQL("DELETE FROM tblStrachOnSchemeDetails");
+        db.execSQL("DELETE FROM tblOutLetInfoOnQuadVolumeCategoryBasis");
+        db.execSQL("DELETE FROM tblSelectedStoreIDinChangeRouteCase");
+        db.execSQL("DELETE FROM tblSysVisitID");
+        db.execSQL("DELETE FROM tblDaySummaryNew");
+
+        db.execSQL("DELETE FROM tblFirstOrderDetailsOnLastVisitDetailsActivity");
+        db.execSQL("DELETE FROM tblSecondVisitDetailsOnLastVisitDetailsActivity");
+        db.execSQL("DELETE FROM tblLODOnLastSalesSummary");
+
+
+        //db.execSQL("DELETE FROM tblInvoiceButtonStoreMstr");
+        db.execSQL("DELETE FROM tblInvoiceButtonProductMstr");
+        //db.execSQL("DELETE FROM tblInvoiceButtonStoreProductwiseOrder");
+        //db.execSQL("DELETE FROM tblInvoiceButtonTransac");
+
+        db.execSQL("DELETE FROM  tblForPDAGetLastVisitDate");
+        db.execSQL("DELETE FROM  tblForPDAGetLastOrderDate");
+        db.execSQL("DELETE FROM  tblForPDAGetLastVisitDetails");
+        db.execSQL("DELETE FROM  tblForPDAGetLastOrderDetails");
+        db.execSQL("DELETE FROM  tblspForPDAGetLastOrderDetailsTotalValues");
+        db.execSQL("DELETE FROM  tblForPDAGetExecutionSummary");
+        db.execSQL("DELETE FROM  tblStoreSchemeFreeProQtyOtherDetails");
+
+
+
+        db.execSQL("DELETE FROM  tblSchemeStoreMapping");
+        db.execSQL("DELETE FROM  tblSchemeMstr");
+        db.execSQL("DELETE FROM  tblSchemeSlabDetail");
+        db.execSQL("DELETE FROM  tblSchemeSlabBucketDetails");
+        db.execSQL("DELETE FROM  tblSchemeSlabBucketProductMapping");
+        db.execSQL("DELETE FROM  tblSchemeSlabBenefitsBucketDetails");
+        db.execSQL("DELETE FROM  tblSchemeSlabBenefitsProductMappingDetail");
+        db.execSQL("DELETE FROM  tblSchemeSlabBenefitsValueDetail");
+        db.execSQL("DELETE FROM  tblProductRelatedScheme");
+        db.execSQL("DELETE FROM  tblProductADDONScheme");
+
+        db.execSQL("DELETE FROM  tblStoreProdcutPurchaseDetails");
+        db.execSQL("DELETE FROM  tblStoreProductAppliedSchemesBenifitsRecords");
+
+        db.execSQL("DELETE FROM  tblStoreProductPhotoDetail");
+        db.execSQL("DELETE FROM  tblStoreReturnDetail");
+
+
+        db.execSQL("DELETE FROM  tblAlrtVal");
+        db.execSQL("DELETE FROM  tblProductMappedWithSchemeSlabApplied");
+
+        db.execSQL("DELETE FROM tblPOSMaterialMstr");
+        db.execSQL("DELETE FROM tblStoreIDAndMaterialIDMap");
+        db.execSQL("DELETE FROM  tblStoreMaterialDetail");
+        db.execSQL("DELETE FROM  tblStoreMaterialPhotoDetail");
+
+
+        Log.w(TAG, "Table re-creation completed..");
+    }
 
 	// ---opens the database---
 	public DBAdapterKenya open() throws SQLException {
@@ -1546,10 +1680,9 @@ private static final String DATABASE_TABLE_MAIN101 = "tblFirstOrderDetailsOnLast
 		 db.execSQL("DELETE FROM tblPDAQuestOptionDependentMstr");
 		 db.execSQL("DELETE FROM tblPDAQuestOptionValuesDependentMstr");
 		 db.execSQL("DELETE FROM tblLatLongDetails");
-    //  db.execSQL("DELETE FROM tblOutletMstr");
-    //  db.execSQL("DELETE FROM tblOutletQuestAnsMstr");
+
       
-      db.execSQL("DELETE FROM tblStoreList WHERE Sstat ="+ 4);
+      //db.execSQL("DELETE FROM tblStoreList WHERE Sstat ="+ 4);
       db.execSQL("DELETE FROM tblOutletQuestAnsMstr WHERE Sstat ="+ 4);
      
      
@@ -5965,121 +6098,7 @@ open();
 		db.execSQL("DELETE FROM tblRouteMstr");
 		//db.execSQL("DELETE FROM tblAvailableVersionMstr");
 	}
-	public void reCreateDB() 
-	{
 
-
-        sPref=context.getSharedPreferences(CommonInfo.Preference, context.MODE_PRIVATE);
-        SharedPreferences.Editor editor=sPref.edit();
-        editor.clear();
-        editor.commit();
-
-        try {
-            sPrefAttandance=context.getSharedPreferences(CommonInfo.AttandancePreference, context.MODE_PRIVATE);
-            SharedPreferences.Editor editor1=sPrefAttandance.edit();
-            editor1.clear();
-            editor1.commit();
-        }
-        catch (Exception e)
-        {
-
-        }
-
-        db.execSQL("Delete FROM tblMerchandisingInstructionDetails");
-        db.execSQL("Delete FROM tblAllServicesCalledSuccessfull");
-        db.execSQL("Delete FROM tblLastOutstanding");
-
-        db.execSQL("Delete FROM tblInvoiceLastVisitDetails");
-        db.execSQL("Delete FROM tblProductAlertNearestSchmApld");
-
-        db.execSQL("Delete FROM tblDistributorSavedData");
-		db.execSQL("DELETE FROM tblStoreList"); 
-		db.execSQL("DELETE FROM tblProductList");
-		db.execSQL("DELETE FROM tblProductSegementMap");
-		db.execSQL("DELETE FROM tblCatagoryMstr");
-		
-		db.execSQL("DELETE FROM tblVisibilityMstr");
-		db.execSQL("DELETE FROM tblVisibilityDetails");
-		
-		
-		
-		db.execSQL("DELETE FROM tblNewStoreListEntries");
-		db.execSQL("DELETE FROM tblPDALastInvoiceDet");
-		db.execSQL("DELETE FROM tblPDATargetQtyForSecondPage");
-		db.execSQL("DELETE FROM tblPDAProductReturnMstr");
-		db.execSQL("DELETE FROM tblPDAProductReturnDetails");
-		
-		db.execSQL("DELETE FROM tblTransac");
-		db.execSQL("DELETE FROM tblInvoice");
-		db.execSQL("DELETE FROM tblStoreProductMap");
-		db.execSQL("DELETE FROM tblSchemeList");
-		db.execSQL("DELETE FROM tblSchemeDetails");
-		db.execSQL("DELETE FROM tblschemeStoreTypeMap");
-		db.execSQL("DELETE FROM tblschemeProductMap");
-		db.execSQL("DELETE FROM tblspForPDASchemeApplicableList");
-		db.execSQL("DELETE FROM tblPDAIsSchemeApplicable");
-		db.execSQL("DELETE FROM tblLastTransactionDetails");
-		db.execSQL("DELETE FROM tblPDALastTranDateForSecondPage");
-		db.execSQL("DELETE FROM tblStorTypeMstr");
-		db.execSQL("DELETE FROM tblSyncSummuryDetails");
-		
-		db.execSQL("DELETE FROM tblSyncSummuryForProductDetails");
-		db.execSQL("DELETE FROM tblStrachApplicableOnScheme");
-		db.execSQL("DELETE FROM tblStrachOnSchemeDetails");
-		db.execSQL("DELETE FROM tblOutLetInfoOnQuadVolumeCategoryBasis");
-		db.execSQL("DELETE FROM tblSelectedStoreIDinChangeRouteCase");
-		db.execSQL("DELETE FROM tblSysVisitID");
-		db.execSQL("DELETE FROM tblDaySummaryNew");
-		
-		db.execSQL("DELETE FROM tblFirstOrderDetailsOnLastVisitDetailsActivity");
-		db.execSQL("DELETE FROM tblSecondVisitDetailsOnLastVisitDetailsActivity");
-		db.execSQL("DELETE FROM tblLODOnLastSalesSummary");
-		
-		
-		//db.execSQL("DELETE FROM tblInvoiceButtonStoreMstr");
-		db.execSQL("DELETE FROM tblInvoiceButtonProductMstr");
-		//db.execSQL("DELETE FROM tblInvoiceButtonStoreProductwiseOrder");
-		//db.execSQL("DELETE FROM tblInvoiceButtonTransac");
-		
-		db.execSQL("DELETE FROM  tblForPDAGetLastVisitDate");
-		db.execSQL("DELETE FROM  tblForPDAGetLastOrderDate");
-		db.execSQL("DELETE FROM  tblForPDAGetLastVisitDetails");
-		db.execSQL("DELETE FROM  tblForPDAGetLastOrderDetails");
-		db.execSQL("DELETE FROM  tblspForPDAGetLastOrderDetailsTotalValues");
-		db.execSQL("DELETE FROM  tblForPDAGetExecutionSummary");
-		db.execSQL("DELETE FROM  tblStoreSchemeFreeProQtyOtherDetails");
-		
-
-		
-		db.execSQL("DELETE FROM  tblSchemeStoreMapping");
-		db.execSQL("DELETE FROM  tblSchemeMstr");
-		db.execSQL("DELETE FROM  tblSchemeSlabDetail");
-		db.execSQL("DELETE FROM  tblSchemeSlabBucketDetails");
-		db.execSQL("DELETE FROM  tblSchemeSlabBucketProductMapping");
-		db.execSQL("DELETE FROM  tblSchemeSlabBenefitsBucketDetails");
-		db.execSQL("DELETE FROM  tblSchemeSlabBenefitsProductMappingDetail");
-		db.execSQL("DELETE FROM  tblSchemeSlabBenefitsValueDetail");
-		db.execSQL("DELETE FROM  tblProductRelatedScheme");
-        db.execSQL("DELETE FROM  tblProductADDONScheme");
-
-		db.execSQL("DELETE FROM  tblStoreProdcutPurchaseDetails");
-		db.execSQL("DELETE FROM  tblStoreProductAppliedSchemesBenifitsRecords");
-
-		db.execSQL("DELETE FROM  tblStoreProductPhotoDetail");
-		db.execSQL("DELETE FROM  tblStoreReturnDetail");
-		
-		
-		db.execSQL("DELETE FROM  tblAlrtVal");
-		db.execSQL("DELETE FROM  tblProductMappedWithSchemeSlabApplied");
-		
-		   db.execSQL("DELETE FROM tblPOSMaterialMstr");
-		  db.execSQL("DELETE FROM tblStoreIDAndMaterialIDMap");
-		  db.execSQL("DELETE FROM  tblStoreMaterialDetail");
-		  db.execSQL("DELETE FROM  tblStoreMaterialPhotoDetail");
-		  
-
-		Log.w(TAG, "Table re-creation completed..");
-	}
 	
 	// ---opens the database---
 	/*public DBAdapterKenya open() throws SQLException {
@@ -25529,46 +25548,45 @@ public  LinkedHashMap<String,String> fngetAllOptionForQuestionID(int QuestID)
 			return hmapRtrvQuestAns;
 		}
 	}
-/*	public LinkedHashMap<String, String> fnGetQuestionIdFlgPrvValue(String TempID)
-	{
-	LinkedHashMap<String, String> hmapQuestionflgPrvValue=new LinkedHashMap<String, String>();
-	open();
+    public LinkedHashMap<String, String> fnGetQuestionIdFlgPrvValue(String TempID)
+    {
+        LinkedHashMap<String, String> hmapQuestionflgPrvValue=new LinkedHashMap<String, String>();
+        open();
+        //tblQuestionTaskIdMapd(QstId int null,TaskId int null);";
+        int lastIndex=0;
+        Cursor cursor;
+//tblPreAddedStoresDataDetails (StoreIDDB text null,GrpQuestID text null,QstId text null,AnsControlTypeID text null,AnsTextVal text null,flgPrvVal text null);";
+        cursor = db.rawQuery("SELECT QstId,AnsControlTypeID,flgPrvVal,GrpQuestID from tblPreAddedStoresDataDetails Where tblPreAddedStoresDataDetails.StoreIDDB='"+ TempID +"'", null);
 
-	int lastIndex=0;
-	Cursor cursor;
-	cursor = db.rawQuery("SELECT QstId,AnsControlTypeID,flgPrvVal,GrpQuestID from tblPreAddedStoresDataDetails Where tblPreAddedStoresDataDetails.StoreIDDB='"+ TempID +"'", null);
 
+        try {
+            if(cursor.getCount()>0)
+            {
+                if (cursor.moveToFirst())
+                {
+                    for (int i = 0; i <= (cursor.getCount() - 1); i++) {
+                        hmapQuestionflgPrvValue.put((String) cursor.getString(0).toString()+"^"+(String) cursor.getString(1).toString()+"^"+(String) cursor.getString(3).toString(), (String) cursor.getString(2).toString());
 
-	try {
-		if(cursor.getCount()>0)
-		{
-			if (cursor.moveToFirst())
-			{
-				for (int i = 0; i <= (cursor.getCount() - 1); i++) {
-					hmapQuestionflgPrvValue.put((String) cursor.getString(0).toString()+"^"+(String) cursor.getString(1).toString()+"^"+(String) cursor.getString(3).toString(), (String) cursor.getString(2).toString());
+                        cursor.moveToNext();
+                    }
 
-					cursor.moveToNext();
-				}
-
-			}
-		}
-		return hmapQuestionflgPrvValue;
-	}
-	finally
-	{
-		cursor.close();
-		close();
-	}
-}*/
+                }
+            }
+            return hmapQuestionflgPrvValue;
+        }
+        finally
+        {
+            cursor.close();
+            close();
+        }
+    }
 
 	public LinkedHashMap<String, String> getPDAUserPreviousQuestionAnswerMasterServer(String tempId)
 	{
 		open();
 		LinkedHashMap<String, String> hmapPreviousVisitServerQuestionSavedAns=new LinkedHashMap<String, String>();
 		try {
-//tblPreAddedStoresDataDetails (StoreIDDB text null,GrpQuestID text null,QstId text null,AnsControlTypeID text null,AnsTextVal text null,flgPrvVal text null);";
-			//tblPDAUserPreviousQuestionAnswerMaster(NodeID text null, NodeType text null,QstID text null,AnsControlTypeID text null,Answers text null,temID text null,flgPrvValue text null);";
-			Cursor cursor=db.rawQuery("Select * from tblPreAddedStoresDataDetails where StoreIDDB='"+tempId+"'", null);
+		Cursor cursor=db.rawQuery("Select * from tblPreAddedStoresDataDetails where StoreIDDB='"+tempId+"'", null);
 
 			if(cursor.getCount()>0)
 			{
@@ -26196,6 +26214,25 @@ public  LinkedHashMap<String,String> fngetAllOptionForQuestionID(int QuestID)
 
 	}
 
+
+    public void UpdateStoreReturnphotoFlagSM(String StoreID, String StoreName,int flgReMap)
+    {
+        try
+        {
+            //
+            final ContentValues values = new ContentValues();
+            values.put("StoreName", StoreName);
+            values.put("flgReMap", flgReMap);
+
+
+
+            int affected16 = db.update("tblPreAddedStores", values,"StoreID=?", new String[] { StoreID });
+        }
+        catch (Exception ex) {
+
+        }
+    }
+
 	public void UpdateStoreReturnphotoFlag(String sID, int flag2set)
 	{
 		try
@@ -26223,23 +26260,7 @@ public  LinkedHashMap<String,String> fngetAllOptionForQuestionID(int QuestID)
 		}
 	}
 
-	/*public void UpdateStoreReturnphotoFlag(String StoreID, String StoreName,int flgReMap)
-	{
-		try
-		{
-			//
-			final ContentValues values = new ContentValues();
-			values.put("StoreName", StoreName);
-			values.put("flgReMap", flgReMap);
 
-
-
-			int affected16 = db.update("tblPreAddedStores", values,"StoreID=?", new String[] { StoreID });
-		}
-		catch (Exception ex) {
-
-		}
-	}*/
 	public String getTodatAndTotalStores()
 	{
 		String StoresData="0";
@@ -26283,7 +26304,7 @@ public  LinkedHashMap<String,String> fngetAllOptionForQuestionID(int QuestID)
 
 	}
 
-	/*public long saveTblStoreCountDetails(String TotStoreAdded,String TodayStoreAdded)
+	public long saveTblStoreCountDetails(String TotStoreAdded,String TodayStoreAdded)
 	{
 
 		ContentValues initialValues = new ContentValues();
@@ -26292,25 +26313,9 @@ public  LinkedHashMap<String,String> fngetAllOptionForQuestionID(int QuestID)
 		initialValues.put("TodayStoreAdded", Integer.parseInt(TodayStoreAdded.toString().trim()));
 
 		return db.insert(DATABASE_TABLE_tblStoreCountDetails, null, initialValues);
-	}*/
-
-	/*public long saveTblPreAddedStores(String StoreID,String StoreName,String LatCode,String LongCode,String DateAdded,int flgOldNewStore,int flgReMap,int Sstat)
-	{
-		ContentValues initialValues = new ContentValues();
-
-		initialValues.put("StoreID", StoreID);
-		initialValues.put("StoreName", StoreName);
-		initialValues.put("LatCode", LatCode);
-		initialValues.put("LongCode", LongCode);
-		initialValues.put("DateAdded", DateAdded);
-		initialValues.put("DistanceNear", 1000);
-		initialValues.put("flgOldNewStore", flgOldNewStore);
-		initialValues.put("flgReMap", flgReMap);
-		initialValues.put("Sstat", Sstat);
+	}
 
 
-		return db.insert(DATABASE_TABLE_tblPreAddedStores, null, initialValues);
-	}*/
 
 	public int checkCountIntblNewStoreMainTable(String  StoreId)
 	{
@@ -26973,7 +26978,41 @@ public  LinkedHashMap<String,String> fngetAllOptionForQuestionID(int QuestID)
 		return db.insert(DATABASE_TABLE_tblLocationDetails, null, initialValues);
 	}
 
+    public int fncheckCountNearByStoreExistsOrNotSM(int DistanceRange)
+    {
+        int flgCheck=0;
+        open();
 
+        try {
+
+            // Cursor cursor = db.rawQuery("SELECT Count(*) from tblPreAddedStores WHERE (LatCode<>'0' AND LatCode<>'NA')    ORDER BY DistanceNear ASC", null);//
+            Cursor cursor = db.rawQuery("SELECT Count(*) from tblPreAddedStores  ORDER BY DistanceNear ASC", null);//
+
+            if(cursor.getCount()>0) {
+                if (cursor.moveToFirst())
+                {
+                    if(cursor.getInt(0)>0)
+                    {
+                        flgCheck=1;
+                    }
+                }
+            }
+
+        }
+        catch (Exception e) {
+            System.out.println("Error fnGettblUOMMstr= "+e.toString());
+        }
+        finally
+        {
+
+            close();
+            if(flgCheck==0)
+            {
+                flgCheck=fncheckCountNewAddedNearByStoreExistsOrNot(flgCheck);
+            }
+            return flgCheck;
+        }
+    }
 
 	public int fncheckCountNearByStoreExistsOrNot(int DistanceRange)
 	{
@@ -26981,7 +27020,6 @@ public  LinkedHashMap<String,String> fngetAllOptionForQuestionID(int QuestID)
 		open();
 
 		try {
-			// Cursor cursor = db.rawQuery("SELECT Count(*) from tblPreAddedStores Where (LatCode<>'0' and LatCode<>'NA') and DistanceNear<"+ DistanceRange+ " ORDER BY DistanceNear", null);
 
 			Cursor cursor = db.rawQuery("SELECT Count(*) from tblStoreList WHERE (StoreLatitude<>'0' AND StoreLatitude<>'NA')    ORDER BY DistanceNear ASC", null);//
 			//StoreID,StoreName,LatCode,LongCode,DateAdded
@@ -27017,7 +27055,6 @@ public  LinkedHashMap<String,String> fngetAllOptionForQuestionID(int QuestID)
 		open();
 
 		try {
-			//Cursor cursor = db.rawQuery("SELECT StoreID,StoreName,LatCode,LongCode,DateAdded,DistanceNear from tblPreAddedStores WHERE (LatCode<>'0' AND LatCode<>'NA') AND DistanceNear<"+ DistanceRange +" ORDER BY DistanceNear  ASC Limit 30", null);//
 			Cursor cursor = db.rawQuery("SELECT Count(*) from tblStoreList WHERE (StoreLatitude='NA') and ISNewStore=1", null);//
 			if(cursor.getCount()>0) {
 				if (cursor.moveToFirst())
@@ -27042,19 +27079,57 @@ public  LinkedHashMap<String,String> fngetAllOptionForQuestionID(int QuestID)
 		return flgCheck;
 	}
 
+    public LinkedHashMap<String, String> fnGeStoreListSM(int DistanceRange)
+    {
+        LinkedHashMap<String, String> hmapQuestionMstr=new LinkedHashMap<String, String>();
+        open();
 
+        try {
+
+            // Cursor cursor = db.rawQuery("SELECT OutletID,OutletDescr,BeatName,RetailerNo,ifnull(OutletNew,0),Sstat from tblOutletMstr", null);
+
+            // Cursor cursor = db.rawQuery("SELECT StoreID,StoreName,LatCode,LongCode,DateAdded,DistanceNear,flgReMap from tblPreAddedStores WHERE (LatCode<>'0' AND LatCode<>'NA') ORDER BY DistanceNear", null);//
+            Cursor cursor = db.rawQuery("SELECT StoreID,StoreName,LatCode,LongCode,DateAdded,DistanceNear,flgReMap from tblPreAddedStores ORDER BY DistanceNear", null);//
+
+            if(cursor.getCount()>0)
+            {
+                if (cursor.moveToFirst())
+                {
+                    for (int i = 0; i <= (cursor.getCount() - 1); i++) {
+                        String StoreLat="0.00";
+                        String StoreLon="0.00";
+                        if(!cursor.getString(2).toString().equals("NA"))
+                        {
+                            StoreLat=(String) cursor.getString(2).toString();
+                            StoreLon=(String) cursor.getString(3).toString();
+                        }
+
+                        hmapQuestionMstr.put((String) cursor.getString(0).toString(),(String) cursor.getString(1).toString()+"^"+StoreLat+"^"+StoreLon+"^"+(String) cursor.getString(4).toString()+"^"+(String) cursor.getString(6).toString());
+
+                        cursor.moveToNext();
+                    }
+                }
+            }
+
+        }
+        catch (Exception e)
+        {
+            // System.out.println("Error fnGettblUOMMstr= "+e.toString());
+        }
+        finally
+        {
+
+            close();
+            fnGeNewlyAddedStoreList(hmapQuestionMstr);
+            return hmapQuestionMstr;
+        }
+    }
 	public LinkedHashMap<String, String> fnGeStoreList(int DistanceRange)
 	{
 		LinkedHashMap<String, String> hmapQuestionMstr=new LinkedHashMap<String, String>();
 		open();
 
 		try {
-			//Cursor cursor = db.rawQuery("SELECT StoreID,StoreName,LatCode,LongCode,DateAdded,DistanceNear from tblPreAddedStores WHERE (LatCode<>'0' AND LatCode<>'NA') AND DistanceNear<"+ DistanceRange +" ORDER BY DistanceNear  ASC Limit 30", null);//
-			// Cursor cursor = db.rawQuery("SELECT StoreID,StoreName,LatCode,LongCode,DateAdded,DistanceNear from tblPreAddedStores WHERE (LatCode<>'0' AND LatCode<>'NA') AND DistanceNear<"+ DistanceRange +"  ORDER BY DistanceNear", null);//
-//           /
-			// tblPreAddedStores (StoreID text null,StoreName text null,LatCode text null,LongCode text null,DateAdded text null,DistanceNear int null,flgOldNewStore int null,flgReMap int null,Sstat int null);";
-
-			//hmapStoreLatLongDistanceFlgRemap
 			Cursor cursor = db.rawQuery("SELECT StoreID,StoreLatitude,StoreLongitude,ForDate,DistanceNear,0 AsflgReMap from tblStoreList WHERE (StoreLatitude<>'0' AND StoreLatitude<>'NA') ORDER BY DistanceNear", null);//
 			if(cursor.getCount()>0)
 			{
@@ -27096,7 +27171,6 @@ public  LinkedHashMap<String,String> fngetAllOptionForQuestionID(int QuestID)
 		open();
 
 		try {
-			//Cursor cursor = db.rawQuery("SELECT StoreID,StoreName,LatCode,LongCode,DateAdded,DistanceNear from tblPreAddedStores WHERE (LatCode<>'0' AND LatCode<>'NA') AND DistanceNear<"+ DistanceRange +" ORDER BY DistanceNear  ASC Limit 30", null);//
 			Cursor cursor = db.rawQuery("SELECT StoreID,StoreLatitude,StoreLongitude,ForDate,DistanceNear,0 AsflgReMap from tblStoreList WHERE (StoreLatitude='NA') and ISNewStore=1", null);//
 			if(cursor.getCount()>0)
 			{
@@ -27129,6 +27203,40 @@ public  LinkedHashMap<String,String> fngetAllOptionForQuestionID(int QuestID)
 
 		}
 	}
+
+
+    public LinkedHashMap<String, String> fnGetALLOutletMstrSM()
+    {
+        Cursor cursor=null;
+
+        LinkedHashMap<String, String> hmapOutletMstr=new LinkedHashMap<String, String>();
+        open();
+
+        cursor = db.rawQuery("SELECT StoreID,ifnull(LatCode,0),ifnull(LongCode,0) from tblPreAddedStores", null);
+
+
+        try
+        {
+            if(cursor.getCount()>0)
+            {
+                if (cursor.moveToFirst())
+                {
+                    String phoneNum;
+                    for (int i = 0; i <= (cursor.getCount() - 1); i++)
+                    {
+                        hmapOutletMstr.put((String) cursor.getString(0).toString(), (String) cursor.getString(1).toString()+"^"+(String) cursor.getString(2).toString());
+                        cursor.moveToNext();
+                    }
+                }
+            }
+            return hmapOutletMstr;
+        }
+        finally
+        {
+            cursor.close();
+            close();
+        }
+    }
 
 	public LinkedHashMap<String, String> fnGetALLOutletMstr()
 	{
@@ -27163,7 +27271,25 @@ public  LinkedHashMap<String,String> fngetAllOptionForQuestionID(int QuestID)
 		}
 	}
 
+    public void UpdateStoreDistanceNearSM(String OutletID, int DistanceNear)
+    {
+        try
+        {
 
+            final ContentValues values = new ContentValues();
+            values.put("DistanceNear", DistanceNear);
+            int affected = db.update("tblPreAddedStores", values, "StoreID=?", new String[]{OutletID});
+        }
+        catch(Exception e)
+        {
+
+        }
+        finally
+        {
+
+        }
+
+    }
 	public void UpdateStoreDistanceNear(String OutletID, int DistanceNear)
 	{
 		try
@@ -32297,6 +32423,270 @@ open();
         }
 
 
+    }
+
+    public int fnGetExistingOutletIDFromOutletMstr(String ODescr)
+    {
+        int existOutID=0;
+        open();
+        Cursor cursor = db.rawQuery("SELECT Count(StoreID)  from tblPreAddedStores where StoreName like '"+ODescr+"%'", null);
+        // close();
+        try {
+            if(cursor.getCount()>0)
+            {
+                if (cursor.moveToFirst())
+                {
+                    if(cursor.getInt(0)>0)
+                    {
+                        existOutID=1;
+                    }
+
+                }
+            }
+            return existOutID;
+        }
+        finally
+        {
+            cursor.close();
+            close();
+        }
+    }
+    public boolean isXMLfilesOrImageFileLeftToUpload(String SstatXml,int SstatImage)
+    {
+
+        open();
+        boolean isDataPendingForUpload=false;
+        //tbl_XMLfiles(XmlFileName text null,Sstat text null);";
+        Cursor curImage=db.rawQuery("Select imageName from tableImage where Sstat="+SstatImage,null);
+        Cursor curXml=db.rawQuery("Select XmlFileName from tbl_XMLfiles where Sstat='"+SstatXml+"'",null);
+        try {
+
+            // tableImage(StoreID text null,QstIdAnsCntrlTyp text null,imageName text null,imagePath text null,ImageClicktime text null,Sstat integer null);";
+
+            if(curXml.getCount()>0 || curImage.getCount()>0)
+            {
+                isDataPendingForUpload=true;
+            }
+        } catch(Exception e)
+        {
+            isDataPendingForUpload=true;
+        }
+        finally {
+            curImage.close();
+            curXml.close();
+            close();
+            return isDataPendingForUpload;
+        }
+
+
+
+    }
+    public void delete_all_storeDetailTables()
+    {
+        db.execSQL("DELETE FROM tblUserName");
+        db.execSQL("DELETE FROM tblStoreCountDetails");
+        db.execSQL("DELETE FROM tblPreAddedStores");
+        db.execSQL("DELETE FROM tblPreAddedStoresDataDetails");
+        // db.execSQL("DELETE FROM tblLocationDetails");
+    }
+    public String getUsername()
+    {String userName="0"+"^"+"0";
+
+        open();
+        try {
+            Cursor cur=db.rawQuery("Select UserName from tblUserName", null);
+
+            if(cur.getCount()>0)
+            {
+                StringBuilder sBuilder=new StringBuilder();
+                if(cur.moveToFirst())
+                {
+                    for(int i=0;i<cur.getCount();i++)
+                    {
+                        userName=cur.getString(0);
+                        cur.moveToNext();
+                    }
+                }
+
+            }
+
+        } catch (Exception e) {
+            // TODO: handle exception
+        } finally
+        {
+            close();
+            return userName;
+        }
+    }
+    public ArrayList<String> getImageDetails(int sStat)
+    {
+        open();
+        ArrayList<String> listImageDetails=new ArrayList<String>();
+        try {
+
+            //tableImage(StoreID text null,QstIdAnsCntrlTyp text null,imageName text null,imagePath text null,ImageClicktime text null,Sstat integer null);";
+            Cursor cursor=db.rawQuery("Select StoreID,imagePath,imageName from tableImage where Sstat="+sStat, null);
+
+            if(cursor.getCount()>0)
+            {
+                if(cursor.moveToFirst())
+                {
+                    for(int i=0;i<cursor.getCount();i++)
+                    {
+                        listImageDetails.add(cursor.getString(0)+"^"+cursor.getString(1)+"^"+cursor.getString(2));
+                        cursor.moveToNext();
+                    }
+                }
+            }
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+        finally
+        {
+            close();
+            return listImageDetails;
+        }
+    }
+
+    public void updateSSttImage(String imageName,int sStat)
+    {
+        open();
+        Cursor cursorImage=db.rawQuery("Select StoreID from tableImage where imageName='"+imageName+"'", null);
+        if(cursorImage.getCount()>0)
+        {
+            ContentValues value=new ContentValues();
+            value.put("Sstat", sStat);
+            db.update(TABLE_IMAGE, value, "imageName=?", new String[]{imageName});
+        }
+
+        close();
+    }
+    public LinkedHashMap<String, String> fnCompleteRouteList()
+    {
+        LinkedHashMap<String, String> hmapRouteMstr=new LinkedHashMap<String, String>();
+        open();
+
+        try {
+
+            Cursor cursor = db.rawQuery("SELECT ID,Descr from tblRouteMstr ", null);//
+
+            if(cursor.getCount()>0)
+            {
+                if (cursor.moveToFirst())
+                {
+                    for (int i = 0; i <= (cursor.getCount() - 1); i++) {
+                        if(i==0){
+                            hmapRouteMstr.put("All","0");
+                        }
+
+                        hmapRouteMstr.put((String) cursor.getString(1).toString(),(String) cursor.getString(0).toString());
+
+                        cursor.moveToNext();
+                    }
+                }
+            }
+
+        }
+        catch (Exception e)
+        {
+            // System.out.println("Error fnGettblUOMMstr= "+e.toString());
+        }
+        finally
+        {
+
+            close();
+
+            return hmapRouteMstr;
+        }
+    }
+
+    public LinkedHashMap<String, String> fnGeStoreListAgainstRoute(int RouteID)
+    {
+        LinkedHashMap<String, String> hmapQuestionMstr=new LinkedHashMap<String, String>();
+        open();
+
+        try {
+
+            Cursor cursor = db.rawQuery("SELECT StoreID,StoreName,LatCode,LongCode,DateAdded,DistanceNear,flgReMap from tblPreAddedStores where RouteID="+RouteID, null);//
+
+            if(cursor.getCount()>0)
+            {
+                if (cursor.moveToFirst())
+                {
+                    for (int i = 0; i <= (cursor.getCount() - 1); i++) {
+                        String StoreLat="0.00";
+                        String StoreLon="0.00";
+                        if(!cursor.getString(2).toString().equals("NA"))
+                        {
+                            StoreLat=(String) cursor.getString(2).toString();
+                            StoreLon=(String) cursor.getString(3).toString();
+                        }
+
+                        hmapQuestionMstr.put((String) cursor.getString(0).toString(),(String) cursor.getString(1).toString()+"^"+StoreLat+"^"+StoreLon+"^"+(String) cursor.getString(4).toString()+"^"+(String) cursor.getString(6).toString());
+
+                        cursor.moveToNext();
+                    }
+                }
+            }
+
+        }
+        catch (Exception e)
+        {
+            // System.out.println("Error fnGettblUOMMstr= "+e.toString());
+        }
+        finally
+        {
+
+            close();
+            fnGeNewlyAddedStoreList(hmapQuestionMstr);
+            return hmapQuestionMstr;
+        }
+    }
+
+    public long saveTblUserName(String UserName) {
+
+        ContentValues initialValues = new ContentValues();
+
+        initialValues.put("UserName", UserName);
+
+        return db.insert(DATABASE_TABLE_tblUserName, null, initialValues);
+    }
+
+    public long saveTblPreAddedStores(String StoreID,String StoreName,String LatCode,String LongCode,String DateAdded,int flgOldNewStore,int flgReMap,int Sstat,int RouteID,int RouteNodeType)
+    {
+        ContentValues initialValues = new ContentValues();
+
+        initialValues.put("StoreID", StoreID);
+        initialValues.put("StoreName", StoreName);
+        initialValues.put("LatCode", LatCode);
+        initialValues.put("LongCode", LongCode);
+        initialValues.put("DateAdded", DateAdded);
+        initialValues.put("DistanceNear", 1000);
+        initialValues.put("flgOldNewStore", flgOldNewStore);
+        initialValues.put("flgReMap", flgReMap);
+        initialValues.put("Sstat", Sstat);
+        initialValues.put("RouteID", RouteID);
+        initialValues.put("RouteNodeType", RouteNodeType);
+
+
+        return db.insert(DATABASE_TABLE_tblPreAddedStores, null, initialValues);
+    }
+
+    public long saveTblPreAddedStoresDataDetails(String StoreIDDB,String GrpQuestID,String QstId,String AnsControlTypeID,String AnsTextVal,String flgPrvVal)
+    {
+
+        ContentValues initialValues = new ContentValues();
+
+        initialValues.put("StoreIDDB", StoreIDDB);
+        initialValues.put("GrpQuestID", GrpQuestID);
+        initialValues.put("QstId", QstId);
+        initialValues.put("AnsControlTypeID", AnsControlTypeID);
+
+        initialValues.put("AnsTextVal", AnsTextVal);
+
+        initialValues.put("flgPrvVal", flgPrvVal);
+
+        return db.insert(DATABASE_TABLE_tblPreAddedStoresDataDetails, null, initialValues);
     }
 }
 
