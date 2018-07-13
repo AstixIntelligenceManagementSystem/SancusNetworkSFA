@@ -39,6 +39,10 @@ public class DBAdapterKenya
 	private static final String TAG = "DBAdapterKenya";
 	private boolean isDBOpenflag = false;
 
+    //StoreProductStock
+    private static final String DATABASE_TABLE_tblProductListLastVisitStockOrOrderMstr= "tblProductListLastVisitStockOrOrderMstr";
+    private static final String DATABASE_CREATE_TABLEtblProductListLastVisitStockOrOrderMstr = "create table tblProductListLastVisitStockOrOrderMstr (StoreID text null,PrdID text null);";
+
 
     private static final String DATABASE_TABLE_tblUserName = "tblUserName";
     private static final String DATABASE_TABLE_tblStoreCountDetails = "tblStoreCountDetails";
@@ -751,7 +755,7 @@ private static final String DATABASE_TABLE_MAIN101 = "tblFirstOrderDetailsOnLast
 	//private static final String DATABASE_CREATE_TABLE_2 = "create table tblProductList (ProductID text not null, ProductShortName text not null, ProductMRP real not null, ProductRLP real not null, ProductTaxAmount real not null, KGLiter string nulll);";//,DisplayUnit string nul 
 	
 	
-	private static final String DATABASE_CREATE_TABLE_14 = "create table tblProductList(CategoryID text  null,ProductID text  null, ProductShortName text  null, DisplayUnit text null, CalculateKilo real  null,ProductMRP real null, ProductRLP real null, ProductTaxAmount real null, KGLiter string null,RetMarginPer real null,VatTax real null,StandardRate real null,StandardRateBeforeTax real null,StandardTax real null,CatOrdr int null,PrdOrdr int null,StoreCatNodeId int null,SearchField text null,ManufacturerID int null);";
+	private static final String DATABASE_CREATE_TABLE_14 = "create table tblProductList(CategoryID text  null,ProductID text  null, ProductShortName text  null, DisplayUnit text null, CalculateKilo real  null,ProductMRP real null, ProductRLP real null, ProductTaxAmount real null, KGLiter string null,RetMarginPer real null,VatTax real null,StandardRate real null,StandardRateBeforeTax real null,StandardTax real null,CatOrdr int null,PrdOrdr int null,StoreCatNodeId int null,SearchField text null,ManufacturerID int null,flagPriority int null);";
 	
 	private static final String DATABASE_CREATE_TABLE_ProductSegementMap = "create table tblProductSegementMap(ProductID text  null,ProductMRP real not null, ProductRLP real not null, ProductTaxAmount real not null,RetMarginPer real null,VatTax real null,StandardRate real null,StandardRateBeforeTax real null,StandardTax real null,BusinessSegmentId int null,flgPriceAva int null);";
 	
@@ -919,6 +923,7 @@ private static final String DATABASE_TABLE_MAIN101 = "tblFirstOrderDetailsOnLast
 			try
 			{
 
+                db.execSQL(DATABASE_CREATE_TABLEtblProductListLastVisitStockOrOrderMstr);
                 db.execSQL(DATABASE_CREATE_TABLE_tblUserName);
                 db.execSQL(DATABASE_CREATE_TABLE_tblStoreCountDetails);
                 db.execSQL(DATABASE_CREATE_TABLE_tblPreAddedStores);
@@ -1176,7 +1181,7 @@ private static final String DATABASE_TABLE_MAIN101 = "tblFirstOrderDetailsOnLast
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 			try
 			{
-
+                db.execSQL("DROP TABLE IF EXISTS tblProductListLastVisitStockOrOrderMstr");
                 db.execSQL("DROP TABLE IF EXISTS tblUserName");
                 db.execSQL("DROP TABLE IF EXISTS tblStoreCountDetails");
                 db.execSQL("DROP TABLE IF EXISTS tblPreAddedStores");
@@ -1389,6 +1394,7 @@ private static final String DATABASE_TABLE_MAIN101 = "tblFirstOrderDetailsOnLast
       /*  db.execSQL("Delete FROM tblPreAddedStoresDataDetails");
         db.execSQL("Delete FROM tblPreAddedStores");
         db.execSQL("Delete FROM tblStoreCountDetails");*/
+        db.execSQL("Delete FROM tblProductListLastVisitStockOrOrderMstr");
         db.execSQL("Delete FROM tblMerchandisingInstructionDetails");
         db.execSQL("Delete FROM tblAllServicesCalledSuccessfull");
         db.execSQL("Delete FROM tblLastOutstanding");
@@ -14788,7 +14794,8 @@ close();
 			Double RetMarginPer, Double VatTax,Double StandardRate,Double StandardRateBeforeTax,
 			Double StandardTax,int CatOrdr,int PrdOrdr,int StoreCatNodeId,String SearchField)*/
 	public long saveSOAPdataProductList(String CategoryID,String ProductID, String ProductShortName,
-			String DisplayUnit, Double CalculateKilo, String KGLiter,int CatOrdr,int PrdOrdr,int StoreCatNodeId,String SearchField,int ManufacturerID)
+			String DisplayUnit, Double CalculateKilo, String KGLiter,int CatOrdr,int PrdOrdr,int StoreCatNodeId,
+                                        String SearchField,int ManufacturerID,int flagPriority)
 	{
 		ContentValues initialValues = new ContentValues();
 		
@@ -14813,6 +14820,7 @@ close();
 		initialValues.put("StoreCatNodeId", StoreCatNodeId);
 		initialValues.put("SearchField", SearchField);
 		initialValues.put("ManufacturerID", ManufacturerID);
+        initialValues.put("flagPriority", flagPriority);
 		
 		return db.insert(DATABASE_TABLE_MAIN14, null, initialValues);
 	}
@@ -17006,7 +17014,7 @@ close();
 			   
 			   
 			 //Cursor cursor = db.rawQuery("SELECT ProductID,CategoryID,ProductShortName,KGLiter ||'^'||ProductRLP||'^'||ProductTaxAmount AS ProductVolumeRateTax,'NA/0' As LODQty,0 AS SampleQty,0 AS ProductFreeQty,0 AS ProductOrderQty,0.00 As PrdctDiscount,RetMarginPer,VatTax,ProductMRP,0.00 AS DiscountPercentageGivenOnProduct,0 AS Per,0.00 AS TaxValue,0.00 AS OrderValue,StandardRate,StandardRateBeforeTax,StandardTax,0 As Stock  FROM tblProductList order by CategoryID,ProductID",null);
-			   Cursor cursor = db.rawQuery("SELECT tblProductList.ProductID,tblProductList.CategoryID,tblProductList.ProductShortName,tblProductList.KGLiter ||'^'||tblProductSegementMap.ProductRLP||'^'||tblProductSegementMap.ProductTaxAmount AS ProductVolumeRateTax,'NA/0' As LODQty,0 AS SampleQty,0 AS ProductFreeQty,0 AS ProductOrderQty,0.00 As PrdctDiscount,tblProductSegementMap.RetMarginPer,tblProductSegementMap.VatTax,tblProductSegementMap.ProductMRP,0.00 AS DiscountPercentageGivenOnProduct,0 AS Per,0.00 AS TaxValue,0.00 AS OrderValue,tblProductSegementMap.StandardRate,tblProductSegementMap.StandardRateBeforeTax,tblProductSegementMap.StandardTax,0 As Stock,tblProductSegementMap.flgPriceAva  FROM tblProductList inner join tblProductSegementMap on tblProductList.ProductID=tblProductSegementMap.ProductID Where tblProductSegementMap.BusinessSegmentId="+BusinessSegmentId+"  order by tblProductList.CategoryID,tblProductList.PrdOrdr",null);
+			   Cursor cursor = db.rawQuery("SELECT tblProductList.ProductID,tblProductList.CategoryID,tblProductList.ProductShortName,tblProductList.KGLiter ||'^'||tblProductSegementMap.ProductRLP||'^'||tblProductSegementMap.ProductTaxAmount AS ProductVolumeRateTax,'NA/0' As LODQty,0 AS SampleQty,0 AS ProductFreeQty,0 AS ProductOrderQty,0.00 As PrdctDiscount,tblProductSegementMap.RetMarginPer,tblProductSegementMap.VatTax,tblProductSegementMap.ProductMRP,0.00 AS DiscountPercentageGivenOnProduct,0 AS Per,0.00 AS TaxValue,0.00 AS OrderValue,tblProductSegementMap.StandardRate,tblProductSegementMap.StandardRateBeforeTax,tblProductSegementMap.StandardTax,0 As Stock,tblProductSegementMap.flgPriceAva  FROM tblProductList inner join tblProductSegementMap on tblProductList.ProductID=tblProductSegementMap.ProductID Where tblProductSegementMap.BusinessSegmentId="+BusinessSegmentId+"  order by tblProductList.CategoryID,tblProductList.PrdOrdr,tblProductList.flagPriority",null);
 			
 			   //tblProductList.ProductID------------->0
 			   //tblProductList.CategoryID------------>1
@@ -22615,12 +22623,15 @@ open();
                                     Cursor cur=null;
 					        		if(!TextUtils.isEmpty(ctgryId) && !ctgryId.equals("0"))
                                     {
-                                         cur=db.rawQuery("Select tblProductList.ProductID,ProductShortName from tblProductList inner join tblProductSegementMap on tblProductList.ProductID=tblProductSegementMap.ProductID where ("+searchString+") and tblProductSegementMap.BusinessSegmentId="+BusinessSegmentId+" AND tblProductList.CategoryID='"+ctgryId+"'order by PrdOrdr Asc", null);
-                                    }
+                                        // cur=db.rawQuery("Select tblProductList.ProductID,ProductShortName from tblProductList inner join tblProductSegementMap on tblProductList.ProductID=tblProductSegementMap.ProductID where ("+searchString+") and tblProductSegementMap.BusinessSegmentId="+BusinessSegmentId+" AND tblProductList.CategoryID='"+ctgryId+"'order by PrdOrdr Asc", null);
+                                       // cur=db.rawQuery("Select tblProductList.ProductID,ProductShortName from tblProductList inner join tblProductSegementMap on tblProductList.ProductID=tblProductSegementMap.ProductID inner join tblDistributorStock on tblProductList.ProductID=tblDistributorStock.PrdctId where ("+searchString+") and tblProductSegementMap.BusinessSegmentId="+BusinessSegmentId+" AND tblProductList.CategoryID='"+ctgryId+"'order by PrdOrdr Asc", null);
+                                        cur=db.rawQuery("Select tblProductList.ProductID,ProductShortName from tblProductList inner join tblProductSegementMap on tblProductList.ProductID=tblProductSegementMap.ProductID inner join tblDistributorStock on tblProductList.ProductID=tblDistributorStock.PrdctId and tblDistributorStock.StockQntty<>0 where ("+searchString+") and tblProductSegementMap.BusinessSegmentId="+BusinessSegmentId+" AND tblProductList.CategoryID='"+ctgryId+"'order by PrdOrdr Asc", null); }
                                     else
                                     {
 
-                                        cur=db.rawQuery("Select tblProductList.ProductID,ProductShortName from tblProductList inner join tblProductSegementMap on tblProductList.ProductID=tblProductSegementMap.ProductID where ("+searchString+") and tblProductSegementMap.BusinessSegmentId="+BusinessSegmentId+" order by PrdOrdr Asc", null);
+                                        // cur=db.rawQuery("Select tblProductList.ProductID,ProductShortName from tblProductList inner join tblProductSegementMap on tblProductList.ProductID=tblProductSegementMap.ProductID where ("+searchString+") and tblProductSegementMap.BusinessSegmentId="+BusinessSegmentId+" order by PrdOrdr Asc", null);
+                                       // cur=db.rawQuery("Select tblProductList.ProductID,ProductShortName from tblProductList inner join tblProductSegementMap on tblProductList.ProductID=tblProductSegementMap.ProductID inner join tblDistributorStock on tblProductList.ProductID=tblDistributorStock.PrdctId where ("+searchString+") and tblProductSegementMap.BusinessSegmentId="+BusinessSegmentId+" order by PrdOrdr Asc", null);
+                                        cur=db.rawQuery("Select tblProductList.ProductID,ProductShortName from tblProductList inner join tblProductSegementMap on tblProductList.ProductID=tblProductSegementMap.ProductID inner join tblDistributorStock on tblProductList.ProductID=tblDistributorStock.PrdctId and tblDistributorStock.StockQntty<>0 where ("+searchString+") and tblProductSegementMap.BusinessSegmentId="+BusinessSegmentId+" order by PrdOrdr Asc", null);
                                     }
 
 					        	if(cur.getCount()>0)
@@ -29267,7 +29278,7 @@ public  LinkedHashMap<String,String> fngetAllOptionForQuestionID(int QuestID)
 			return isRtalrCreditBalSbmtd;
 		}
 	}
-	//(PrdctId text not null,OrderQntty text ,DistributorNodeIdNodeType text null);";
+
 	public void insertDistributorStock(String prdctId,String stockQntty,String distributorNodeIdNodeType)
 	{
 		open();
@@ -29277,7 +29288,6 @@ public  LinkedHashMap<String,String> fngetAllOptionForQuestionID(int QuestID)
 		values.put("StockQntty",stockQntty);
 		values.put("DistributorNodeIdNodeType",distributorNodeIdNodeType);
 		int netStock = getLeftProductQantity(Integer.parseInt(stockQntty),distributorNodeIdNodeType,prdctId);
-
 		values.put("OriginalStock",String.valueOf(netStock));
 
 
@@ -32687,6 +32697,24 @@ open();
         initialValues.put("flgPrvVal", flgPrvVal);
 
         return db.insert(DATABASE_TABLE_tblPreAddedStoresDataDetails, null, initialValues);
+    }
+    public void deletetblProductListLastVisitStockOrOrderMstr()
+    {
+        db.execSQL("DELETE FROM tblProductListLastVisitStockOrOrderMstr");
+
+    }
+    public void savetblProductListLastVisitStockOrOrderMstr(String StoreID,String PrdID)
+    {
+
+
+        ContentValues initialValues = new ContentValues();
+        initialValues.put("StoreID",StoreID);
+        initialValues.put("PrdID", PrdID.trim());
+
+
+
+        db.insert(DATABASE_TABLE_tblProductListLastVisitStockOrOrderMstr, null, initialValues);
+
     }
 }
 

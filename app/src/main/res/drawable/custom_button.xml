@@ -47,13 +47,13 @@
     <item>
         <shape>
             <gradient
-                android:endColor="#00C853"
-                android:startColor="#00C853"
+                android:endColor="#CD4038"
+                android:startColor="#CD4038"
                 android:angle="270" />
             <corners android:radius="5dp"/>
             <stroke
                 android:width="0.5dp"
-                android:color="#015db4"/>
+                android:color="#91403C"/>
             <padding
                 android:left="6dp"
                 android:top="6dp"

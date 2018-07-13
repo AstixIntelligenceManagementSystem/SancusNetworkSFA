@@ -1253,7 +1253,7 @@ GoogleApiClient.OnConnectionFailedListener,CategoryCommunicator
 				public void onClick(View v)
 				{
 					img_ctgry.setEnabled(false);
-					customAlertStoreList(categoryNames,"Select Category");
+					customAlertStoreList(categoryNames,"Select Brands");
 				}
 			});
 			btn_go.setOnClickListener(new OnClickListener() {
@@ -10596,7 +10596,11 @@ GoogleApiClient.OnConnectionFailedListener,CategoryCommunicator
 
 	public void alertForRetailerCreditLimit(final int btnClkd)
 	{
-		AlertDialog.Builder alertDialogSubmitConfirm = new AlertDialog.Builder(ProductOrderFilterSearch.this);
+
+		dbengine.updateFlgCrediBal(storeID,1);
+
+		nextStepAfterRetailerCreditBal(btnClkd);
+		/*AlertDialog.Builder alertDialogSubmitConfirm = new AlertDialog.Builder(ProductOrderFilterSearch.this);
 		alertDialogSubmitConfirm.setTitle(ProductOrderFilterSearch.this.getResources().getString(R.string.genTermInformation));
 		alertDialogSubmitConfirm.setMessage(getText(R.string.credit_retailer_balance));
 		alertDialogSubmitConfirm.setCancelable(false);
@@ -10630,7 +10634,7 @@ GoogleApiClient.OnConnectionFailedListener,CategoryCommunicator
 
 		AlertDialog alert = alertDialogSubmitConfirm.create();
 
-		alert.show();
+		alert.show();*/
 
 
 	}

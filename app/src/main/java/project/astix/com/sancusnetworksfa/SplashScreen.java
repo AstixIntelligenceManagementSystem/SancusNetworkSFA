@@ -53,6 +53,7 @@ import java.net.URL;
 import java.net.URLConnection;
 
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Locale;
 import java.util.zip.ZipEntry;
@@ -123,6 +124,8 @@ public class SplashScreen extends BaseActivity
         {
 
         }
+
+
         //  imei="865735032952249";  // Live User
 
         // imei="864449033669429";
@@ -138,7 +141,7 @@ public class SplashScreen extends BaseActivity
 
 
       //  imei="359632061313398";
-       // imei="354010084603910"; //for development given by avinash sir
+       //imei="354010084603910"; //for development given by avinash sir
 
     if(CommonInfo.imei.trim().equals(null) || CommonInfo.imei.trim().equals(""))
     {

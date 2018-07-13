@@ -11,6 +11,7 @@ public class CommonInfo
 	// Its for Live Path on 194 Server
 
 
+
 	public static int flgAllRoutesData=1;
 	public static File imageF_savedInstance=null;
 	public static String imageName_savedInstance=null;
@@ -27,7 +28,6 @@ public class CommonInfo
 	public static String globalValueOfPaymentStage="0"+"_"+"0"+"_"+"0";
 
 
-
 	public static String WebServicePath="http://103.20.212.194/WebServiceAndroidSancusNetworksSFALive/Service.asmx";
 	public static String VersionDownloadPath="http://103.20.212.194/downloads/";
 	public static String VersionDownloadAPKName="SancusNetworksSFA.apk";
@@ -36,7 +36,7 @@ public class CommonInfo
 
 	public static int AnyVisit = 0;
 
-	public static int DATABASE_VERSIONID = 2;      // put this field value based on value in table on the server
+	public static int DATABASE_VERSIONID = 1;      // put this field value based on value in table on the server
 	public static String AppVersionID = "1.0";   // put this field value based on value in table on the server
 	public static int Application_TypeID = 2; //1=Parag Store Mapping,2=Parag SFA Indirect,3=Parag SFA Direct
 
@@ -79,7 +79,10 @@ public class CommonInfo
 	public static int FlgDSRSO=0;
 
 
+
 	// Its for Dev Path on 194 Server
+
+
 
 /*
 
@@ -105,11 +108,10 @@ public class CommonInfo
 		public static String VersionDownloadAPKName="SancusNetworksSFADev.apk";
 
 		public static String DATABASE_NAME = "DbSancusNetworksSFAApp";
-
 		public static int AnyVisit = 0;
 
-		public static int DATABASE_VERSIONID = 8;      // put this field value based on value in table on the server
-		public static String AppVersionID = "1.4";   // put this field value based on value in table on the server
+		public static int DATABASE_VERSIONID = 12;      // put this field value based on value in table on the server
+		public static String AppVersionID = "1.8";   // put this field value based on value in table on the server
 		public static int Application_TypeID = 2; //1=Parag Store Mapping,2=Parag SFA Indirect,3=Parag SFA Direct
 
 	    public static String OrderSyncPath="http://103.20.212.194/ReadXML_SancusNetworksSFADevelopment/DefaultSFA.aspx";
@@ -149,6 +151,8 @@ public class CommonInfo
 	    public static int SalesmanNodeType=0;
 	    public static int flgDataScope=0;
 	    public static int FlgDSRSO=0;
+
+
 */
 
 

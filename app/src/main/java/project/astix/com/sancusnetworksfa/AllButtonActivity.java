@@ -3863,7 +3863,7 @@ public class AllButtonActivity extends BaseActivity implements LocationListener,
 
                 if(isRouteAvailable)
                 {
-                    for(int mm = 1; mm < 40  ; mm++)
+                    for(int mm = 1; mm < 41  ; mm++)
                     {
                         System.out.println("Excecuted function : "+mm);
                         if(mm==1)
@@ -4185,6 +4185,16 @@ public class AllButtonActivity extends BaseActivity implements LocationListener,
                             serviceException=true;
                             break;
                         }
+                        }
+                        if(mm==40)
+                        {
+
+                            newservice = newservice.getProductListLastVisitStockOrOrderMstr(getApplicationContext(), fDate, imei, rID);
+                            if(newservice.flagExecutedServiceSuccesfully!=1)
+                            {
+                                serviceException=true;
+                                break;
+                            }
                         }
 
                     }
