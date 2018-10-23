@@ -80,7 +80,8 @@
         <activity android:name=".DayStartActivity"  />
 
         <activity android:name="project.astix.com.sancusnetworksfa.AllButtonActivity" />
-        <activity android:name="project.astix.com.sancusnetworksfa.StoreSelection" />
+        <activity android:name="project.astix.com.sancusnetworksfa.StoreSelection"
+            android:windowSoftInputMode="stateHidden"/>
         <activity android:name="project.astix.com.sancusnetworksfa.LastVisitDetails" />
         <activity android:name="project.astix.com.sancusnetworksfa.LastVisitDetailsSecondPart" />
 
@@ -471,6 +472,7 @@
             android:screenOrientation="portrait" />
 
         <activity android:name="project.astix.com.sancusnetworksfa.ActualVisitStock"
+            android:windowSoftInputMode="stateHidden"
             android:screenOrientation="portrait" />
         <activity android:name="project.astix.com.sancusnetworksfa.MerchandisingInstruction"
             android:screenOrientation="portrait" />

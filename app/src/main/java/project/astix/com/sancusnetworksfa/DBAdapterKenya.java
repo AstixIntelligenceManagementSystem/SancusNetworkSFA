@@ -40,6 +40,10 @@ public class DBAdapterKenya
 	private boolean isDBOpenflag = false;
 
     //StoreProductStock
+
+
+
+
     private static final String DATABASE_TABLE_tblProductListLastVisitStockOrOrderMstr= "tblProductListLastVisitStockOrOrderMstr";
     private static final String DATABASE_CREATE_TABLEtblProductListLastVisitStockOrOrderMstr = "create table tblProductListLastVisitStockOrOrderMstr (StoreID text null,PrdID text null);";
 
@@ -749,8 +753,8 @@ private static final String DATABASE_TABLE_MAIN101 = "tblFirstOrderDetailsOnLast
 	 
 	//private static final String DATABASE_CREATE_TABLE_13 = "create table tblStoreList (StoreID text not null, StoreType string not null, StoreName string not null, StoreLatitude real not null, StoreLongitude real not null, LastVisitDate string not null, LastTransactionDate string not null, Sstat integer not null, ForDate string not null, ActualLatitude text null, ActualLongitude text null, VisitStartTS text null, VisitEndTS text null, ISNewStore int null, AutoIdStore int null, LocProvider text null, Accuracy text null, BateryLeftStatus text null,StoreRouteID text null);";
 	
-	
-	private static final String DATABASE_CREATE_TABLE_13 = "create table tblStoreList(StoreID text not null, StoreType string not null, StoreName string not null, StoreLatitude real not null, StoreLongitude real not null, LastVisitDate string not null, LastTransactionDate string not null, Sstat integer not null, ForDate string not null, ActualLatitude text null, ActualLongitude text null, VisitStartTS text null, VisitEndTS text null,AutoIdStore int null, LocProvider text null, Accuracy text null, BateryLeftStatus text null,StoreClose integer null,StoreNextDay integer null,chainID integer null,ISNewStore int null,StoreRouteID int null,RouteNodeType int null,StoreCatNodeId int null,IsNewStoreDataCompleteSaved int null,flgFromWhereSubmitStatus int null,StoreAddress text null,PaymentStage text null,flgHasQuote int null,flgAllowQuotation int null,flgSubmitFromQuotation int null,flgGSTCapture text null,flgGSTCompliance text null,GSTNumber text null,flgGSTRecordFromServer int null,DistanceNear int null,flgLocationServicesOnOff int null,flgGPSOnOff int null,flgNetworkOnOff int null,flgFusedOnOff int null,flgInternetOnOffWhileLocationTracking int null,flgRestart int null,flgStoreOrder int null,StoreCity text null,StorePinCode text not null,StoreState text null,flgRetailerCreditBalnce integer null,DBR text null,MapAddress text null,MapCity text null,MapPinCode text null,MapState text null,CityId text null,StateId text null,flgOrderType int null);";
+
+	private static final String DATABASE_CREATE_TABLE_13 = "create table tblStoreList(StoreID text not null, StoreType string not null, StoreName string not null, StoreLatitude real not null, StoreLongitude real not null, LastVisitDate string not null, LastTransactionDate string not null, Sstat integer not null, ForDate string not null, ActualLatitude text null, ActualLongitude text null, VisitStartTS text null, VisitEndTS text null,AutoIdStore int null, LocProvider text null, Accuracy text null, BateryLeftStatus text null,StoreClose integer null,StoreNextDay integer null,chainID integer null,ISNewStore int null,StoreRouteID int null,RouteNodeType int null,StoreCatNodeId int null,IsNewStoreDataCompleteSaved int null,flgFromWhereSubmitStatus int null,StoreAddress text null,PaymentStage text null,flgHasQuote int null,flgAllowQuotation int null,flgSubmitFromQuotation int null,flgGSTCapture text null,flgGSTCompliance text null,GSTNumber text null,flgGSTRecordFromServer int null,DistanceNear int null,flgLocationServicesOnOff int null,flgGPSOnOff int null,flgNetworkOnOff int null,flgFusedOnOff int null,flgInternetOnOffWhileLocationTracking int null,flgRestart int null,flgStoreOrder int null,StoreCity text null,StorePinCode text not null,StoreState text null,flgRetailerCreditBalnce integer null,DBR text null,MapAddress text null,MapCity text null,MapPinCode text null,MapState text null,CityId text null,StateId text null,flgOrderType int null,OwnerName text null,StoreContactNo text null,StoreCatType text null);";
 	
 	//private static final String DATABASE_CREATE_TABLE_2 = "create table tblProductList (ProductID text not null, ProductShortName text not null, ProductMRP real not null, ProductRLP real not null, ProductTaxAmount real not null, KGLiter string nulll);";//,DisplayUnit string nul 
 	
@@ -3288,7 +3292,7 @@ db.execSQL("Update tblStoreProductClassificationTypeListMstr Set SubCategoryValu
 			String ActualLongitude,String Accuracy,String LocProvider,int IsNewStoreDataCompleteSaved,
 			String fetchAddress,String PaymentStage,int flgHasQuote,int flgAllowQuotation,
 			int flgSubmitFromQuotation,String flgGSTCapture,String flgGSTCompliance,String GSTNumber,int flgGSTRecordFromServer, int flgLocationServicesOnOff, int flgGPSOnOff, int flgNetworkOnOff, int flgFusedOnOff, int flgInternetOnOffWhileLocationTracking, int flgRestart, int flgStoreOrder, String StoreCity,String StorePinCode, String StoreState,String DBR,String CityId,String StateId,
-                                 String MapAddress,String MapCity,String MapPinCode,String MapState)
+                                 String MapAddress,String MapCity,String MapPinCode,String MapState,String OwnerName,String StoreContactNo,String StoreCatType)
 	  {
 		
 		int MaxAutoStore = 0;
@@ -3327,7 +3331,7 @@ db.execSQL("Update tblStoreProductClassificationTypeListMstr Set SubCategoryValu
 
 			//saveSOAPdataStoreList = DBR,flgRetailerCredit
 			saveSOAPdataStoreListNewStore(StoreID, ""+StoreTypeId, StoreName, Double.parseDouble(ActualLatitude.trim()), Double.parseDouble(ActualLongitude.trim()), "", "", prevDate2Send, MaxAutoStore,Sstat,Accuracy.trim(),LocProvider.trim(),RouteID,RouteNodeType,BatteryStatus,IsNewStoreDataCompleteSaved,fetchAddress,PaymentStage,flgHasQuote,flgAllowQuotation,flgSubmitFromQuotation,flgGSTCapture,flgGSTCompliance,GSTNumber,flgGSTRecordFromServer,flgLocationServicesOnOff,flgGPSOnOff,flgNetworkOnOff,flgFusedOnOff,flgInternetOnOffWhileLocationTracking,flgRestart,flgStoreOrder,StoreCity,StorePinCode,StoreState,DBR, CityId, StateId,
-                     MapAddress, MapCity, MapPinCode, MapState); // in last parameter Fdate
+                     MapAddress, MapCity, MapPinCode, MapState, OwnerName, StoreContactNo, StoreCatType); // in last parameter Fdate
 			
 			//saveSOAPdataStoreListNewStore(strGetMaxIDForNewStore.trim(), StoreType.trim(), RetailerName.trim(), Double.parseDouble(ActualLatitude), Double.parseDouble(ActualLongitude), "", "", fDate, MaxAutoStore,1,Accuracy,LocProvider,activeRid,BateryLevel); // in last parameter Fdate
 			
@@ -14678,7 +14682,8 @@ close();
 			String ForDate, int AutoIdStore, int Sstat, int StoreClose, int StoreNextDay, int StoreRouteID,
 			int StoreCatNodeId,String StoreAddress,String PaymentStage,int flgHasQuote,int flgAllowQuotation,
 			int flgSubmitFromQuotation,String flgGSTCapture,String flgGSTCompliance,String GSTNumber,int flgGSTRecordFromServer,String DBR,String RouteNodeType,String CityId,String StateId,
-                                      String MapAddress,String MapCity,String MapPinCode,String MapState,int flgOrderType)
+                                      String MapAddress,String MapCity,String MapPinCode,String MapState,int flgOrderType,String OwnerName,
+                                      String StoreContactNo,String StoreCatType)
 	{
 
 
@@ -14777,6 +14782,9 @@ close();
         initialValues.put("MapPinCode", MapPinCode);
         initialValues.put("MapState", MapState);
         initialValues.put("flgOrderType", flgOrderType);
+        initialValues.put("OwnerName", OwnerName.trim());
+        initialValues.put("StoreContactNo", StoreContactNo.trim());
+        initialValues.put("StoreCatType", StoreCatType);
 		////// System.out.println("inserting records in StoreList table..");
 
 		return db.insert(DATABASE_TABLE_MAIN13, null, initialValues);
@@ -16392,7 +16400,7 @@ close();
 											  String activeRid,String RouteNodeType,String BateryLevel,int IsNewStoreDataCompleteSaved,String fetchAddress,
 											  String PaymentStage,int flgHasQuote,int flgAllowQuotation,int flgSubmitFromQuotation
 			,String flgGSTCapture,String flgGSTCompliance,String GSTNumber,int flgGSTRecordFromServer, int flgLocationServicesOnOff, int flgGPSOnOff, int flgNetworkOnOff, int flgFusedOnOff, int flgInternetOnOffWhileLocationTracking, int flgRestart, int flgStoreOrder, String StoreCity,String StorePinCode, String StoreState,String DBR,String CityId,String StateId,
-                                              String MapAddress,String MapCity,String MapPinCode,String MapState) {
+                                              String MapAddress,String MapCity,String MapPinCode,String MapState,String OwnerName,String StoreContactNo,String StoreCatType) {
 
 
 		int flgIfStoreHasRecords=0;
@@ -16414,6 +16422,7 @@ close();
 
 		//activeRid = GetActiveRouteID();
 		//String RouteNodeType=FetchRouteType(activeRid);
+
 
 
 		initialValues.put("StoreID", sCode.trim());
@@ -16480,6 +16489,11 @@ close();
         initialValues.put("MapPinCode", MapPinCode);
         initialValues.put("MapState", MapState);
         initialValues.put("flgOrderType", -1);
+
+        initialValues.put("OwnerName", OwnerName.trim());
+        initialValues.put("StoreContactNo", StoreContactNo.trim());
+        initialValues.put("StoreCatType", StoreCatType);
+
 		//flgAllowQuotation
 
 		//flgAllowQuotation
@@ -16957,7 +16971,7 @@ close();
 		public ArrayList<HashMap<String, String>> fetch_catgry_prdctsData(String storeID,int BusinessSegmentId) {
 			
 			open();
-			ArrayList<HashMap<String, String>> totalProductDetail=new ArrayList<HashMap<String, String>>();
+			ArrayList<HashMap<String, String>> totalProductDetail=new ArrayList<HashMap<String, String>>(20);
 			//hmapCtgryPrdctDetail= key=prdctId,val=CategoryID
 			LinkedHashMap<String, String> hmapCtgryPrdctDetail=new LinkedHashMap<String, String>();
 			//hmapCtgryPrdctDetail= key=prdctId,val=Volume^Rate^TaxAmount
@@ -17014,7 +17028,7 @@ close();
 			   
 			   
 			 //Cursor cursor = db.rawQuery("SELECT ProductID,CategoryID,ProductShortName,KGLiter ||'^'||ProductRLP||'^'||ProductTaxAmount AS ProductVolumeRateTax,'NA/0' As LODQty,0 AS SampleQty,0 AS ProductFreeQty,0 AS ProductOrderQty,0.00 As PrdctDiscount,RetMarginPer,VatTax,ProductMRP,0.00 AS DiscountPercentageGivenOnProduct,0 AS Per,0.00 AS TaxValue,0.00 AS OrderValue,StandardRate,StandardRateBeforeTax,StandardTax,0 As Stock  FROM tblProductList order by CategoryID,ProductID",null);
-			   Cursor cursor = db.rawQuery("SELECT tblProductList.ProductID,tblProductList.CategoryID,tblProductList.ProductShortName,tblProductList.KGLiter ||'^'||tblProductSegementMap.ProductRLP||'^'||tblProductSegementMap.ProductTaxAmount AS ProductVolumeRateTax,'NA/0' As LODQty,0 AS SampleQty,0 AS ProductFreeQty,0 AS ProductOrderQty,0.00 As PrdctDiscount,tblProductSegementMap.RetMarginPer,tblProductSegementMap.VatTax,tblProductSegementMap.ProductMRP,0.00 AS DiscountPercentageGivenOnProduct,0 AS Per,0.00 AS TaxValue,0.00 AS OrderValue,tblProductSegementMap.StandardRate,tblProductSegementMap.StandardRateBeforeTax,tblProductSegementMap.StandardTax,0 As Stock,tblProductSegementMap.flgPriceAva  FROM tblProductList inner join tblProductSegementMap on tblProductList.ProductID=tblProductSegementMap.ProductID Where tblProductSegementMap.BusinessSegmentId="+BusinessSegmentId+"  order by tblProductList.CategoryID,tblProductList.PrdOrdr,tblProductList.flagPriority",null);
+            Cursor cursor = db.rawQuery("SELECT tblProductList.ProductID,tblProductList.CategoryID,tblProductList.ProductShortName,tblProductList.KGLiter ||'^'||tblProductSegementMap.ProductRLP||'^'||tblProductSegementMap.ProductTaxAmount AS ProductVolumeRateTax,'NA/0' As LODQty,0 AS SampleQty,0 AS ProductFreeQty,0 AS ProductOrderQty,0.00 As PrdctDiscount,tblProductSegementMap.RetMarginPer,tblProductSegementMap.VatTax,tblProductSegementMap.ProductMRP,0.00 AS DiscountPercentageGivenOnProduct,0 AS Per,0.00 AS TaxValue,0.00 AS OrderValue,tblProductSegementMap.StandardRate,tblProductSegementMap.StandardRateBeforeTax,tblProductSegementMap.StandardTax,0 As Stock,tblProductSegementMap.flgPriceAva  FROM tblProductList inner join tblProductSegementMap on tblProductList.ProductID=tblProductSegementMap.ProductID inner join tblDistributorStock ON tblProductList.ProductID=tblDistributorStock.PrdctId Where tblProductSegementMap.BusinessSegmentId="+BusinessSegmentId+" AND  tblDistributorStock.StockQntty<>0  order by tblProductList.CategoryID,tblProductList.PrdOrdr,tblProductList.flagPriority",null);
 			
 			   //tblProductList.ProductID------------->0
 			   //tblProductList.CategoryID------------>1
@@ -22625,13 +22639,13 @@ open();
                                     {
                                         // cur=db.rawQuery("Select tblProductList.ProductID,ProductShortName from tblProductList inner join tblProductSegementMap on tblProductList.ProductID=tblProductSegementMap.ProductID where ("+searchString+") and tblProductSegementMap.BusinessSegmentId="+BusinessSegmentId+" AND tblProductList.CategoryID='"+ctgryId+"'order by PrdOrdr Asc", null);
                                        // cur=db.rawQuery("Select tblProductList.ProductID,ProductShortName from tblProductList inner join tblProductSegementMap on tblProductList.ProductID=tblProductSegementMap.ProductID inner join tblDistributorStock on tblProductList.ProductID=tblDistributorStock.PrdctId where ("+searchString+") and tblProductSegementMap.BusinessSegmentId="+BusinessSegmentId+" AND tblProductList.CategoryID='"+ctgryId+"'order by PrdOrdr Asc", null);
-                                        cur=db.rawQuery("Select tblProductList.ProductID,ProductShortName from tblProductList inner join tblProductSegementMap on tblProductList.ProductID=tblProductSegementMap.ProductID inner join tblDistributorStock on tblProductList.ProductID=tblDistributorStock.PrdctId and tblDistributorStock.StockQntty<>0 where ("+searchString+") and tblProductSegementMap.BusinessSegmentId="+BusinessSegmentId+" AND tblProductList.CategoryID='"+ctgryId+"'order by PrdOrdr Asc", null); }
+                                        cur=db.rawQuery("Select tblProductList.ProductID,ProductShortName from tblProductList inner join tblProductSegementMap on tblProductList.ProductID=tblProductSegementMap.ProductID inner join tblDistributorStock on tblProductList.ProductID=tblDistributorStock.PrdctId where ("+searchString+") and tblDistributorStock.StockQntty<>0 and tblProductSegementMap.BusinessSegmentId="+BusinessSegmentId+" AND tblProductList.CategoryID='"+ctgryId+"'order by PrdOrdr Asc", null); }
                                     else
                                     {
 
                                         // cur=db.rawQuery("Select tblProductList.ProductID,ProductShortName from tblProductList inner join tblProductSegementMap on tblProductList.ProductID=tblProductSegementMap.ProductID where ("+searchString+") and tblProductSegementMap.BusinessSegmentId="+BusinessSegmentId+" order by PrdOrdr Asc", null);
                                        // cur=db.rawQuery("Select tblProductList.ProductID,ProductShortName from tblProductList inner join tblProductSegementMap on tblProductList.ProductID=tblProductSegementMap.ProductID inner join tblDistributorStock on tblProductList.ProductID=tblDistributorStock.PrdctId where ("+searchString+") and tblProductSegementMap.BusinessSegmentId="+BusinessSegmentId+" order by PrdOrdr Asc", null);
-                                        cur=db.rawQuery("Select tblProductList.ProductID,ProductShortName from tblProductList inner join tblProductSegementMap on tblProductList.ProductID=tblProductSegementMap.ProductID inner join tblDistributorStock on tblProductList.ProductID=tblDistributorStock.PrdctId and tblDistributorStock.StockQntty<>0 where ("+searchString+") and tblProductSegementMap.BusinessSegmentId="+BusinessSegmentId+" order by PrdOrdr Asc", null);
+                                        cur=db.rawQuery("Select tblProductList.ProductID,ProductShortName from tblProductList inner join tblProductSegementMap on tblProductList.ProductID=tblProductSegementMap.ProductID inner join tblDistributorStock on tblProductList.ProductID=tblDistributorStock.PrdctId where ("+searchString+") and tblDistributorStock.StockQntty<>0 and tblProductSegementMap.BusinessSegmentId="+BusinessSegmentId+" order by PrdOrdr Asc", null);
                                     }
 
 					        	if(cur.getCount()>0)
@@ -32715,6 +32729,72 @@ open();
 
         db.insert(DATABASE_TABLE_tblProductListLastVisitStockOrOrderMstr, null, initialValues);
 
+    }
+    public LinkedHashMap<String, String> fngetStoreBasicDetails(String StoreID)
+    {
+        LinkedHashMap<String, String> hmapStoreBasicDetails=new LinkedHashMap<String, String>();//=null;
+        Cursor cur=null;
+        open();
+        try {
+
+
+            cur=db.rawQuery("Select ifnull(StoreName,'NA'),ifnull(OwnerName,'NA'),ifnull(StoreContactNo,'NA'),ifnull(StoreAddress,'NA'),ifnull(StoreCatType,'NA') from tblStoreList where StoreID = '"+StoreID+"'", null);
+            if(cur.getCount()>0)
+            {
+                if(cur.moveToFirst())
+                {
+                    // System.out.println("System Value :"+cur.getString(0)+"="+ cur.getString(1)+"~"+cur.getString(2));
+                    hmapStoreBasicDetails.put("StoreName", cur.getString(0));
+                    hmapStoreBasicDetails.put("OwnerName", cur.getString(1));
+                    hmapStoreBasicDetails.put("StoreContactNo", cur.getString(2));
+                    hmapStoreBasicDetails.put("StoreAddress", cur.getString(3));
+                    hmapStoreBasicDetails.put("StoreCatType", cur.getString(4));
+
+                }
+
+            }
+
+        }
+        catch(Exception ex)
+        {
+            hmapStoreBasicDetails.put("StoreName", "NA");
+            hmapStoreBasicDetails.put("OwnerName", "NA");
+            hmapStoreBasicDetails.put("StoreContactNo","NA");
+            hmapStoreBasicDetails.put("StoreAddress", "NA");
+            hmapStoreBasicDetails.put("StoreCatType", "NA");
+        }
+        finally {
+            if (cur != null) {
+                cur.close();
+            }
+            close();
+        }
+        return hmapStoreBasicDetails;
+    }
+
+
+    public  HashMap<String, String> fnGetProductPurchaseListHmap(String StoreID,String TmpInvoiceCodePDA)
+    {
+        open();
+        //SELECT ProdID,Stock,OrderQty,OrderVal,FreeQty,DisVal,SampleQuantity,ProductPrice From tblStoreProdcutPurchaseDetails where StoreID='"+StoreID+"' and OrderIDPDA='"+pdaOrderID+"' and OrderQty<>0" , null);
+        HashMap<String, String> hmapPrdctOdrQty=new HashMap<String, String>();
+        Cursor cursor = db.rawQuery("SELECT ProdID,OrderQty From tblStoreProdcutPurchaseDetails where StoreID='"+StoreID+"'  AND OrderIDPDA='"+TmpInvoiceCodePDA+"' and OrderQty<>0" , null);
+        try {
+            String CompleteResult[] = new String[cursor.getCount()];
+            if (cursor.getCount() > 0) {
+                if (cursor.moveToFirst()) {
+                    for (int i = 0; i <= (cursor.getCount() - 1); i++) {
+                        hmapPrdctOdrQty.put( cursor.getString(0),cursor.getString(1)) ;
+                        cursor.moveToNext();
+                    }
+                }
+            }
+            return hmapPrdctOdrQty;
+
+        } finally {
+            cursor.close();
+            close();
+        }
     }
 }
 

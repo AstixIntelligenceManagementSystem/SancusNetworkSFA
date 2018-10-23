@@ -98,6 +98,12 @@ import java.util.regex.Pattern;
 public class ProductOrderFilterSearch extends BaseActivity implements OnItemSelectedListener, OnClickListener, OnFocusChangeListener, LocationListener,GoogleApiClient.ConnectionCallbacks,
 GoogleApiClient.OnConnectionFailedListener,CategoryCommunicator
 {
+	 Button btn_SaveExit;
+	Button btn_Save;
+	Button btn_Submit;
+	TextView txt_RefreshOdrTot;
+	Button btn_orderReview;
+	int flagRefreshButtonClick=0;
 	String VisitDate="";
 	HashMap<String, String> hmapProductIdLastStock=new HashMap<String, String>();
 	HashMap<String, String> hmapProductIdLastOrder=new HashMap<String, String>();
@@ -1289,15 +1295,18 @@ GoogleApiClient.OnConnectionFailedListener,CategoryCommunicator
 				  });
 
 
-			TextView txt_RefreshOdrTot=(TextView) findViewById(R.id.txt_RefreshOdrTot);
+			 txt_RefreshOdrTot=(TextView) findViewById(R.id.txt_RefreshOdrTot);
 			txt_RefreshOdrTot.setOnClickListener(new OnClickListener()
 			  {
 
 					@Override
 					public void onClick(View v)
 					{
+
 						if(ed_LastEditextFocusd!=null)
 						{
+							flagRefreshButtonClick=1;
+							disableAllButton();
 							//etOrderQty
 							String tag=ed_LastEditextFocusd.getTag().toString();
 							if(tag.contains("etOrderQty"))
@@ -1500,7 +1509,7 @@ GoogleApiClient.OnConnectionFailedListener,CategoryCommunicator
 			     });
 
 
-			final Button btn_orderReview=(Button) findViewById(R.id.btn_orderReview);
+			btn_orderReview=(Button) findViewById(R.id.btn_orderReview);
 			btn_orderReview.setOnClickListener(new OnClickListener() {
 
 				@Override
@@ -1510,6 +1519,7 @@ GoogleApiClient.OnConnectionFailedListener,CategoryCommunicator
 
 
 				    //TODO Auto-generated method stub
+					disableAllButton();
 
 
 					fnCreditAndStockCal(0);
@@ -1518,7 +1528,7 @@ GoogleApiClient.OnConnectionFailedListener,CategoryCommunicator
 
 				}
 			});
-			final Button btn_Save=(Button) findViewById(R.id.btn_save);
+			btn_Save=(Button) findViewById(R.id.btn_save);
 		    btn_Save.setTag("0_0");
 		    btn_Save.setOnClickListener(new OnClickListener()
 		    {
@@ -1527,6 +1537,7 @@ GoogleApiClient.OnConnectionFailedListener,CategoryCommunicator
 			   public void onClick(View v)
 			   {
 			    // TODO Auto-generated method stub
+				   disableAllButton();
 
 
 				   fnCreditAndStockCal(1);
@@ -1540,7 +1551,7 @@ GoogleApiClient.OnConnectionFailedListener,CategoryCommunicator
 			   }
 			  });
 
-			  final Button btn_SaveExit=(Button) findViewById(R.id.btn_saveExit);
+			   btn_SaveExit=(Button) findViewById(R.id.btn_saveExit);
 		      btn_SaveExit.setTag("0_0");
 			  btn_SaveExit.setOnClickListener(new OnClickListener()
 			  {
@@ -1548,6 +1559,7 @@ GoogleApiClient.OnConnectionFailedListener,CategoryCommunicator
 			   @Override
 			   public void onClick(View v) {
 			    // TODO Auto-generated method stub
+				   disableAllButton();
 
 				   fnCreditAndStockCal(2);
 
@@ -1555,7 +1567,7 @@ GoogleApiClient.OnConnectionFailedListener,CategoryCommunicator
 
 			   }
 			  });
-			  final Button btn_Submit=(Button) findViewById(R.id.btn_sbmt);
+			  btn_Submit=(Button) findViewById(R.id.btn_sbmt);
 			  btn_Submit.setTag("0_0");
 			  btn_Submit.setOnClickListener(new OnClickListener() {
 
@@ -1625,6 +1637,7 @@ GoogleApiClient.OnConnectionFailedListener,CategoryCommunicator
 
 			   @Override
 			   public void onClick(View v) {
+				   disableAllButton();
 
 				   fnCreditAndStockCal(5);
 
@@ -1899,7 +1912,7 @@ GoogleApiClient.OnConnectionFailedListener,CategoryCommunicator
 
 
 	          txtVwRate.setTag("tvRate"+"_"+productIdDynamic);
-
+			System.out.println("Shivam = "+productIdDynamic);
 
 	           String value=hmapPrdctVolRatTax.get(productIdDynamic).toString();
 
@@ -6918,6 +6931,12 @@ GoogleApiClient.OnConnectionFailedListener,CategoryCommunicator
 		Double GrossInvValue=totalGrossVALAfterDiscount + TotTaxAmount;
 		GrossInvValue=Double.parseDouble(new DecimalFormat("##.##").format(GrossInvValue));
 		tv_GrossInvVal.setText(""+GrossInvValue);
+		if(flagRefreshButtonClick==1){
+			enableAllButton();
+			flagRefreshButtonClick=0;
+
+		}
+		flagRefreshButtonClick=0;
 	//Now the its Time to Show the OverAll Summary Code Starts Here
 	}
 
@@ -8846,6 +8865,7 @@ GoogleApiClient.OnConnectionFailedListener,CategoryCommunicator
 		  }
 		   @Override
 		         protected void onPostExecute(Void args) {
+			   enableAllButton();
 
 			   if(mProgressDialog.isShowing()==true)
 	           {
@@ -10567,7 +10587,7 @@ GoogleApiClient.OnConnectionFailedListener,CategoryCommunicator
 					alertForRetailerCreditLimit(flagClkdButton);
 				}
 			}
-
+enableAllButton();
 				dialog.dismiss();
 
 			}
@@ -10580,6 +10600,7 @@ GoogleApiClient.OnConnectionFailedListener,CategoryCommunicator
 
 				edOrderCurrent.clearFocus();
 				edOrderCurrentLast.requestFocus();
+				enableAllButton();
 				dialog.dismiss();
 			}
 		});
@@ -11182,14 +11203,8 @@ GoogleApiClient.OnConnectionFailedListener,CategoryCommunicator
 						if(hmapPrdctIdOutofStock.containsKey(ProductIdOnClickedEdit))
 						{
 							int lastOrgnlQntty=Integer.parseInt(hmapPrdctIdOutofStock.get(ProductIdOnClickedEdit));
-
-
-
 							int netStockLeft=hmapDistPrdctStockCount.get(ProductIdOnClickedEdit)+lastOrgnlQntty;
 							hmapDistPrdctStockCount.put(ProductIdOnClickedEdit,netStockLeft);
-
-
-
 						}
 					}
 					int originalNetQntty=0;
@@ -11894,6 +11909,25 @@ GoogleApiClient.OnConnectionFailedListener,CategoryCommunicator
 		}
 
 	}
+	public void disableAllButton(){
+		btn_SaveExit.setEnabled(false);
+		btn_Save.setEnabled(false);
+		btn_Submit.setEnabled(false);
+		btn_bck.setEnabled(false);
+		txt_RefreshOdrTot.setEnabled(false);
+		btn_orderReview.setEnabled(false);
+		img_ctgry.setEnabled(false);
 
+	}
+	public void enableAllButton(){
+		btn_SaveExit.setEnabled(true);
+		btn_Save.setEnabled(true);
+		btn_Submit.setEnabled(true);
+		btn_bck.setEnabled(true);
+		txt_RefreshOdrTot.setEnabled(true);
+		btn_orderReview.setEnabled(true);
+		img_ctgry.setEnabled(true);
+
+	}
 
 }

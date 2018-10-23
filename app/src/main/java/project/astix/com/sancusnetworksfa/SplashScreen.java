@@ -141,8 +141,8 @@ public class SplashScreen extends BaseActivity
 
 
       //  imei="359632061313398";
-      // imei="354010084603910"; //for development given by avinash sir
-
+     //  imei="354010084603910"; //for development given by avinash sir
+      //  imei="354010084603910";
     if(CommonInfo.imei.trim().equals(null) || CommonInfo.imei.trim().equals(""))
     {
         CommonInfo.imei=imei;

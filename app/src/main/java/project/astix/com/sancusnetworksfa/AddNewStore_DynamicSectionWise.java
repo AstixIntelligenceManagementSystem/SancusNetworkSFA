@@ -99,6 +99,7 @@ public class AddNewStore_DynamicSectionWise extends BaseFragmentActivity impleme
 
     public static String distID="0";
     public static String beatSelected="0-0-0";
+    public String ownerName,storeMobNum,storeType;
 
     public static String fnAccurateProvider="";
     public static String fnLati="0";
@@ -1073,6 +1074,9 @@ if(flgCheckNewOldStore==1)
                     hmapStoreQuestAnsNew = recFragment.hmapAnsValues;
                     hmapStoreAddress=recFragment.hmapAddress;
                     selectedBeatName= recFragment.getSelectedBeatName();
+                    ownerName=recFragment.ownerNameFilled;
+                    storeMobNum=recFragment.strMobNumFilld;
+                    storeType=recFragment.storeTypeFilld;
                     if(!selectedBeatName.equals("0") && (selectedBeatName.contains("-")))
                     {
                         slctdBeatId= selectedBeatName.split(Pattern.quote("-"))[1];
@@ -1246,9 +1250,21 @@ if(flgCheckNewOldStore==1)
         helperDb.deletetblstoreMstrOnStoreIDBasis(selStoreID);
         helperDb.saveTblPreAddedStores(selStoreID, StoreName, LattitudeFromLauncher, LongitudeFromLauncher, VisitDate, 1,0, 3,Integer.parseInt(slctdBeatId),Integer.parseInt(slctdBeatNodeType));
 
+        if(ownerName==null )
+        {
+            ownerName="NA";
+        }
+        if(storeMobNum==null )
+        {
+            storeMobNum="NA";
+        }
+        if(storeType==null)
+        {
+            storeType="NA";
+        }
 
         helperDb.savetblStoreMain(beatSelected.split(Pattern.quote("-"))[1],beatSelected.split(Pattern.quote("-"))[2],selStoreID,StoreName,"NA","NA","NA","NA","NA","NA","NA","0",StoreTypeTradeChannel,
-                Integer.parseInt("1"),0,0, 0, "NA",VisitStartTS,imei,""+battLevel,3,String.valueOf(LattitudeFromLauncher),String.valueOf(LongitudeFromLauncher),"" + AccuracyFromLauncher,"" + fnAccurateProvider,0,hmapStoreAddress.get("0"),allValuesOfPaymentStageID,flgHasQuote,flgAllowQuotation,flgSubmitFromQuotation,flgGSTCapture,flgGSTCompliance,GSTNumber,flgGSTRecordFromServer,flgLocationServicesOnOff,flgGPSOnOff,flgNetworkOnOff,flgFusedOnOff,flgInternetOnOffWhileLocationTracking,flgRestart,flgStoreOrder, hmapStoreAddress.get("2"), hmapStoreAddress.get("1"), hmapStoreAddress.get("3"),distID, hmapStoreAddress.get("4"), hmapStoreAddress.get("5"), hmapStoreAddress.get("6"), hmapStoreAddress.get("7"), hmapStoreAddress.get("8"), hmapStoreAddress.get("9"));
+                Integer.parseInt("1"),0,0, 0, "NA",VisitStartTS,imei,""+battLevel,3,String.valueOf(LattitudeFromLauncher),String.valueOf(LongitudeFromLauncher),"" + AccuracyFromLauncher,"" + fnAccurateProvider,0,hmapStoreAddress.get("0"),allValuesOfPaymentStageID,flgHasQuote,flgAllowQuotation,flgSubmitFromQuotation,flgGSTCapture,flgGSTCompliance,GSTNumber,flgGSTRecordFromServer,flgLocationServicesOnOff,flgGPSOnOff,flgNetworkOnOff,flgFusedOnOff,flgInternetOnOffWhileLocationTracking,flgRestart,flgStoreOrder, hmapStoreAddress.get("2"), hmapStoreAddress.get("1"), hmapStoreAddress.get("3"),distID, hmapStoreAddress.get("4"), hmapStoreAddress.get("5"), hmapStoreAddress.get("6"), hmapStoreAddress.get("7"), hmapStoreAddress.get("8"), hmapStoreAddress.get("9"),ownerName,storeMobNum,storeType);
 
         helperDb.saveSOAPdataStoreListDetailsInNewTable(selStoreID, hmapStoreAddress.get("2"), hmapStoreAddress.get("1"), hmapStoreAddress.get("3"),3);
         helperDb.close();
@@ -1373,9 +1389,9 @@ if(flgCheckNewOldStore==1)
         helperDb.open();
 
         helperDb.fndeleteNewStoreSalesQuotePaymentDetails(selStoreID);
-        helperDb.saveSOAPdataStoreList(ServiceWorkerStoreID,StoreName,StoreType,Double.parseDouble(StoreLatitude),Double.parseDouble(StoreLongitude),LastVisitDate,LastTransactionDate,
+       /* helperDb.saveSOAPdataStoreList(ServiceWorkerStoreID,StoreName,StoreType,Double.parseDouble(StoreLatitude),Double.parseDouble(StoreLongitude),LastVisitDate,LastTransactionDate,
                 dateVAL.toString().trim(),Integer.parseInt(AutoIdStore), Integer.parseInt(Sstat),Integer.parseInt(IsClose),Integer.parseInt(IsNextDat),Integer.parseInt(RouteID),StoreTypeTradeChannel,fetchAddress,allValuesOfPaymentStageID,flgHasQuoteNew,flgAllowQuotationNew,flgSubmitFromQuotationNew,flgGSTCapture,flgGSTCompliance,GSTNumber,Integer.parseInt(flgGSTRecordFromServer),distID,"0","NA","NA","NA","NA","NA","NA",flgOrderType);
-        helperDb.close();
+        helperDb.close();*/
 
 
 

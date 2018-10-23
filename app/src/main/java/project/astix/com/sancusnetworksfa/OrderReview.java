@@ -91,7 +91,12 @@ import java.util.regex.Pattern;
 
 public class OrderReview extends BaseActivity implements OnItemSelectedListener, OnClickListener, OnFocusChangeListener, LocationListener,GoogleApiClient.ConnectionCallbacks,
 GoogleApiClient.OnConnectionFailedListener{
-
+	 Button btn_SaveExit;
+	 Button btn_Save;
+	 Button btn_Submit;
+	TextView txt_RefreshOdrTot;
+	 Button btn_AmountCollect;
+	int flagRefreshButtonClick=0;
 	String VisitDate="";
 	HashMap<String, String> hmapProductIdLastOrder=new HashMap<String, String>();
 	public static boolean isSubmitClicked;
@@ -1068,13 +1073,15 @@ public void loadPurchaseProductDefault()
 				  });
 				 
 			
-			TextView txt_RefreshOdrTot=(TextView) findViewById(R.id.txt_RefreshOdrTot);
+			 txt_RefreshOdrTot=(TextView) findViewById(R.id.txt_RefreshOdrTot);
 			txt_RefreshOdrTot.setOnClickListener(new OnClickListener()
 			  {
 				
 					@Override
 					public void onClick(View v)
 					{
+						flagRefreshButtonClick=1;
+						disableAllButton();
 						if(ed_LastEditextFocusd!=null)
 						{
 							/*if(!(ed_LastEditextFocusd.getText().toString()).equals(viewCurrentBoxValue))
@@ -1092,7 +1099,7 @@ public void loadPurchaseProductDefault()
 			 });
 			
 			
-			final Button btn_AmountCollect=(Button) findViewById(R.id.btn_collectAmount);
+			 btn_AmountCollect=(Button) findViewById(R.id.btn_collectAmount);
 			if(flgOrderType==0){
 				btn_AmountCollect.setVisibility(View.GONE);
 			}
@@ -1104,6 +1111,8 @@ public void loadPurchaseProductDefault()
 
 				@Override
 				public void onClick(View v) {
+					flagRefreshButtonClick=0;
+					disableAllButton();
 					if(ed_LastEditextFocusd!=null)
 					{
 						String tag=ed_LastEditextFocusd.getTag().toString();
@@ -1501,7 +1510,7 @@ public void loadPurchaseProductDefault()
 			
 			
 			
-			final Button btn_Save=(Button) findViewById(R.id.btn_save);
+			 btn_Save=(Button) findViewById(R.id.btn_save);
 		    btn_Save.setTag("0_0");
 		    btn_Save.setOnClickListener(new OnClickListener()
 		    {
@@ -1512,7 +1521,8 @@ public void loadPurchaseProductDefault()
 			    // TODO Auto-generated method stub
 
 
-
+				   flagRefreshButtonClick=0;
+				   disableAllButton();
 				   if(ed_LastEditextFocusd!=null)
 				   {
 					   String tag=ed_LastEditextFocusd.getTag().toString();
@@ -1633,7 +1643,7 @@ public void loadPurchaseProductDefault()
 			   }
 			  });
 		
-			  final Button btn_SaveExit=(Button) findViewById(R.id.btn_saveExit);
+			   btn_SaveExit=(Button) findViewById(R.id.btn_saveExit);
 		      btn_SaveExit.setTag("0_0");
 			  btn_SaveExit.setOnClickListener(new OnClickListener()
 			  {
@@ -1642,7 +1652,8 @@ public void loadPurchaseProductDefault()
 			   public void onClick(View v) {
 			    // TODO Auto-generated method stub
 
-
+				   flagRefreshButtonClick=0;
+				   disableAllButton();
 				   if(ed_LastEditextFocusd!=null)
 				   {
 					   String tag=ed_LastEditextFocusd.getTag().toString();
@@ -1758,7 +1769,7 @@ public void loadPurchaseProductDefault()
 
 			   }
 			  });
-			  final Button btn_Submit=(Button) findViewById(R.id.btn_sbmt);
+			   btn_Submit=(Button) findViewById(R.id.btn_sbmt);
 			  btn_Submit.setTag("0_0");
 			  btn_Submit.setOnClickListener(new OnClickListener() {
 			   
@@ -1766,7 +1777,8 @@ public void loadPurchaseProductDefault()
 			   public void onClick(View v) 
 			   {
 			    // TODO Auto-generated method stub
-
+				   flagRefreshButtonClick=0;
+				   disableAllButton();
 
 				   if(ed_LastEditextFocusd!=null)
 				   {
@@ -2048,7 +2060,7 @@ public void loadPurchaseProductDefault()
 			   
 			   @Override
 			   public void onClick(View v) {
-
+				   disableAllButton();
 				   if(ed_LastEditextFocusd!=null)
 				   {
 					   String tag=ed_LastEditextFocusd.getTag().toString();
@@ -3209,7 +3221,7 @@ public void loadPurchaseProductDefault()
 
 		if(hmapProductflgPriceAva.get(productIdDynamic).equals("1"))
 		{
-			txtVwRate.setEnabled(true);
+			//txtVwRate.setEnabled(true);
 		}
 		if(hmapMinDlvrQty!=null && hmapMinDlvrQty.size()>0)
 		{
@@ -8495,6 +8507,11 @@ public void loadPurchaseProductDefault()
 		Double totalInvcVal= outstandingvalue+GrossInvValue;
 		tvTtlAmtOutstandingVAL.setText(""+totalInvcVal);
 		//Now the its Time to Show the OverAll Summary Code Starts Here
+
+		if(flagRefreshButtonClick==1){
+			enableAllButton();
+
+		}
 	}
 
 
@@ -10342,7 +10359,7 @@ public void loadPurchaseProductDefault()
 		  }
 		   @Override
 		         protected void onPostExecute(Void args) {
-		   
+			   enableAllButton();
 			   if(mProgressDialog.isShowing()==true)
 	           {
 		     mProgressDialog.dismiss();
@@ -11815,7 +11832,7 @@ public void loadPurchaseProductDefault()
 						alertForRetailerCreditLimit(flagClkdButton);
 					}
 				}
-
+				enableAllButton();
 				dialog.dismiss();
 
 			}
@@ -11829,6 +11846,7 @@ public void loadPurchaseProductDefault()
 
 				edOrderCurrent.clearFocus();
 				edOrderCurrentLast.requestFocus();
+				enableAllButton();
 				dialog.dismiss();
 			}
 		});
@@ -12883,6 +12901,22 @@ public void loadPurchaseProductDefault()
 
 		}
 
+	}
+	public void disableAllButton(){
+		btn_SaveExit.setEnabled(false);
+		btn_Save.setEnabled(false);
+		btn_Submit.setEnabled(false);
+		btn_bck.setEnabled(false);
+		txt_RefreshOdrTot.setEnabled(false);
+		btn_AmountCollect.setEnabled(false);
+	}
+	public void enableAllButton(){
+		btn_SaveExit.setEnabled(true);
+		btn_Save.setEnabled(true);
+		btn_Submit.setEnabled(true);
+		btn_bck.setEnabled(true);
+		txt_RefreshOdrTot.setEnabled(true);
+		btn_AmountCollect.setEnabled(true);
 	}
 
 }

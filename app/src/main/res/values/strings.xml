@@ -789,5 +789,8 @@
 
     <string name="ConfirmOrderType">Confirm Telephonic Order</string>
     <string name="AlertTelephonic">This is the telephonic order and the store visit will not count, kindly confirm to proceed</string>
-
+    <string name="SalesPersonName">Store Owner Name :</string>
+    <string name="SalesPersonContact">Store Owner Contact :</string>
+    <string name="SalesPersonAddress">Store  Address :</string>
+    <string name="StoreCatType">Store Category Type :</string>
 </resources>

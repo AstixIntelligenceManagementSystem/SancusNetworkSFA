@@ -280,7 +280,7 @@ public void passIntentToProductOrderFilter(){
                 et_unit.setText(hmapPrdctAndDisplayUnitData.get(prdId.trim()));
                 prdName.setText(value);
                 prdName.setTag(prdId);
-
+                et_unit.setEnabled(false);
                 et_stckVal.setTag(prdId+"_Stock");
 
                 if(hmapFetchPDASavedData!=null && hmapFetchPDASavedData.containsKey(prdId))

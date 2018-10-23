@@ -188,6 +188,10 @@ public class ServiceWorker
 					String StoreIDPDAFromServer="NA";
 					String RouteNodeType="0";
 					String ForDate=dateVAL;
+					String OwnerName="NA";
+					String StoreContactNo="0000000000";
+					String StoreCatType="NA";
+					String StoreAddress="NA";
 	            	
                        
 	                Element element = (Element) tblUOMMstrNode.item(i);
@@ -551,6 +555,44 @@ public class ServiceWorker
 							RouteNodeType=xmlParser.getCharacterDataFromElement(line);
 						}
 					}
+					if(!element.getElementsByTagName("OwnerName").equals(null))
+					{
+						NodeList OwnerNameNode = element.getElementsByTagName("OwnerName");
+						Element     line = (Element) OwnerNameNode.item(0);
+						if(OwnerNameNode.getLength()>0)
+						{
+							OwnerName=XMLParser.getCharacterDataFromElement(line);
+						}
+					}
+					if(!element.getElementsByTagName("StoreContactNo").equals(null))
+					{
+						NodeList StoreContactNoNode = element.getElementsByTagName("StoreContactNo");
+						Element     line = (Element) StoreContactNoNode.item(0);
+						if(StoreContactNoNode.getLength()>0)
+						{
+							StoreContactNo =XMLParser.getCharacterDataFromElement(line);
+						}
+					}
+
+
+					if(!element.getElementsByTagName("StoreCatType").equals(null))
+					{
+						NodeList StoreCatTypeNode = element.getElementsByTagName("StoreCatType");
+						Element     line = (Element) StoreCatTypeNode.item(0);
+						if(StoreCatTypeNode.getLength()>0)
+						{
+							StoreCatType=XMLParser.getCharacterDataFromElement(line);
+						}
+					}
+					if(!element.getElementsByTagName("StoreAddress").equals(null))
+					{
+						NodeList StoreAddressNode = element.getElementsByTagName("StoreAddress");
+						Element     line = (Element) StoreAddressNode.item(0);
+						if(StoreAddressNode.getLength()>0)
+						{
+							StoreAddress=XMLParser.getCharacterDataFromElement(line);
+						}
+					}
 
 
 
@@ -576,11 +618,11 @@ public class ServiceWorker
 	                //flgAllowQuotation
 					int AutoIdStore=0;
 					AutoIdStore= i +1;
-					String StoreAddress="";
+
 
 					if(!StoreIDPDAFromServer.equals(StoreID))
 					{
-						dbengine.saveSOAPdataStoreList(StoreID,StoreName,StoreType,StoreLatitude,StoreLongitude,LastVisitDate,LastTransactionDate,dateVAL.toString().trim(), AutoIdStore, Sstat,IsClose,IsNextDat,StoreRouteID,StoreCatNodeId,StoreAddress,PaymentStage,flgHasQuote,flgAllowQuotation,flgSubmitFromQuotation,flgGSTCapture,flgGSTCompliance,GSTNumber,flgGSTRecordFromServer,DBR,RouteNodeType,"NA","NA","NA","NA","NA","NA",flgOrderType);
+						dbengine.saveSOAPdataStoreList(StoreID,StoreName,StoreType,StoreLatitude,StoreLongitude,LastVisitDate,LastTransactionDate,dateVAL.toString().trim(), AutoIdStore, Sstat,IsClose,IsNextDat,StoreRouteID,StoreCatNodeId,StoreAddress,PaymentStage,flgHasQuote,flgAllowQuotation,flgSubmitFromQuotation,flgGSTCapture,flgGSTCompliance,GSTNumber,flgGSTRecordFromServer,DBR,RouteNodeType,"NA","NA","NA","NA","NA","NA",flgOrderType,OwnerName,StoreContactNo, StoreCatType);
 
 					}
 

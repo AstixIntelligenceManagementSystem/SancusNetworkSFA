@@ -92,6 +92,10 @@ public class NewStoreForm extends Fragment  {
 	String defaultCity="";
 
 	String beatNameTag="1^8^1";
+	String ownerName="4^2^4";
+	String storeMobileNum="5^2^5";
+	String storeTypeId="16^13^16";
+	String ownerNameFilled,strMobNumFilld,storeTypeFilld;
 	String beatOptnSlctd="0-0-0";
 	LinkedHashMap<String, String> hmapState_details=new LinkedHashMap<String, String>();
 	String previousSlctdState="Select";
@@ -234,7 +238,7 @@ public class NewStoreForm extends Fragment  {
 	private void setSingleSpinnerVal() {
 		if(hmapSingleValSpinner!=null && hmapSingleValSpinner.size()>0)
 		{
-			for(Map.Entry<String,Integer> entry:hmapSingleValSpinner.entrySet())
+			for(Entry<String,Integer> entry:hmapSingleValSpinner.entrySet())
 			{
 				Spinner singleValSpinner= (Spinner) ll_data.findViewWithTag(entry.getKey());
 				singleValSpinner.setSelection(1);
@@ -547,7 +551,7 @@ public class NewStoreForm extends Fragment  {
 			if(!AddNewStore_DynamicSectionWise.city.equals("NA")) {
 
 
-				for (Map.Entry<String, String> entryCity : hmapCity_details.entrySet()) {
+				for (Entry<String, String> entryCity : hmapCity_details.entrySet()) {
 					if (entryCity.getKey().equalsIgnoreCase(AddNewStore_DynamicSectionWise.city.trim())) {
 						etCity.setText(AddNewStore_DynamicSectionWise.city);
 						isCityFilled = true;
@@ -2160,14 +2164,14 @@ public class NewStoreForm extends Fragment  {
 		}
 		
 		 if(questKey.split(Pattern.quote("^"))[1].toString().equals("13"))
-		 {/*
-			 TextView textView=(TextView) ll_data.findViewWithTag(entry.getKey());
-			 if(hmapsearchAnswerSlctd.containsKey(entry.getKey()))
+		 {
+			 TextView textView=(TextView) ll_data.findViewWithTag(questKey);
+			 if(hmapsearchAnswerSlctd.containsKey(questKey))
 			 {
-				  hmapAnsValues.put(entry.getKey(),hmapsearchAnswerSlctd.get(entry.getKey()) );
+				  hmapAnsValues.put(questKey,hmapsearchAnswerSlctd.get(questKey) );
 			 }
 			
-		 */}
+		 }
 		 if(questKey.split(Pattern.quote("^"))[1].toString().equals("15"))
 		 {
 			 TextView textView=(TextView) ll_data.findViewWithTag(questKey);
@@ -5869,6 +5873,14 @@ public void selectedOption(String optId, String optionVal, EditText editext,List
 								if(!TextUtils.isEmpty(edVal.getText().toString()))
 								{
 
+									if(ownerName.equals(entry.getKey()))
+									{
+										ownerNameFilled=edVal.getText().toString();
+									}
+									else if(storeMobileNum.equals(entry.getKey()))
+									{
+										strMobNumFilld=edVal.getText().toString();
+									}
 									hmapAnsValues.put(entry.getKey(), TextUtils.htmlEncode(edVal.getText().toString()));
 									/*//tempOutletQuestAnsMstrVal.add(0,OutletID);
 									tempOutletQuestAnsMstrVal.add(1,entry.getKey().split(Pattern.quote("^"))[0].toString());
@@ -6109,14 +6121,18 @@ public void selectedOption(String optId, String optionVal, EditText editext,List
 							}
 							
 							 if(entry.getKey().split(Pattern.quote("^"))[1].toString().equals("13"))
-							 {/*
+							 {
 								 TextView textView=(TextView) ll_data.findViewWithTag(entry.getKey());
 								 if(hmapsearchAnswerSlctd.containsKey(entry.getKey()))
 								 {
+								 	if(storeTypeId.equals(entry.getKey()))
+									{
+										storeTypeFilld=textView.getText().toString();
+									}
 									  hmapAnsValues.put(entry.getKey(),hmapsearchAnswerSlctd.get(entry.getKey()) );
 								 }
 								
-							 */}
+							 }
 							 if(entry.getKey().split(Pattern.quote("^"))[1].toString().equals("15"))
 							 {
 								 TextView textView=(TextView) ll_data.findViewWithTag(entry.getKey());
@@ -7244,7 +7260,7 @@ public void selectedOption(String optId, String optionVal, EditText editext,List
 		AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
 
 		// Setting Dialog Title
-		alertDialog.setTitle(title);
+		alertDialog.setTitle(getString(R.string.genTermInformation));
 
 		// Setting Dialog Message
 		alertDialog.setMessage(message);
@@ -7310,11 +7326,12 @@ public void selectedOption(String optId, String optionVal, EditText editext,List
 		});
 
 		// Setting Negative "NO" Button
-		alertDialog.setNegativeButton(getResources().getString(R.string.SaveandExit), new DialogInterface.OnClickListener() {
+		alertDialog.setNegativeButton(getResources().getString(R.string.txtCancle), new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
 
+				dialog.dismiss();
 				// User pressed No button. Write Logic Here
-				if(validateNameFilled())
+				/*if(validateNameFilled())
 				{
 
 
@@ -7366,7 +7383,7 @@ public void selectedOption(String optId, String optionVal, EditText editext,List
 				else
 				{
 					Toast.makeText(getActivity(), getResources().getString(R.string.PleaseFillNameToSave), Toast.LENGTH_SHORT).show();
-				}
+				}*/
 
 
 			}
@@ -7948,7 +7965,7 @@ public void selectedOption(String optId, String optionVal, EditText editext,List
 		if(!AddNewStore_DynamicSectionWise.city.equals("NA")) {
 
 
-			for (Map.Entry<String, String> entryCity : hmapCity_details.entrySet()) {
+			for (Entry<String, String> entryCity : hmapCity_details.entrySet()) {
 				if (entryCity.getKey().equalsIgnoreCase(AddNewStore_DynamicSectionWise.city.trim())) {
 					etCity.setText(AddNewStore_DynamicSectionWise.city);
 					isCityFilled = true;
@@ -8635,7 +8652,7 @@ public void selectedOption(String optId, String optionVal, EditText editext,List
 		if(hmapState_details!=null && hmapState_details.size()>0)
 		{
 			stateNames=new ArrayList<String>();
-			for(Map.Entry<String, String> entry:hmapState_details.entrySet())
+			for(Entry<String, String> entry:hmapState_details.entrySet())
 			{
 				stateNames.add(entry.getKey().toString());
 			}
@@ -8654,7 +8671,7 @@ public void selectedOption(String optId, String optionVal, EditText editext,List
 		if(hmapCity_details!=null && hmapCity_details.size()>0)
 		{
 			cityNames=new ArrayList<String>();
-			for(Map.Entry<String, String> entry:hmapCity_details.entrySet())
+			for(Entry<String, String> entry:hmapCity_details.entrySet())
 			{
 				cityNames.add(entry.getKey().toString());
 			}

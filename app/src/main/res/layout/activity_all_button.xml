@@ -91,7 +91,8 @@
                     android:layout_height="match_parent"
                     android:layout_marginBottom="8dp"
                     android:layout_marginTop="8dp"
-                    android:background="#BDBDBD" />
+                    android:background="#BDBDBD"
+                    android:visibility="gone"/>
 
                 <LinearLayout
                     android:id="@+id/ll_execution"
@@ -103,6 +104,7 @@
                     android:layout_marginTop="30dp"
                     android:layout_weight="1"
                     android:gravity="center"
+                    android:visibility="gone"
                     android:orientation="vertical">
 
                     <ImageView
