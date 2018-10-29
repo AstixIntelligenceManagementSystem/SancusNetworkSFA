@@ -370,12 +370,32 @@ public class SplashScreen extends BaseActivity
         alert.show();
 
     }
+    public static  void pyramid(int n){
+        int j=n;
+        String str="*";
+        for(int i=0;i<n;i++){
+
+            String s="";
+
+            for(int k=0;k<j;k++){
+                s=" "+s;
+            }
+
+
+            j--;
+
+            System.out.println("SHIVAMMMMMM"+s+str);
+            str=str+" "+"*";
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+        pyramid(10);
+
   //      BugSenseHandler.setup(this, "1f12b9fe");
 
         // Initalization New Relic Tool

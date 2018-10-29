@@ -2026,7 +2026,7 @@ GoogleApiClient.OnConnectionFailedListener,CategoryCommunicator
 
 	           et_SampleQTY.setTag("etSampleQty"+"_"+productIdDynamic);
 
-	           et_SampleQTY.setOnFocusChangeListener(this);
+	         //  et_SampleQTY.setOnFocusChangeListener(this);
 
 
 
@@ -2037,10 +2037,10 @@ GoogleApiClient.OnConnectionFailedListener,CategoryCommunicator
 
 
 	           et_OrderQty.setOnFocusChangeListener(this);
-			if(hmapProductflgPriceAva.get(productIdDynamic).equals("1"))
+			/*if(hmapProductflgPriceAva.get(productIdDynamic).equals("1"))
 			{
 				txtVwRate.setEnabled(true);
-			}
+			}*/
 
 	           et_OrderQty.addTextChangedListener(new TextWatcher() 
 	           {
@@ -2163,72 +2163,6 @@ GoogleApiClient.OnConnectionFailedListener,CategoryCommunicator
 	        });
 
 
-	    /*       imgDel.setOnClickListener(new OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-				final String productIdToDel=	v.getTag().toString().split(Pattern.quote("_"))[1];
-				final String vtag=v.getTag().toString();
-					AlertDialog.Builder alertDialog = new AlertDialog.Builder(ProductOrderFilterSearch.this);
-
-			        // Setting Dialog Title
-			        alertDialog.setTitle("Confirm Delete...");
-
-			        // Setting Dialog Message
-			        alertDialog.setMessage("Are you sure you want remove this product?");
-
-			        // Setting Icon to Dialog
-			        alertDialog.setIcon(R.drawable.delete);
-
-			        // Setting Positive "Yes" Button
-			        alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-			            public void onClick(DialogInterface dialog,int which) {
-
-			            // Write your code here to invoke YES event
-			            	hmapPrdctIdPrdctNameVisible.remove(productIdToDel);
-
-			            	View namebar = (LinearLayout) (ll_prdct_detal).findViewWithTag(vtag);
-
-			            	//If romoved from list, then remove it from the return  page also and code starts here
-
-			            	String getPIdToremove=vtag.split("_")[1];
-			            	try
-			            	{
-			            		dbengine.fnDeleteProductDetailsFromReturnTables(storeID, getPIdToremove, strGlobalOrderID);
-			            	}
-			            	catch(Exception ex)
-			            	{
-
-			            	}
-			            	//If romoved from list, then remove it from the return  page also and code ends here
-
-			            	((LinearLayout) namebar.getParent()).removeView(namebar);
-			            	 if(hmapPrdctIdPrdctNameVisible.size()>0)
-			  	           {
-			  	        	   createProductRowColor();
-			  	           }
-
-			            	 //ll_prdct_detal.removeViewInLayout((LinearLayout) (ll_prdct_detal).findViewWithTag(vtag));
-
-			            }
-			        });
-
-			        // Setting Negative "NO" Button
-			        alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
-			            public void onClick(DialogInterface dialog, int which) {
-			            // Write your code here to invoke NO event
-			            Toast.makeText(getApplicationContext(), "You clicked on NO", Toast.LENGTH_SHORT).show();
-			            dialog.cancel();
-			            }
-			        });
-
-			        // Showing Alert Message
-			        alertDialog.show();
-
-				}
-			});*/
-
-
 	          final TextView tv_Orderval=(TextView) viewProduct.findViewById(R.id.tv_Orderval);
 
 	           tv_Orderval.setTag("tvOrderVal"+"_"+productIdDynamic);
@@ -2273,7 +2207,7 @@ GoogleApiClient.OnConnectionFailedListener,CategoryCommunicator
 
 	           et_ProductMRP.setTag("etProductMRP"+"_"+productIdDynamic);
 
-	           et_ProductMRP.setOnFocusChangeListener(this);
+	          // et_ProductMRP.setOnFocusChangeListener(this);
 
 
 			if(hmapProductMRP.get(productIdDynamic).equals("-99.0") || hmapProductMRP.get(productIdDynamic).equals("-99.00") || hmapProductMRP.get(productIdDynamic).equals("-99"))
@@ -2397,7 +2331,7 @@ GoogleApiClient.OnConnectionFailedListener,CategoryCommunicator
 
 	           }
 
-			txtVwRate.addTextChangedListener(new TextWatcher() {
+			/*txtVwRate.addTextChangedListener(new TextWatcher() {
 				@Override
 				public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -2458,15 +2392,15 @@ GoogleApiClient.OnConnectionFailedListener,CategoryCommunicator
 
 				}
 			});
-
-			txtVwRate.setOnFocusChangeListener(this);
+*/
+		//	txtVwRate.setOnFocusChangeListener(this);
 	           et_OrderQty.setOnFocusChangeListener(this);
 
 	          // txtVwRate.setOnClickListener(this);
 
 	          // tv_product_name.setOnClickListener(this);
 
-	           et_Stock.setOnClickListener(this);
+	      //     et_Stock.setOnClickListener(this);
 
 	           et_OrderQty.setOnClickListener(this);
 
@@ -2476,11 +2410,11 @@ GoogleApiClient.OnConnectionFailedListener,CategoryCommunicator
 
 	           //tv_DisVal.setOnClickListener(this);
 
-	           et_SampleQTY.setOnClickListener(this);
+	       //    et_SampleQTY.setOnClickListener(this);
 
 
 
-	           et_SampleQTY.addTextChangedListener(new TextWatcher() {
+	       /*    et_SampleQTY.addTextChangedListener(new TextWatcher() {
 
 
 
@@ -2561,8 +2495,8 @@ GoogleApiClient.OnConnectionFailedListener,CategoryCommunicator
 	                        }
 
 	        });
-
-	           et_Stock.addTextChangedListener(new TextWatcher() {
+*/
+	         /*  et_Stock.addTextChangedListener(new TextWatcher() {
 
 
 
@@ -2630,12 +2564,12 @@ GoogleApiClient.OnConnectionFailedListener,CategoryCommunicator
 												et_Stock.setText("0");
 
 												hmapProductIdStock.put(""+getPIDTag, "0");
-												/*if(flgOrderType!=1)
+												*//*if(flgOrderType!=1)
 												{
 													et_Stock.setText("0");
 
 													hmapProductIdStock.put(""+getPIDTag, "0");
-												}*/
+												}*//*
 	                                        }
 
 
@@ -2643,7 +2577,7 @@ GoogleApiClient.OnConnectionFailedListener,CategoryCommunicator
 	                        }
 
 	        });
-
+*/
 
 
 	       /*    et_OrderQty.addTextChangedListener(new TextWatcher() {

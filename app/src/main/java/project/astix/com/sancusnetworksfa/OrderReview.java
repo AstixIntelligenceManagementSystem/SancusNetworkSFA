@@ -3233,7 +3233,7 @@ public void loadPurchaseProductDefault()
 		}
 
 
-		txtVwRate.setOnFocusChangeListener(this);
+		//txtVwRate.setOnFocusChangeListener(this);
 
 		final EditText et_Stock=(EditText) viewProduct.findViewById(R.id.et_Stock);
 		final EditText et_LstStock=(EditText) viewProduct.findViewById(R.id.et_LstStock);
@@ -3255,7 +3255,7 @@ public void loadPurchaseProductDefault()
 			et_LstOrder.setText("");
 		}
 		et_Stock.setTag("etStock"+"_"+productIdDynamic);
-		et_Stock.setEnabled(false);
+		//et_Stock.setEnabled(false);
 		if(flgOrderType==1)
 		{
 			et_Stock.setBackgroundResource(R.drawable.edit_text_diable_bg_transprent);
@@ -3280,14 +3280,14 @@ public void loadPurchaseProductDefault()
 			//setTextColor(getResources().getColor(R.color.black));
 			et_Stock.setEnabled(false);    // its making false,stock alrady taken in store check
 		}
-		et_Stock.setOnFocusChangeListener(this);
+	//	et_Stock.setOnFocusChangeListener(this);
 
 
 		final EditText et_SampleQTY=(EditText) viewProduct.findViewById(R.id.et_SampleQTY);
 
 		et_SampleQTY.setTag("etSampleQty"+"_"+productIdDynamic);
 
-		et_SampleQTY.setOnFocusChangeListener(this);
+		//et_SampleQTY.setOnFocusChangeListener(this);
 
 
 
@@ -3297,7 +3297,7 @@ public void loadPurchaseProductDefault()
 
 
 
-		et_OrderQty.setOnFocusChangeListener(this);
+		//et_OrderQty.setOnFocusChangeListener(this);
 
 		txtVwRate.addTextChangedListener(new TextWatcher() {
 			@Override
@@ -3369,99 +3369,7 @@ public void loadPurchaseProductDefault()
 			}
 		});
 
-		et_OrderQty.addTextChangedListener(new TextWatcher()
-		{
 
-			@Override
-
-			public void onTextChanged(CharSequence s, int start, int before, int count)
-			{
-
-				// TODO Auto-generated method stub
-
-				System.out.println("EditValue onTextchange : "+s.toString());
-
-			}
-
-
-
-			@Override
-
-			public void beforeTextChanged(CharSequence s, int start, int count,int after)
-			{
-
-				// TODO Auto-generated method stub
-				System.out.println("EditValue before : "+s.toString());
-			}
-
-
-
-			@Override
-
-			public void afterTextChanged(Editable s)
-			{
-
-
-				productIdOnLastEditTextVal=s.toString();
-				String tagOrder=et_OrderQty.getTag().toString();
-				String productIdOfTag=tagOrder.split(Pattern.quote("_"))[1];
-
-				if(!TextUtils.isEmpty(et_OrderQty.getText().toString().trim()))
-				{
-					if(hmapProductflgPriceAva.get(productIdOfTag).equals("1"))
-					{
-						EditText ediTextRate= (EditText) ll_prdct_detal.findViewWithTag("tvRate"+"_"+productIdOfTag);
-						if(ediTextRate!=null)
-						{
-							if(TextUtils.isEmpty(ediTextRate.getText().toString().trim()))
-							{
-								et_OrderQty.clearFocus();
-								ediTextRate.requestFocus();
-								ediTextRate.setCursorVisible(true);
-								ediTextRate.setError(OrderReview.this.getResources().getString(R.string.PleasefillRatefirst));
-								et_OrderQty.setText("");
-							}
-							else if(Double.parseDouble(ediTextRate.getText().toString())<0)
-							{
-								et_OrderQty.clearFocus();
-								ediTextRate.requestFocus();
-								ediTextRate.setCursorVisible(true);
-								ediTextRate.setError(OrderReview.this.getResources().getString(R.string.PleasefillproperRatefirst));
-								et_OrderQty.setText("");
-							}
-
-						}
-
-					}
-				}
-
-				System.out.println("EditValue after : "+s.toString());
-
-
-				if(!viewCurrentBoxValue.equals(s.toString()))
-				{
-					if(btnExcptn.getVisibility()==View.VISIBLE)
-					{
-
-						btnExcptn.setVisibility(View.INVISIBLE);
-					}
-				}
-				else
-				{
-					if(isbtnExceptionVisible==1)
-					{
-
-						btnExcptn.setVisibility(View.VISIBLE);
-					}
-				}
-
-
-
-
-
-			}
-
-		});
 
 
 	          imgDel.setOnClickListener(new OnClickListener() {
@@ -3614,7 +3522,7 @@ public void loadPurchaseProductDefault()
 
 		et_ProductMRP.setTag("etProductMRP"+"_"+productIdDynamic);
 
-		et_ProductMRP.setOnFocusChangeListener(this);
+		//et_ProductMRP.setOnFocusChangeListener(this);
 
 
 		if(hmapProductMRP.get(productIdDynamic).equals("-99.0") || hmapProductMRP.get(productIdDynamic).equals("-99.00") || hmapProductMRP.get(productIdDynamic).equals("-99"))
